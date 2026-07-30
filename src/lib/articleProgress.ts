@@ -2,6 +2,8 @@ export interface ArticleProgress {
   read: boolean;
   understood: boolean;
   updatedAt: number;
+  quizCorrect?: number;
+  quizAttempts?: number;
 }
 
 export type ArticleProgressMap = Record<string, ArticleProgress>;
@@ -30,4 +32,21 @@ export function updateArticleProgress(
   const next = { ...current, ...patch, updatedAt: Date.now() };
   if (next.understood) next.read = true;
   return { ...progress, [articleId]: next };
+}
+
+export function recordArticleQuiz(
+  progress: ArticleProgressMap,
+  articleId: string,
+  correct: boolean,
+): ArticleProgressMap {
+  const current = progress[articleId] || { read: false, understood: false, updatedAt: 0 };
+  return {
+    ...progress,
+    [articleId]: {
+      ...current,
+      quizCorrect: (current.quizCorrect || 0) + (correct ? 1 : 0),
+      quizAttempts: (current.quizAttempts || 0) + 1,
+      updatedAt: Date.now(),
+    },
+  };
 }

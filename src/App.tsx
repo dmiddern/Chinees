@@ -1,14 +1,17 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import wordsData from "./data/words.json";
 import { literalGlosses } from "./data/literalGlosses";
 import { articleKinds, articleLevels, articleSources, articles, type Article, type ArticleKind, type ArticleLevel } from "./data/articles";
 import HanziPractice, { StrokeOrderPreview } from "./components/HanziPractice";
-import { loadArticleProgress, saveArticleProgress, updateArticleProgress, type ArticleProgressMap } from "./lib/articleProgress";
+import { loadArticleProgress, recordArticleQuiz, saveArticleProgress, updateArticleProgress, type ArticleProgressMap } from "./lib/articleProgress";
+import { createCustomList, loadCustomLists, saveCustomLists, toggleWordInList, type CustomWordList } from "./lib/customLists";
+import { exercisesForArticle, relatedWordsForArticle } from "./lib/course";
 import { clearDailySets, createDailySet, loadDailySets, localDateKey, saveDailySets, type DailySet, type DailySetMap } from "./lib/dailySets";
 import { createLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
 import { searchWords } from "./lib/search";
 import { speakMandarin } from "./lib/speech";
+import { exampleForWord } from "./lib/wordExamples";
 import type { Direction, HskLevel, ProgressMap, Skill, Word } from "./types";
 
 type Tab = "home" | "learn" | "guide" | "words" | "write" | "settings";
@@ -60,6 +63,7 @@ function App() {
   const [settings, setSettings] = useState<Settings>(() => loadSettings(defaultSettings));
   const [dailySets, setDailySets] = useState<DailySetMap>(() => loadDailySets());
   const [articleProgress, setArticleProgress] = useState<ArticleProgressMap>(() => loadArticleProgress());
+  const [customLists, setCustomLists] = useState<CustomWordList[]>(() => loadCustomLists());
   const [learningSession, setLearningSession] = useState<LearningSession | null>(() => loadLearningSession());
   const [selectedDay, setSelectedDay] = useState<DailySet | null>(null);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
@@ -70,6 +74,7 @@ function App() {
   useEffect(() => saveSettings(settings), [settings]);
   useEffect(() => saveDailySets(dailySets), [dailySets]);
   useEffect(() => saveArticleProgress(articleProgress), [articleProgress]);
+  useEffect(() => saveCustomLists(customLists), [customLists]);
   useEffect(() => saveLearningSession(learningSession), [learningSession]);
 
   useEffect(() => {
@@ -180,6 +185,12 @@ function App() {
     setTab("learn");
   }
 
+  function startWordList(wordIds: number[], title: string) {
+    if (!wordIds.length) return;
+    setLearningSession(createLearningSession(`list:${Date.now()}`, wordIds, title));
+    setTab("learn");
+  }
+
   return (
     <div className="app-shell">
       <header className="topbar">
@@ -220,16 +231,25 @@ function App() {
           <ArticleGuide
             progress={articleProgress}
             speechRate={settings.speechRate}
+            onPractice={(wordIds, title) => startWordList(wordIds, title)}
             onProgress={(articleId, patch) => (
               setArticleProgress((current) => updateArticleProgress(current, articleId, patch))
+            )}
+            onQuiz={(articleId, correct) => (
+              setArticleProgress((current) => recordArticleQuiz(current, articleId, correct))
             )}
           />
         )}
         {tab === "words" && (
           <WordList
             progress={progress}
+            lists={customLists}
             onSelect={setSelectedWord}
             onSpeak={(word) => speakMandarin(word.hanzi, settings.speechRate)}
+            onCreateList={(name) => setCustomLists((current) => createCustomList(current, name))}
+            onDeleteList={(listId) => setCustomLists((current) => current.filter((list) => list.id !== listId))}
+            onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
+            onPracticeList={(list) => startWordList(list.wordIds, list.name)}
           />
         )}
         {tab === "write" && (
@@ -488,7 +508,7 @@ function Learn({
         <div className="hero-character">好</div>
         <p className="eyebrow">Daglijst voltooid</p>
         <h1>Goed gewerkt</h1>
-        <p>Je hebt de {session.wordIds.length} woorden van {session.title || "deze reeks"} in beide richtingen doorlopen.</p>
+        <p>Je hebt betekenis, uitspraak en schrijfwijze van {session.wordIds.length} woorden uit {session.title || "deze reeks"} geoefend.</p>
         <button className="button primary-button" onClick={restart}>Oefen deze lijst opnieuw</button>
       </div>
     );
@@ -498,15 +518,17 @@ function Learn({
   const activeSession: LearningSession = session;
   const activeWord: Word = word;
 
-  function answer(skill: Skill, correct: boolean) {
-    onRate(activeWord.id, skill, correct);
+  function answer(correct: boolean) {
     onSessionChange({
       ...activeSession,
-      ratings: { ...activeSession.ratings, [skill]: correct },
+      ratings: { [exercise.skill]: correct },
     });
   }
 
   function next() {
+    const rating = activeSession.ratings[exercise.skill];
+    if (rating === undefined) return;
+    onRate(activeWord.id, exercise.skill, rating);
     onSessionChange({
       ...activeSession,
       index: activeSession.index + 1,
@@ -516,9 +538,12 @@ function Learn({
     });
   }
 
-  const requiredRated = session.ratings.meaning !== undefined
-    && session.ratings.pronunciation !== undefined
-    && session.ratings.writing !== undefined;
+  const requiredRated = session.ratings[exercise.skill] !== undefined;
+  const skillLabels: Record<Skill, string> = {
+    meaning: "Betekenis",
+    pronunciation: "Uitspraak",
+    writing: "Schrijfwijze",
+  };
   const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
 
   return (
@@ -539,10 +564,15 @@ function Learn({
           Nederlands → Chinees
         </span>
       </div>
+      <p className="skill-focus">Focus: <strong>{skillLabels[exercise.skill]}</strong></p>
 
       <section className={`flashcard ${session.revealed ? "revealed" : ""}`}>
         <p className="card-instruction">
-          {exercise.direction === "zh-nl" ? "Wat betekent dit woord?" : "Hoe schrijf en spreek je dit uit?"}
+          {exercise.skill === "meaning"
+            ? "Wat betekent dit woord?"
+            : exercise.skill === "pronunciation"
+              ? "Spreek het Chinese woord hardop uit."
+              : "Schrijf het Chinese woord uit je hoofd."}
         </p>
         {exercise.direction === "zh-nl" ? (
           <>
@@ -567,9 +597,12 @@ function Learn({
         ) : <div className="prompt-meaning">{word.meaningNl}</div>}
 
         {!session.revealed ? (
-          <button className="button primary-button reveal-button" onClick={() => onSessionChange({ ...session, revealed: true })}>
-            Toon het antwoord
-          </button>
+          <>
+            {exercise.skill === "pronunciation" && <PronunciationRecorder />}
+            <button className="button primary-button reveal-button" onClick={() => onSessionChange({ ...session, revealed: true })}>
+              Toon het antwoord
+            </button>
+          </>
         ) : (
           <div className="answer-block">
             <div className="answer-hanzi" style={hanziStyle}>{word.hanzi}</div>
@@ -579,21 +612,76 @@ function Learn({
             <button className="audio-button" onClick={() => speakMandarin(word.hanzi, settings.speechRate)}>
               <span aria-hidden="true">◖))</span> Luister
             </button>
+            <WordExampleCard word={word} speechRate={settings.speechRate} compact />
           </div>
         )}
       </section>
 
       {session.revealed && (
         <section className="self-check">
-          <p>Wat kende je?</p>
-          <SkillRating label="Betekenis" value={session.ratings.meaning} onRate={(value) => answer("meaning", value)} />
-          <SkillRating label="Uitspraak" value={session.ratings.pronunciation} onRate={(value) => answer("pronunciation", value)} />
-          <SkillRating label="Schrijfwijze" value={session.ratings.writing} onRate={(value) => answer("writing", value)} />
+          <p>Hoe ging deze oefening?</p>
+          <SkillRating label={skillLabels[exercise.skill]} value={session.ratings[exercise.skill]} onRate={answer} />
           <button className="button primary-button full-button" disabled={!requiredRated} onClick={next}>
-            Volgend woord <span aria-hidden="true">→</span>
+            Volgende oefening <span aria-hidden="true">→</span>
           </button>
         </section>
       )}
+    </div>
+  );
+}
+
+function PronunciationRecorder() {
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
+  const streamRef = useRef<MediaStream | null>(null);
+  const [recording, setRecording] = useState(false);
+  const [audioUrl, setAudioUrl] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => () => {
+    streamRef.current?.getTracks().forEach((track) => track.stop());
+    if (audioUrl) URL.revokeObjectURL(audioUrl);
+  }, [audioUrl]);
+
+  async function startRecording() {
+    if (!navigator.mediaDevices?.getUserMedia || typeof MediaRecorder === "undefined") {
+      setError("Opnemen wordt niet ondersteund door deze browser.");
+      return;
+    }
+    try {
+      setError("");
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+      chunksRef.current = [];
+      const recorder = new MediaRecorder(stream);
+      recorderRef.current = recorder;
+      recorder.ondataavailable = (event) => {
+        if (event.data.size) chunksRef.current.push(event.data);
+      };
+      recorder.onstop = () => {
+        if (audioUrl) URL.revokeObjectURL(audioUrl);
+        setAudioUrl(URL.createObjectURL(new Blob(chunksRef.current, { type: recorder.mimeType || "audio/webm" })));
+        stream.getTracks().forEach((track) => track.stop());
+      };
+      recorder.start();
+      setRecording(true);
+    } catch {
+      setError("Geef microfoontoegang om je uitspraak op te nemen.");
+    }
+  }
+
+  function stopRecording() {
+    recorderRef.current?.stop();
+    setRecording(false);
+  }
+
+  return (
+    <div className="pronunciation-recorder">
+      <button type="button" className={`button secondary-button ${recording ? "recording" : ""}`} onClick={recording ? stopRecording : startRecording}>
+        {recording ? "■ Stop opname" : "● Neem je uitspraak op"}
+      </button>
+      {audioUrl && <audio controls src={audioUrl} />}
+      {error && <small>{error}</small>}
     </div>
   );
 }
@@ -610,14 +698,33 @@ function SkillRating({ label, value, onRate }: { label: string; value?: boolean;
   );
 }
 
+function WordExampleCard({ word, speechRate, compact = false }: { word: Word; speechRate: number; compact?: boolean }) {
+  const example = exampleForWord(word);
+  return (
+    <div className={`word-example ${compact ? "compact" : ""}`}>
+      <div>
+        <small>Voorbeeldzin</small>
+        <strong>{example.chinese}</strong>
+        <span>{example.pinyin}</span>
+        <p>{example.dutch}</p>
+      </div>
+      <button onClick={() => speakMandarin(example.chinese, speechRate)} aria-label={`Luister naar ${example.chinese}`}>◖))</button>
+    </div>
+  );
+}
+
 function ArticleGuide({
   progress,
   speechRate,
   onProgress,
+  onQuiz,
+  onPractice,
 }: {
   progress: ArticleProgressMap;
   speechRate: number;
   onProgress: (articleId: string, patch: { read?: boolean; understood?: boolean }) => void;
+  onQuiz: (articleId: string, correct: boolean) => void;
+  onPractice: (wordIds: number[], title: string) => void;
 }) {
   const [selected, setSelected] = useState<Article | null>(null);
   const [level, setLevel] = useState<"Alles" | ArticleLevel>("Alles");
@@ -642,6 +749,8 @@ function ArticleGuide({
 
   if (selected) {
     const itemProgress = progress[selected.id] || { read: false, understood: false };
+    const courseExercises = exercisesForArticle(selected);
+    const relatedWords = relatedWordsForArticle(selected, words);
     const currentIndex = articles.findIndex((item) => item.id === selected.id);
     const previous = articles[currentIndex - 1];
     const next = articles[currentIndex + 1];
@@ -738,11 +847,12 @@ function ArticleGuide({
           </section>
         ) : null}
 
-        {selected.exercises?.length ? (
+        {courseExercises.length ? (
           <section className="article-body">
-            <h2>Controleer jezelf</h2>
+            <h2>Controleer en herhaal</h2>
+            <p className="exercise-intro">Elke les bevat meerdere vragen. Foute antwoorden kun je meteen opnieuw proberen en later opnieuw herhalen.</p>
             <div className="article-exercises">
-              {selected.exercises.map((exercise, exerciseIndex) => {
+              {courseExercises.map((exercise, exerciseIndex) => {
                 const chosen = exerciseAnswers[exerciseIndex];
                 const answered = chosen !== undefined;
                 return (
@@ -756,7 +866,10 @@ function ArticleGuide({
                             answered && optionIndex === exercise.answer ? "correct" : "",
                             answered && optionIndex === chosen && chosen !== exercise.answer ? "incorrect" : "",
                           ].filter(Boolean).join(" ")}
-                          onClick={() => setExerciseAnswers((current) => ({ ...current, [exerciseIndex]: optionIndex }))}
+                          onClick={() => {
+                            if (!answered) onQuiz(selected.id, optionIndex === exercise.answer);
+                            setExerciseAnswers((current) => ({ ...current, [exerciseIndex]: optionIndex }));
+                          }}
                         >
                           {option}
                         </button>
@@ -767,6 +880,35 @@ function ArticleGuide({
                 );
               })}
             </div>
+            {(itemProgress.quizAttempts || 0) > 0 && (
+              <p className="quiz-history">
+                Over alle pogingen: <strong>{itemProgress.quizCorrect || 0} van {itemProgress.quizAttempts} juist</strong>
+              </p>
+            )}
+          </section>
+        ) : null}
+
+        {relatedWords.length ? (
+          <section className="article-body related-words">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">Van theorie naar praktijk</p>
+                <h2>Oefen de kernwoorden</h2>
+              </div>
+              <span>{relatedWords.length} woorden</span>
+            </div>
+            <div className="related-word-grid">
+              {relatedWords.map((word) => (
+                <div key={word.id}>
+                  <strong>{word.hanzi}</strong>
+                  <span>{word.pinyin}</span>
+                  <small>{word.meaningNl}</small>
+                </div>
+              ))}
+            </div>
+            <button className="button primary-button full-button" onClick={() => onPractice(relatedWords.map((word) => word.id), selected.title)}>
+              Oefen deze leswoorden <span aria-hidden="true">→</span>
+            </button>
           </section>
         ) : null}
 
@@ -920,18 +1062,35 @@ function ArticleGuide({
 
 function WordList({
   progress,
+  lists,
   onSelect,
   onSpeak,
+  onCreateList,
+  onDeleteList,
+  onToggleWord,
+  onPracticeList,
 }: {
   progress: ProgressMap;
+  lists: CustomWordList[];
   onSelect: (word: Word) => void;
   onSpeak: (word: Word) => void;
+  onCreateList: (name: string) => void;
+  onDeleteList: (listId: string) => void;
+  onToggleWord: (listId: string, wordId: number) => void;
+  onPracticeList: (list: CustomWordList) => void;
 }) {
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<"all" | HskLevel>("all");
+  const [newListName, setNewListName] = useState("");
+  const [selectedListId, setSelectedListId] = useState("");
+  const [onlySelectedList, setOnlySelectedList] = useState(false);
+  const selectedList = lists.find((list) => list.id === selectedListId);
   const filtered = useMemo(
-    () => searchWords(words.filter((word) => level === "all" || word.level === level), query),
-    [query, level],
+    () => searchWords(words.filter((word) => (
+      (level === "all" || word.level === level)
+      && (!onlySelectedList || !selectedList || selectedList.wordIds.includes(word.id))
+    )), query),
+    [query, level, onlySelectedList, selectedList],
   );
 
   return (
@@ -939,6 +1098,61 @@ function WordList({
       <div className="page-title-row">
         <div><p className="eyebrow">Naslagwerk</p><h1>1.000 woorden</h1></div>
       </div>
+      <section className="custom-lists">
+        <div className="section-heading">
+          <div><p className="eyebrow">Eigen selectie</p><h2>Mijn woordenlijsten</h2></div>
+          {selectedList?.wordIds.length ? (
+            <button className="button primary-button" onClick={() => onPracticeList(selectedList)}>Oefen lijst</button>
+          ) : null}
+        </div>
+        <form
+          className="new-list-form"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!newListName.trim()) return;
+            onCreateList(newListName);
+            setNewListName("");
+          }}
+        >
+          <input value={newListName} onChange={(event) => setNewListName(event.target.value)} placeholder="Naam van je nieuwe lijst" />
+          <button type="submit">Maak lijst</button>
+        </form>
+        {lists.length ? (
+          <div className="custom-list-chips">
+            {lists.map((list) => (
+              <button
+                key={list.id}
+                className={selectedListId === list.id ? "active" : ""}
+                onClick={() => {
+                  setSelectedListId(list.id);
+                  setOnlySelectedList(false);
+                }}
+              >
+                <strong>{list.name}</strong>
+                <span>{list.wordIds.length}</span>
+              </button>
+            ))}
+          </div>
+        ) : <p className="empty-list-copy">Maak een lijst en voeg daarna woorden toe met de plusknop.</p>}
+        {selectedList && (
+          <div className="selected-list-actions">
+            <label>
+              <input type="checkbox" checked={onlySelectedList} onChange={(event) => setOnlySelectedList(event.target.checked)} />
+              Toon alleen woorden uit deze lijst
+            </label>
+            <button
+              onClick={() => {
+                if (!window.confirm(`Wil je de lijst “${selectedList.name}” verwijderen?`)) return;
+                onDeleteList(selectedList.id);
+                setSelectedListId("");
+                setOnlySelectedList(false);
+              }}
+            >
+              Verwijder lijst
+            </button>
+          </div>
+        )}
+      </section>
       <label className="search-box">
         <span aria-hidden="true">⌕</span>
         <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Zoek Chinees, pinyin of Nederlands" />
@@ -969,6 +1183,16 @@ function WordList({
                 <span className={`status-dot ${status}`} aria-label={status} />
               </button>
               <button className="row-audio" onClick={() => onSpeak(word)} aria-label={`Luister naar ${word.hanzi}`}>◖))</button>
+              {selectedList && (
+                <button
+                  className={`row-list-toggle ${selectedList.wordIds.includes(word.id) ? "added" : ""}`}
+                  onClick={() => onToggleWord(selectedList.id, word.id)}
+                  aria-label={`${word.hanzi} ${selectedList.wordIds.includes(word.id) ? "uit" : "aan"} ${selectedList.name}`}
+                  title={selectedList.wordIds.includes(word.id) ? "Verwijder uit lijst" : "Voeg toe aan lijst"}
+                >
+                  {selectedList.wordIds.includes(word.id) ? "✓" : "+"}
+                </button>
+              )}
             </article>
           );
         })}
@@ -1097,6 +1321,7 @@ function WordSheet({
         <div className="literal-meaning sheet-literal"><span>Letterlijk</span>{literalMeaning(word)}</div>
         <p className="word-type">{word.wordType}</p>
         <button className="audio-button" onClick={() => speakMandarin(word.hanzi, speechRate)}>◖)) Luister</button>
+        <WordExampleCard word={word} speechRate={speechRate} />
         <div className="skill-summary">
           <SkillSummary label="Betekenis" status={progress.meaning.status} />
           <SkillSummary label="Uitspraak" status={progress.pronunciation.status} />
