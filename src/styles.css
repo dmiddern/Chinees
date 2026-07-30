@@ -124,28 +124,45 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .daily-history { margin-top: 28px; }
 .daily-history .section-heading { margin-bottom: 10px; }
 .daily-history .section-heading h2 { margin-bottom: 0; }
+.daily-select-all { border: 0; background: transparent; color: var(--accent-hover); padding: 8px 0; font-size: 12px; font-weight: 800; cursor: pointer; }
 .daily-history-list { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--background); }
-.daily-history-list > button {
+.daily-history-row {
+  min-width: 0;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  transition: background .16s ease;
+}
+.daily-history-row:last-child { border-bottom: 0; }
+.daily-history-row.selected { background: rgba(166, 106, 87, 0.09); }
+.daily-day-select {
   width: 100%;
   min-width: 0;
   min-height: 68px;
   padding: 11px 14px;
   border: 0;
-  border-bottom: 1px solid var(--border);
   background: transparent;
   display: grid;
-  grid-template-columns: minmax(115px, auto) minmax(0, 1fr) auto;
+  grid-template-columns: 26px minmax(115px, auto) minmax(0, 1fr);
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   text-align: left;
   cursor: pointer;
 }
-.daily-history-list > button:last-child { border-bottom: 0; }
-.daily-history-list > button > span:first-child strong,
-.daily-history-list > button > span:first-child small { display: block; }
-.daily-history-list > button > span:first-child strong { font-size: 13px; text-transform: capitalize; }
-.daily-history-list > button > span:first-child small { margin-top: 3px; color: var(--secondary); font-size: 10px; }
+.daily-check { width: 22px; height: 22px; border: 1px solid var(--border); border-radius: 7px; display: grid; place-items: center; background: var(--background); color: var(--background); font-size: 13px; font-weight: 900; }
+.daily-history-row.selected .daily-check { border-color: var(--accent); background: var(--accent); }
+.daily-day-select > span:nth-child(2) strong,
+.daily-day-select > span:nth-child(2) small { display: block; }
+.daily-day-select > span:nth-child(2) strong { font-size: 13px; text-transform: capitalize; }
+.daily-day-select > span:nth-child(2) small { margin-top: 3px; color: var(--secondary); font-size: 10px; }
 .daily-word-preview { min-width: 0; overflow: hidden; color: var(--accent-hover); font-family: "Noto Serif SC", serif; font-size: 18px; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
+.daily-day-open { width: 44px; min-height: 68px; border: 0; border-left: 1px solid var(--border); background: transparent; color: var(--secondary); font-size: 22px; cursor: pointer; }
+.daily-practice-selection { margin-top: 12px; padding: 14px; border: 1px solid var(--border); border-radius: 17px; background: var(--surface); display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.daily-practice-selection > span { min-width: 0; }
+.daily-practice-selection strong, .daily-practice-selection small { display: block; }
+.daily-practice-selection strong { font-size: 13px; }
+.daily-practice-selection small { margin-top: 4px; color: var(--secondary); font-size: 10px; }
+.daily-practice-selection .button { flex: 0 0 auto; min-height: 44px; padding-inline: 14px; font-size: 12px; white-space: nowrap; }
 
 .bottom-nav {
   position: fixed;
@@ -314,6 +331,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .daily-set-sheet { text-align: left; }
 .daily-set-sheet > h2 { margin-bottom: 4px; font-size: clamp(24px, 7vw, 32px); text-transform: capitalize; }
 .daily-set-meta { margin-bottom: 16px; color: var(--secondary); font-size: 12px; }
+.daily-set-practice { margin: 0 0 18px; }
 .daily-set-words { border-top: 1px solid var(--border); }
 .daily-set-words > button {
   width: 100%;
@@ -378,8 +396,10 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   .writer-actions .button { padding-inline: 10px; font-size: 12px; }
   .bottom-nav button { font-size: 9px; }
   .bottom-nav button span { font-size: 19px; }
-  .daily-history-list > button { grid-template-columns: minmax(105px, auto) minmax(0, 1fr) auto; gap: 8px; padding-inline: 11px; }
+  .daily-day-select { grid-template-columns: 24px minmax(100px, auto) minmax(0, 1fr); gap: 7px; padding-inline: 10px; }
   .daily-word-preview { font-size: 16px; }
+  .daily-practice-selection { align-items: stretch; flex-direction: column; }
+  .daily-practice-selection .button { width: 100%; justify-content: space-between; display: flex; align-items: center; }
 }
 
 @media (max-width: 350px) {
@@ -391,7 +411,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   .writer-actions { grid-template-columns: 1fr; }
   .sheet-close { right: 12px; top: 12px; }
   .daily-word-preview { display: none; }
-  .daily-history-list > button { grid-template-columns: 1fr auto; }
+  .daily-day-select { grid-template-columns: 24px 1fr; }
 }
 
 @media (max-height: 540px) and (orientation: landscape) {

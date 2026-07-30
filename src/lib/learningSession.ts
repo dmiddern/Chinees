@@ -9,6 +9,7 @@ export interface LearningExercise {
 
 export interface LearningSession {
   date: string;
+  title?: string;
   wordIds: number[];
   queue: LearningExercise[];
   index: number;
@@ -26,7 +27,7 @@ const shuffle = <T,>(items: T[]) => {
   return result;
 };
 
-export function createLearningSession(date: string, wordIds: number[]): LearningSession {
+export function createLearningSession(date: string, wordIds: number[], title?: string): LearningSession {
   const queue = shuffle(
     wordIds.flatMap((wordId) => [
       { wordId, direction: "zh-nl" as const },
@@ -36,6 +37,7 @@ export function createLearningSession(date: string, wordIds: number[]): Learning
 
   return {
     date,
+    title,
     wordIds: [...wordIds],
     queue,
     index: 0,
