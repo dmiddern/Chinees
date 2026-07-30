@@ -623,6 +623,7 @@ function ArticleGuide({
   const [level, setLevel] = useState<"Alles" | ArticleLevel>("Alles");
   const [kind, setKind] = useState<"Alles" | ArticleKind>("Alles");
   const [onlyOpen, setOnlyOpen] = useState(false);
+  const [exerciseAnswers, setExerciseAnswers] = useState<Record<number, number>>({});
 
   const filtered = articles.filter((item) => (
     (level === "Alles" || item.level === level)
@@ -635,6 +636,7 @@ function ArticleGuide({
 
   function openArticle(item: Article) {
     setSelected(item);
+    setExerciseAnswers({});
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -708,6 +710,65 @@ function ArticleGuide({
             {selected.remember.map((item) => <li key={item}>{item}</li>)}
           </ul>
         </section>
+
+        {selected.dialogue?.length ? (
+          <section className="article-body">
+            <h2>Mini-dialoog</h2>
+            <div className="article-dialogue">
+              {selected.dialogue.map((line, index) => (
+                <div key={`${line.speaker}-${index}`}>
+                  <span>{line.speaker}</span>
+                  <div>
+                    <strong>{line.chinese}</strong>
+                    <small>{line.pinyin}</small>
+                    <p>{line.dutch}</p>
+                  </div>
+                  <button className="article-audio" onClick={() => speakMandarin(line.chinese, speechRate)} aria-label={`Luister naar ${line.chinese}`}>◖))</button>
+                </div>
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        {selected.culture?.length ? (
+          <section className="article-body culture-card">
+            <p className="eyebrow">Taal in context</p>
+            <h2>Cultuur- en gebruiksnotitie</h2>
+            {selected.culture.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </section>
+        ) : null}
+
+        {selected.exercises?.length ? (
+          <section className="article-body">
+            <h2>Controleer jezelf</h2>
+            <div className="article-exercises">
+              {selected.exercises.map((exercise, exerciseIndex) => {
+                const chosen = exerciseAnswers[exerciseIndex];
+                const answered = chosen !== undefined;
+                return (
+                  <div key={exercise.question} className="article-exercise">
+                    <strong>{exercise.question}</strong>
+                    <div>
+                      {exercise.options.map((option, optionIndex) => (
+                        <button
+                          key={option}
+                          className={[
+                            answered && optionIndex === exercise.answer ? "correct" : "",
+                            answered && optionIndex === chosen && chosen !== exercise.answer ? "incorrect" : "",
+                          ].filter(Boolean).join(" ")}
+                          onClick={() => setExerciseAnswers((current) => ({ ...current, [exerciseIndex]: optionIndex }))}
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                    {answered && <p className={chosen === exercise.answer ? "exercise-good" : "exercise-try"}>{exercise.explanation}</p>}
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        ) : null}
 
         <section className="article-check">
           <div>
