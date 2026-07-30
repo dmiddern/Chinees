@@ -3,6 +3,7 @@ import wordsData from "./data/words.json";
 import { literalGlosses } from "./data/literalGlosses";
 import HanziPractice, { StrokeOrderPreview } from "./components/HanziPractice";
 import { clearDailySets, createDailySet, loadDailySets, localDateKey, saveDailySets, type DailySet, type DailySetMap } from "./lib/dailySets";
+import { createLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
 import { searchWords } from "./lib/search";
 import { speakMandarin } from "./lib/speech";
@@ -63,6 +64,7 @@ function App() {
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress());
   const [settings, setSettings] = useState<Settings>(() => loadSettings(defaultSettings));
   const [dailySets, setDailySets] = useState<DailySetMap>(() => loadDailySets());
+  const [learningSession, setLearningSession] = useState<LearningSession | null>(() => loadLearningSession());
   const [selectedDay, setSelectedDay] = useState<DailySet | null>(null);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const [writingWord, setWritingWord] = useState<Word | null>(null);
@@ -71,6 +73,7 @@ function App() {
   useEffect(() => saveProgress(progress), [progress]);
   useEffect(() => saveSettings(settings), [settings]);
   useEffect(() => saveDailySets(dailySets), [dailySets]);
+  useEffect(() => saveLearningSession(learningSession), [learningSession]);
 
   useEffect(() => {
     const listener = (event: Event) => {
@@ -95,6 +98,16 @@ function App() {
     () => (todaySet?.wordIds || []).map((id) => words.find((word) => word.id === id)).filter((word): word is Word => Boolean(word)),
     [todaySet],
   );
+  const todayWordIdsKey = todaySet?.wordIds.join("-") || "";
+
+  useEffect(() => {
+    if (!todaySet || !todayWords.length) return;
+    setLearningSession((current) => (
+      sessionMatches(current, todaySet.date, todaySet.wordIds)
+        ? current
+        : createLearningSession(todaySet.date, todaySet.wordIds)
+    ));
+  }, [todaySet, todayWordIdsKey, todayWords.length]);
   const dailyHistory = useMemo(
     () => Object.values(dailySets).sort((a, b) => b.date.localeCompare(a.date)),
     [dailySets],
@@ -180,10 +193,9 @@ function App() {
         )}
         {tab === "learn" && (
           <Learn
-            key={`${todaySet?.date}-${todaySet?.wordIds.join("-")}-${settings.direction}`}
-            words={todayWords}
+            session={learningSession}
             settings={settings}
-            onSettings={updateSettings}
+            onSessionChange={setLearningSession}
             onRate={rate}
           />
         )}
@@ -211,6 +223,7 @@ function App() {
               if (window.confirm("Wil je alle leerresultaten en bewaarde daglijsten verwijderen?")) {
                 setProgress({});
                 setDailySets({});
+                setLearningSession(null);
                 clearDailySets();
               }
             }}
@@ -379,57 +392,60 @@ function StatCard({ value, label, tone }: { value: number; label: string; tone: 
 }
 
 function Learn({
-  words,
+  session,
   settings,
-  onSettings,
+  onSessionChange,
   onRate,
 }: {
-  words: Word[];
+  session: LearningSession | null;
   settings: Settings;
-  onSettings: (patch: Partial<Settings>) => void;
+  onSessionChange: (session: LearningSession) => void;
   onRate: (id: number, skill: Skill, correct: boolean) => void;
 }) {
-  const [queue, setQueue] = useState<Word[]>(() => shuffleWords(words));
-  const [index, setIndex] = useState(0);
-  const [revealed, setRevealed] = useState(false);
-  const [promptMode, setPromptMode] = useState<"character" | "strokes">("character");
-  const [ratings, setRatings] = useState<Partial<Record<Skill, boolean>>>({});
-  const word = queue[index];
-
   function restart() {
-    setQueue(shuffleWords(words));
-    setIndex(0);
-    setRevealed(false);
-    setPromptMode("character");
-    setRatings({});
+    if (!session) return;
+    onSessionChange(createLearningSession(session.date, session.wordIds));
   }
 
-  if (!queue.length) return <EmptyState title="Je daglijst wordt klaargezet" text="Ga even terug naar Vandaag en open de leersessie opnieuw." />;
-  if (!word) {
+  if (!session?.queue.length) return <EmptyState title="Je daglijst wordt klaargezet" text="Ga even terug naar Vandaag en open de leersessie opnieuw." />;
+  const exercise = session.queue[session.index];
+  if (!exercise) {
     return (
       <div className="page daily-complete">
         <div className="hero-character">好</div>
         <p className="eyebrow">Daglijst voltooid</p>
         <h1>Goed gewerkt</h1>
-        <p>Je hebt de {queue.length} woorden van vandaag doorlopen.</p>
+        <p>Je hebt de {session.wordIds.length} woorden van vandaag in beide richtingen doorlopen.</p>
         <button className="button primary-button" onClick={restart}>Oefen deze lijst opnieuw</button>
       </div>
     );
   }
+  const word = words.find((item) => item.id === exercise.wordId);
+  if (!word) return <EmptyState title="Dit woord is niet beschikbaar" text="Start de daglijst opnieuw om verder te oefenen." />;
+  const activeSession: LearningSession = session;
+  const activeWord: Word = word;
 
   function answer(skill: Skill, correct: boolean) {
-    onRate(word.id, skill, correct);
-    setRatings((current) => ({ ...current, [skill]: correct }));
+    onRate(activeWord.id, skill, correct);
+    onSessionChange({
+      ...activeSession,
+      ratings: { ...activeSession.ratings, [skill]: correct },
+    });
   }
 
   function next() {
-    setIndex((current) => current + 1);
-    setRevealed(false);
-    setPromptMode("character");
-    setRatings({});
+    onSessionChange({
+      ...activeSession,
+      index: activeSession.index + 1,
+      revealed: false,
+      promptMode: "character",
+      ratings: {},
+    });
   }
 
-  const requiredRated = ratings.meaning !== undefined && ratings.pronunciation !== undefined && ratings.writing !== undefined;
+  const requiredRated = session.ratings.meaning !== undefined
+    && session.ratings.pronunciation !== undefined
+    && session.ratings.writing !== undefined;
   const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
 
   return (
@@ -437,38 +453,48 @@ function Learn({
       <div className="page-title-row">
         <div>
           <p className="eyebrow">Oefensessie</p>
-          <h1>{index + 1} <span>van {queue.length}</span></h1>
+          <h1>{session.index + 1} <span>van {session.queue.length}</span></h1>
         </div>
         <span className="level-chip">{levelLabel(word.level)}</span>
       </div>
 
-      <div className="segmented-control">
-        <button className={settings.direction === "zh-nl" ? "active" : ""} onClick={() => onSettings({ direction: "zh-nl" })}>
+      <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">
+        <span className={exercise.direction === "zh-nl" ? "active" : ""}>
           Chinees → Nederlands
-        </button>
-        <button className={settings.direction === "nl-zh" ? "active" : ""} onClick={() => onSettings({ direction: "nl-zh" })}>
+        </span>
+        <span className={exercise.direction === "nl-zh" ? "active" : ""}>
           Nederlands → Chinees
-        </button>
+        </span>
       </div>
 
-      <section className={`flashcard ${revealed ? "revealed" : ""}`}>
+      <section className={`flashcard ${session.revealed ? "revealed" : ""}`}>
         <p className="card-instruction">
-          {settings.direction === "zh-nl" ? "Wat betekent dit woord?" : "Hoe schrijf en spreek je dit uit?"}
+          {exercise.direction === "zh-nl" ? "Wat betekent dit woord?" : "Hoe schrijf en spreek je dit uit?"}
         </p>
-        {settings.direction === "zh-nl" ? (
+        {exercise.direction === "zh-nl" ? (
           <>
             <div className="prompt-mode-toggle" aria-label="Weergave van het Chinese woord">
-              <button className={promptMode === "character" ? "active" : ""} onClick={() => setPromptMode("character")}>Karakter</button>
-              <button className={promptMode === "strokes" ? "active" : ""} onClick={() => setPromptMode("strokes")}>Schrijfvolgorde</button>
+              <button
+                className={session.promptMode === "character" ? "active" : ""}
+                onClick={() => onSessionChange({ ...session, promptMode: "character" })}
+              >
+                Karakter
+              </button>
+              <button
+                className={session.promptMode === "strokes" ? "active" : ""}
+                onClick={() => onSessionChange({ ...session, promptMode: "strokes" })}
+              >
+                Schrijfvolgorde
+              </button>
             </div>
-            {promptMode === "character"
+            {session.promptMode === "character"
               ? <div className="prompt-hanzi" style={hanziStyle}>{word.hanzi}</div>
               : <StrokeOrderPreview hanzi={word.hanzi} />}
           </>
         ) : <div className="prompt-meaning">{word.meaningNl}</div>}
 
-        {!revealed ? (
-          <button className="button primary-button reveal-button" onClick={() => setRevealed(true)}>
+        {!session.revealed ? (
+          <button className="button primary-button reveal-button" onClick={() => onSessionChange({ ...session, revealed: true })}>
             Toon het antwoord
           </button>
         ) : (
@@ -484,12 +510,12 @@ function Learn({
         )}
       </section>
 
-      {revealed && (
+      {session.revealed && (
         <section className="self-check">
           <p>Wat kende je?</p>
-          <SkillRating label="Betekenis" value={ratings.meaning} onRate={(value) => answer("meaning", value)} />
-          <SkillRating label="Uitspraak" value={ratings.pronunciation} onRate={(value) => answer("pronunciation", value)} />
-          <SkillRating label="Schrijfwijze" value={ratings.writing} onRate={(value) => answer("writing", value)} />
+          <SkillRating label="Betekenis" value={session.ratings.meaning} onRate={(value) => answer("meaning", value)} />
+          <SkillRating label="Uitspraak" value={session.ratings.pronunciation} onRate={(value) => answer("pronunciation", value)} />
+          <SkillRating label="Schrijfwijze" value={session.ratings.writing} onRate={(value) => answer("writing", value)} />
           <button className="button primary-button full-button" disabled={!requiredRated} onClick={next}>
             Volgend woord <span aria-hidden="true">→</span>
           </button>
