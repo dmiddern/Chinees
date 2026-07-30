@@ -331,6 +331,7 @@ function Learn({
   }
 
   const requiredRated = ratings.meaning !== undefined && ratings.pronunciation !== undefined && ratings.writing !== undefined;
+  const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
 
   return (
     <div className="page learn-page">
@@ -362,7 +363,7 @@ function Learn({
               <button className={promptMode === "strokes" ? "active" : ""} onClick={() => setPromptMode("strokes")}>Schrijfvolgorde</button>
             </div>
             {promptMode === "character"
-              ? <div className="prompt-hanzi">{word.hanzi}</div>
+              ? <div className="prompt-hanzi" style={hanziStyle}>{word.hanzi}</div>
               : <StrokeOrderPreview hanzi={word.hanzi} />}
           </>
         ) : <div className="prompt-meaning">{word.meaningNl}</div>}
@@ -373,7 +374,7 @@ function Learn({
           </button>
         ) : (
           <div className="answer-block">
-            <div className="answer-hanzi">{word.hanzi}</div>
+            <div className="answer-hanzi" style={hanziStyle}>{word.hanzi}</div>
             <div className="answer-pinyin">{word.pinyin}</div>
             <div className="answer-meaning">{word.meaningNl}</div>
             <div className="literal-meaning"><span>Letterlijk</span>{literalMeaning(word)}</div>
@@ -578,12 +579,13 @@ function WordSheet({
   onWrite: () => void;
   onNotesChange: (notes: string) => void;
 }) {
+  const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
   return (
     <div className="sheet-backdrop" onClick={onClose}>
       <article className="word-sheet" onClick={(event) => event.stopPropagation()}>
         <button className="sheet-close" onClick={onClose} aria-label="Sluiten">×</button>
         <span className="level-chip">{levelLabel(word.level)}</span>
-        <div className="sheet-hanzi">{word.hanzi}</div>
+        <div className="sheet-hanzi" style={hanziStyle}>{word.hanzi}</div>
         <div className="sheet-pinyin">{word.pinyin}</div>
         <div className="sheet-meaning">{word.meaningNl}</div>
         <div className="literal-meaning sheet-literal"><span>Letterlijk</span>{literalMeaning(word)}</div>
