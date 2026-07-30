@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import wordsData from "./data/words.json";
 import { literalGlosses } from "./data/literalGlosses";
-import HanziPractice from "./components/HanziPractice";
+import HanziPractice, { StrokeOrderPreview } from "./components/HanziPractice";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
 import { wordMatchesSearch } from "./lib/search";
 import { speakMandarin } from "./lib/speech";
@@ -56,6 +56,7 @@ function App() {
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress());
   const [settings, setSettings] = useState<Settings>(() => loadSettings(defaultSettings));
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
+  const [writingWord, setWritingWord] = useState<Word | null>(null);
   const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
 
   useEffect(() => saveProgress(progress), [progress]);
@@ -158,6 +159,7 @@ function App() {
         {tab === "write" && (
           <Writing
             words={levelWords}
+            initialWord={writingWord}
             rate={settings.speechRate}
             onRate={(wordId, correct) => rate(wordId, "writing", correct)}
           />
@@ -195,6 +197,7 @@ function App() {
           speechRate={settings.speechRate}
           onClose={() => setSelectedWord(null)}
           onWrite={() => {
+            setWritingWord(selectedWord);
             setSelectedWord(null);
             setTab("write");
           }}
@@ -309,6 +312,7 @@ function Learn({
   });
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
+  const [promptMode, setPromptMode] = useState<"character" | "strokes">("character");
   const [ratings, setRatings] = useState<Partial<Record<Skill, boolean>>>({});
   const word = queue[index % Math.max(queue.length, 1)];
 
@@ -322,6 +326,7 @@ function Learn({
   function next() {
     setIndex((current) => current + 1);
     setRevealed(false);
+    setPromptMode("character");
     setRatings({});
   }
 
@@ -350,9 +355,17 @@ function Learn({
         <p className="card-instruction">
           {settings.direction === "zh-nl" ? "Wat betekent dit woord?" : "Hoe schrijf en spreek je dit uit?"}
         </p>
-        {settings.direction === "zh-nl"
-          ? <div className="prompt-hanzi">{word.hanzi}</div>
-          : <div className="prompt-meaning">{word.meaningNl}</div>}
+        {settings.direction === "zh-nl" ? (
+          <>
+            <div className="prompt-mode-toggle" aria-label="Weergave van het Chinese woord">
+              <button className={promptMode === "character" ? "active" : ""} onClick={() => setPromptMode("character")}>Karakter</button>
+              <button className={promptMode === "strokes" ? "active" : ""} onClick={() => setPromptMode("strokes")}>Schrijfvolgorde</button>
+            </div>
+            {promptMode === "character"
+              ? <div className="prompt-hanzi">{word.hanzi}</div>
+              : <StrokeOrderPreview hanzi={word.hanzi} />}
+          </>
+        ) : <div className="prompt-meaning">{word.meaningNl}</div>}
 
         {!revealed ? (
           <button className="button primary-button reveal-button" onClick={() => setRevealed(true)}>
@@ -457,9 +470,12 @@ function WordList({
   );
 }
 
-function Writing({ words, rate, onRate }: { words: Word[]; rate: number; onRate: (wordId: number, correct: boolean) => void }) {
+function Writing({ words, initialWord, rate, onRate }: { words: Word[]; initialWord: Word | null; rate: number; onRate: (wordId: number, correct: boolean) => void }) {
   const [query, setQuery] = useState("");
-  const [word, setWord] = useState<Word>(() => words[0] || (wordsData as Word[])[0]);
+  const [word, setWord] = useState<Word>(() => initialWord || words[0] || (wordsData as Word[])[0]);
+  useEffect(() => {
+    if (initialWord) setWord(initialWord);
+  }, [initialWord]);
   const matches = query
     ? words.filter((item) => wordMatchesSearch(item, query)).slice(0, 8)
     : [];
