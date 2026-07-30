@@ -18,6 +18,14 @@ interface Settings {
 }
 
 const words = wordsData as Word[];
+const shuffleWords = (items: Word[]) => {
+  const shuffled = [...items];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+  return shuffled;
+};
 const singleCharacterMeanings = new Map(
   words
     .filter((word) => [...word.hanzi].length === 1)
@@ -381,12 +389,20 @@ function Learn({
   onSettings: (patch: Partial<Settings>) => void;
   onRate: (id: number, skill: Skill, correct: boolean) => void;
 }) {
-  const queue = words;
+  const [queue, setQueue] = useState<Word[]>(() => shuffleWords(words));
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [promptMode, setPromptMode] = useState<"character" | "strokes">("character");
   const [ratings, setRatings] = useState<Partial<Record<Skill, boolean>>>({});
   const word = queue[index];
+
+  function restart() {
+    setQueue(shuffleWords(words));
+    setIndex(0);
+    setRevealed(false);
+    setPromptMode("character");
+    setRatings({});
+  }
 
   if (!queue.length) return <EmptyState title="Je daglijst wordt klaargezet" text="Ga even terug naar Vandaag en open de leersessie opnieuw." />;
   if (!word) {
@@ -396,7 +412,7 @@ function Learn({
         <p className="eyebrow">Daglijst voltooid</p>
         <h1>Goed gewerkt</h1>
         <p>Je hebt de {queue.length} woorden van vandaag doorlopen.</p>
-        <button className="button primary-button" onClick={() => setIndex(0)}>Oefen deze lijst opnieuw</button>
+        <button className="button primary-button" onClick={restart}>Oefen deze lijst opnieuw</button>
       </div>
     );
   }

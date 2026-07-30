@@ -185,6 +185,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   position: relative;
   container-type: inline-size;
 }
+.flashcard:not(.revealed) { padding-bottom: clamp(96px, 22vw, 116px); }
 .card-instruction { position: absolute; top: clamp(16px, 4vw, 22px); left: 16px; right: 16px; color: var(--secondary); font-size: 12px; }
 .prompt-hanzi, .answer-hanzi { font-family: "Noto Serif SC", "Songti SC", serif; }
 .prompt-hanzi { max-width: 100%; font-size: clamp(48px, calc(82cqw / var(--characters)), 138px); line-height: 1.1; white-space: nowrap; }
@@ -208,7 +209,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   border: 1px solid var(--border);
 }
 .stroke-preview-grid svg { width: 100% !important; height: 100% !important; }
-.stroke-replay { margin-top: 8px; }
+.stroke-replay { position: relative; z-index: 1; margin: 12px 0 4px; }
 .reveal-button { position: absolute; left: clamp(14px, 4vw, 22px); right: clamp(14px, 4vw, 22px); bottom: clamp(14px, 4vw, 22px); width: auto; }
 .answer-block { width: 100%; animation: reveal .25s ease both; }
 @keyframes reveal { from { opacity: 0; transform: translateY(8px); } }
