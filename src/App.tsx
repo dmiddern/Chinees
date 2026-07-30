@@ -2,12 +2,14 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { wordsData } from "./data/words";
 import { literalGlosses } from "./data/literalGlosses";
 import { articleKinds, articleLevels, articleSources, articles, type Article, type ArticleKind, type ArticleLevel } from "./data/articles";
-import HanziPractice, { StrokeOrderPreview } from "./components/HanziPractice";
+import HanziPractice from "./components/HanziPractice";
 import { loadArticleProgress, recordArticleQuiz, saveArticleProgress, updateArticleProgress, type ArticleProgressMap } from "./lib/articleProgress";
 import { createCustomList, loadCustomLists, saveCustomLists, toggleWordInList, type CustomWordList } from "./lib/customLists";
+import { blankSentence, checkActiveAnswer, choiceOptions, exerciseInstruction, inputPlaceholder, sentenceTokens } from "./lib/activeExercises";
 import { exercisesForArticle, relatedWordsForArticle } from "./lib/course";
 import { clearDailySets, createDailySet, loadDailySets, localDateKey, saveDailySets, type DailySet, type DailySetMap } from "./lib/dailySets";
-import { createLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
+import { answerExercise, createLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
+import { isArticleUnlocked, learningRecommendation, loadLearningPath, needsTheoryReview, placementQuestions, prerequisiteFor, resultForPlacement, saveLearningPath, type LearningPathState } from "./lib/learningPath";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
 import { searchWords } from "./lib/search";
 import { speakMandarin } from "./lib/speech";
@@ -48,7 +50,7 @@ const defaultSettings: Settings = {
 const navItems: { id: Tab; label: string; icon: string }[] = [
   { id: "home", label: "Vandaag", icon: "⌂" },
   { id: "learn", label: "Leren", icon: "学" },
-  { id: "guide", label: "Theorie", icon: "文" },
+  { id: "guide", label: "Leerpad", icon: "文" },
   { id: "words", label: "Woorden", icon: "词" },
   { id: "write", label: "Schrijven", icon: "写" },
   { id: "settings", label: "Instellingen", icon: "⚙" },
@@ -66,6 +68,10 @@ function App() {
   const [articleProgress, setArticleProgress] = useState<ArticleProgressMap>(() => loadArticleProgress());
   const [customLists, setCustomLists] = useState<CustomWordList[]>(() => loadCustomLists());
   const [learningSession, setLearningSession] = useState<LearningSession | null>(() => loadLearningSession());
+  const [learningPath, setLearningPath] = useState<LearningPathState>(() => loadLearningPath());
+  const [selectedArticleId, setSelectedArticleId] = useState<string | null>(null);
+  const [theoryReturnArticleId, setTheoryReturnArticleId] = useState<string | null>(null);
+  const [wordReturnArticleId, setWordReturnArticleId] = useState<string | null>(null);
   const [selectedDay, setSelectedDay] = useState<DailySet | null>(null);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const [writingWord, setWritingWord] = useState<Word | null>(null);
@@ -77,6 +83,7 @@ function App() {
   useEffect(() => saveArticleProgress(articleProgress), [articleProgress]);
   useEffect(() => saveCustomLists(customLists), [customLists]);
   useEffect(() => saveLearningSession(learningSession), [learningSession]);
+  useEffect(() => saveLearningPath(learningPath), [learningPath]);
 
   useEffect(() => {
     const listener = (event: Event) => {
@@ -167,6 +174,7 @@ function App() {
 
   function startToday() {
     if (!todaySet?.wordIds.length) return;
+    setTheoryReturnArticleId(null);
     setLearningSession((current) => (
       sessionMatches(current, todaySet.date, todaySet.wordIds)
         ? current
@@ -179,6 +187,7 @@ function App() {
     const sortedSets = [...sets].sort((a, b) => a.date.localeCompare(b.date));
     const wordIds = [...new Set(sortedSets.flatMap((set) => set.wordIds))];
     if (!wordIds.length) return;
+    setTheoryReturnArticleId(null);
     const dates = sortedSets.map((set) => set.date);
     const title = sortedSets.length === 1
       ? formatDailyDate(sortedSets[0].date).toLocaleLowerCase("nl-BE")
@@ -228,13 +237,27 @@ function App() {
             settings={settings}
             onSessionChange={setLearningSession}
             onRate={rate}
+            returnArticle={theoryReturnArticleId ? articles.find((article) => article.id === theoryReturnArticleId) || null : null}
+            onReturnToTheory={() => {
+              setSelectedArticleId(theoryReturnArticleId);
+              setTheoryReturnArticleId(null);
+              setTab("guide");
+            }}
           />
         )}
         {tab === "guide" && (
           <ArticleGuide
             progress={articleProgress}
+            wordProgress={progress}
+            learningPath={learningPath}
+            selectedId={selectedArticleId}
             speechRate={settings.speechRate}
-            onPractice={(wordIds, title) => startWordList(wordIds, title)}
+            onSelect={setSelectedArticleId}
+            onLearningPathChange={setLearningPath}
+            onPractice={(wordIds, title, articleId) => {
+              setTheoryReturnArticleId(articleId);
+              startWordList(wordIds, title);
+            }}
             onProgress={(articleId, patch) => (
               setArticleProgress((current) => updateArticleProgress(current, articleId, patch))
             )}
@@ -247,6 +270,12 @@ function App() {
           <WordList
             progress={progress}
             lists={customLists}
+            returnArticle={wordReturnArticleId ? articles.find((article) => article.id === wordReturnArticleId) || null : null}
+            onReturnToTheory={() => {
+              setSelectedArticleId(wordReturnArticleId);
+              setWordReturnArticleId(null);
+              setTab("guide");
+            }}
             onSelect={setSelectedWord}
             onSpeak={(word) => speakMandarin(word.hanzi, settings.speechRate)}
             onCreateList={(name) => setCustomLists((current) => createCustomList(current, name))}
@@ -286,7 +315,15 @@ function App() {
           <button
             key={item.id}
             className={tab === item.id ? "active" : ""}
-            onClick={() => setTab(item.id)}
+            onClick={() => {
+              if (item.id !== "learn") setTheoryReturnArticleId(null);
+              if (item.id === "words" && tab === "guide" && selectedArticleId) {
+                setWordReturnArticleId(selectedArticleId);
+              } else if (item.id !== "words") {
+                setWordReturnArticleId(null);
+              }
+              setTab(item.id);
+            }}
             aria-current={tab === item.id ? "page" : undefined}
           >
             <span aria-hidden="true">{item.icon}</span>
@@ -492,26 +529,56 @@ function Learn({
   settings,
   onSessionChange,
   onRate,
+  returnArticle,
+  onReturnToTheory,
 }: {
   session: LearningSession | null;
   settings: Settings;
   onSessionChange: (session: LearningSession) => void;
   onRate: (id: number, skill: Skill, correct: boolean) => void;
+  returnArticle: Article | null;
+  onReturnToTheory: () => void;
 }) {
+  const [input, setInput] = useState("");
+  const [selectedChoice, setSelectedChoice] = useState("");
+  const [orderedTokenIds, setOrderedTokenIds] = useState<string[]>([]);
+  const [submitted, setSubmitted] = useState(false);
+  const [correct, setCorrect] = useState(false);
+  const exercise = session?.queue[session.index];
+
+  useEffect(() => {
+    setInput("");
+    setSelectedChoice("");
+    setOrderedTokenIds([]);
+    setSubmitted(false);
+    setCorrect(false);
+  }, [session?.index, exercise?.retryCount]);
+
   function restart() {
     if (!session) return;
     onSessionChange(createLearningSession(session.date, session.wordIds, session.title));
   }
 
   if (!session?.queue.length) return <EmptyState title="Je daglijst wordt klaargezet" text="Ga even terug naar Vandaag en open de leersessie opnieuw." />;
-  const exercise = session.queue[session.index];
   if (!exercise) {
+    const attempts = session.correctCount + session.incorrectCount;
+    const accuracy = attempts ? Math.round((session.correctCount / attempts) * 100) : 0;
     return (
       <div className="page daily-complete">
         <div className="hero-character">好</div>
-        <p className="eyebrow">Daglijst voltooid</p>
+        <p className="eyebrow">Oefensessie voltooid</p>
         <h1>Goed gewerkt</h1>
-        <p>Je hebt betekenis, uitspraak en schrijfwijze van {session.wordIds.length} woorden uit {session.title || "deze reeks"} geoefend.</p>
+        <p>Je oefende {session.wordIds.length} woorden uit {session.title || "deze reeks"} met actieve vragen.</p>
+        <div className="session-result-grid">
+          <span><strong>{accuracy}%</strong> juist</span>
+          <span><strong>{session.correctCount}</strong> goed</span>
+          <span><strong>{session.retriedCount}</strong> herhaald</span>
+        </div>
+        {returnArticle && (
+          <button className="button secondary-button" onClick={onReturnToTheory}>
+            ← Terug naar {returnArticle.title}
+          </button>
+        )}
         <button className="button primary-button" onClick={restart}>Oefen deze lijst opnieuw</button>
       </div>
     );
@@ -520,28 +587,7 @@ function Learn({
   if (!word) return <EmptyState title="Dit woord is niet beschikbaar" text="Start de daglijst opnieuw om verder te oefenen." />;
   const activeSession: LearningSession = session;
   const activeWord: Word = word;
-
-  function answer(correct: boolean) {
-    onSessionChange({
-      ...activeSession,
-      ratings: { [exercise.skill]: correct },
-    });
-  }
-
-  function next() {
-    const rating = activeSession.ratings[exercise.skill];
-    if (rating === undefined) return;
-    onRate(activeWord.id, exercise.skill, rating);
-    onSessionChange({
-      ...activeSession,
-      index: activeSession.index + 1,
-      revealed: false,
-      promptMode: "character",
-      ratings: {},
-    });
-  }
-
-  const requiredRated = session.ratings[exercise.skill] !== undefined;
+  const activeExercise = exercise;
   const skillLabels: Record<Skill, string> = {
     meaning: "Betekenis",
     pronunciation: "Uitspraak",
@@ -549,9 +595,77 @@ function Learn({
   };
   const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
   const meaningLanguageLabel = word.meaningLanguage === "en" ? "Engels" : "Nederlands";
+  const choices = choiceOptions(exercise, word, words);
+  const example = exampleForWord(word);
+  const tokenSet = sentenceTokens(word, words);
+  const orderedTokens = orderedTokenIds
+    .map((id) => tokenSet.shuffled.find((token) => token.id === id))
+    .filter((token): token is { id: string; token: string } => Boolean(token));
+  const isChoice = exercise.kind === "meaning-choice" || exercise.kind === "listening-choice";
+  const isOrdering = exercise.kind === "sentence-order";
+  const canSubmit = isChoice
+    ? Boolean(selectedChoice)
+    : isOrdering
+      ? orderedTokenIds.length === tokenSet.shuffled.length
+      : Boolean(input.trim());
+
+  function submitAnswer(event?: React.FormEvent) {
+    event?.preventDefault();
+    if (!canSubmit || submitted) return;
+    const answerIsCorrect = isChoice
+      ? selectedChoice === String(activeWord.id)
+      : isOrdering
+        ? orderedTokens.map((token) => token.token).join("") === tokenSet.ordered.join("")
+        : checkActiveAnswer(activeExercise, activeWord, input);
+    setCorrect(answerIsCorrect);
+    setSubmitted(true);
+    onRate(activeWord.id, activeExercise.skill, answerIsCorrect);
+  }
+
+  function next() {
+    if (!submitted) return;
+    onSessionChange(answerExercise(activeSession, correct));
+  }
+
+  function renderPrompt() {
+    if (activeExercise.kind === "listening-choice" || activeExercise.kind === "dictation") {
+      return (
+        <div className="listening-prompt">
+          <button className="listening-button" onClick={() => speakMandarin(activeWord.hanzi, settings.speechRate)} aria-label="Speel het Chinese woord af">
+            <span aria-hidden="true">◖))</span>
+          </button>
+          <strong>Speel het woord af</strong>
+          <small>Je kunt zo vaak luisteren als nodig.</small>
+        </div>
+      );
+    }
+    if (activeExercise.kind === "hanzi-input") return <div className="prompt-meaning">{activeWord.meaningNl}</div>;
+    if (activeExercise.kind === "fill-blank") {
+      return (
+        <div className="context-prompt">
+          <strong>{blankSentence(activeWord)}</strong>
+          <span>{example.dutch}</span>
+        </div>
+      );
+    }
+    if (activeExercise.kind === "sentence-order" || activeExercise.kind === "translation-input") {
+      return (
+        <div className="context-prompt">
+          <strong>{example.dutch}</strong>
+          <span>Bouw de Chinese zin.</span>
+        </div>
+      );
+    }
+    return <div className="prompt-hanzi" style={hanziStyle}>{activeWord.hanzi}</div>;
+  }
 
   return (
     <div className="page learn-page">
+      {returnArticle && (
+        <button className="theory-return" onClick={onReturnToTheory}>
+          <span aria-hidden="true">←</span> Terug naar theorie: {returnArticle.title}
+        </button>
+      )}
       <div className="page-title-row">
         <div>
           <p className="eyebrow">Oefensessie · {session.title || "daglijst"}</p>
@@ -570,45 +684,79 @@ function Learn({
       </div>
       <p className="skill-focus">Focus: <strong>{skillLabels[exercise.skill]}</strong></p>
 
-      <section className={`flashcard ${session.revealed ? "revealed" : ""}`}>
-        <p className="card-instruction">
-          {exercise.skill === "meaning"
-            ? "Wat betekent dit woord?"
-            : exercise.skill === "pronunciation"
-              ? "Spreek het Chinese woord hardop uit."
-              : "Schrijf het Chinese woord uit je hoofd."}
-        </p>
-        {exercise.direction === "zh-nl" ? (
-          <>
-            <div className="prompt-mode-toggle" aria-label="Weergave van het Chinese woord">
-              <button
-                className={session.promptMode === "character" ? "active" : ""}
-                onClick={() => onSessionChange({ ...session, promptMode: "character" })}
-              >
-                Karakter
-              </button>
-              <button
-                className={session.promptMode === "strokes" ? "active" : ""}
-                onClick={() => onSessionChange({ ...session, promptMode: "strokes" })}
-              >
-                Schrijfvolgorde
-              </button>
-            </div>
-            {session.promptMode === "character"
-              ? <div className="prompt-hanzi" style={hanziStyle}>{word.hanzi}</div>
-              : <StrokeOrderPreview hanzi={word.hanzi} />}
-          </>
-        ) : <div className="prompt-meaning">{word.meaningNl}</div>}
+      <section className={`flashcard active-exercise ${submitted ? "revealed" : ""}`}>
+        <p className="card-instruction">{exerciseInstruction(exercise.kind, meaningLanguageLabel.toLowerCase())}</p>
+        {renderPrompt()}
 
-        {!session.revealed ? (
-          <>
-            {exercise.skill === "pronunciation" && <PronunciationRecorder />}
-            <button className="button primary-button reveal-button" onClick={() => onSessionChange({ ...session, revealed: true })}>
-              Toon het antwoord
+        {!submitted && (
+          <form className="active-answer" onSubmit={submitAnswer}>
+            {isChoice && (
+              <div className="answer-options">
+                {choices.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={selectedChoice === option.value ? "selected" : ""}
+                    onClick={() => setSelectedChoice(option.value)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            {isOrdering && (
+              <div className="sentence-builder">
+                <div className="sentence-answer" aria-label="Jouw Chinese zin">
+                  {orderedTokens.length
+                    ? orderedTokens.map((token) => (
+                      <button
+                        type="button"
+                        key={token.id}
+                        onClick={() => setOrderedTokenIds((current) => current.filter((id) => id !== token.id))}
+                      >
+                        {token.token}
+                      </button>
+                    ))
+                    : <span>Tik hieronder de zinsdelen aan</span>}
+                </div>
+                <div className="sentence-pool">
+                  {tokenSet.shuffled.map((token) => (
+                    <button
+                      type="button"
+                      key={token.id}
+                      disabled={orderedTokenIds.includes(token.id)}
+                      onClick={() => setOrderedTokenIds((current) => [...current, token.id])}
+                    >
+                      {token.token}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {!isChoice && !isOrdering && (
+              <input
+                className="active-input"
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                placeholder={inputPlaceholder(exercise.kind)}
+                autoComplete="off"
+                autoCapitalize="none"
+                spellCheck={false}
+              />
+            )}
+            {exercise.kind === "pinyin-input" && <PronunciationRecorder />}
+            <button type="submit" className="button primary-button full-button" disabled={!canSubmit}>
+              Controleer mijn antwoord
             </button>
-          </>
-        ) : (
+          </form>
+        )}
+
+        {submitted && (
           <div className="answer-block">
+            <div className={`answer-result ${correct ? "correct" : "incorrect"}`}>
+              <strong>{correct ? "Juist" : "Nog niet juist"}</strong>
+              <span>{correct ? "Mooi. Dit antwoord telt mee." : "Deze vraag komt later in de sessie opnieuw terug."}</span>
+            </div>
             <div className="answer-hanzi" style={hanziStyle}>{word.hanzi}</div>
             <div className="answer-pinyin">{word.pinyin}</div>
             <div className="answer-meaning">{word.meaningNl}</div>
@@ -617,16 +765,21 @@ function Learn({
               <span aria-hidden="true">◖))</span> Luister
             </button>
             <WordExampleCard word={word} speechRate={settings.speechRate} compact />
+            {exercise.kind === "translation-input" && (
+              <div className="translation-answer">
+                <span>Modelantwoord</span>
+                <strong>{example.chinese}</strong>
+                <small>{example.pinyin}</small>
+              </div>
+            )}
           </div>
         )}
       </section>
 
-      {session.revealed && (
-        <section className="self-check">
-          <p>Hoe ging deze oefening?</p>
-          <SkillRating label={skillLabels[exercise.skill]} value={session.ratings[exercise.skill]} onRate={answer} />
-          <button className="button primary-button full-button" disabled={!requiredRated} onClick={next}>
-            Volgende oefening <span aria-hidden="true">→</span>
+      {submitted && (
+        <section className="active-next">
+          <button className="button primary-button full-button" onClick={next}>
+            {correct ? "Volgende oefening" : "Verder, later opnieuw"} <span aria-hidden="true">→</span>
           </button>
         </section>
       )}
@@ -690,18 +843,6 @@ function PronunciationRecorder() {
   );
 }
 
-function SkillRating({ label, value, onRate }: { label: string; value?: boolean; onRate: (value: boolean) => void }) {
-  return (
-    <div className="skill-rating">
-      <span>{label}</span>
-      <div>
-        <button className={value === false ? "selected no" : ""} onClick={() => onRate(false)} aria-label={`${label} niet gekend`}>×</button>
-        <button className={value === true ? "selected yes" : ""} onClick={() => onRate(true)} aria-label={`${label} gekend`}>✓</button>
-      </div>
-    </div>
-  );
-}
-
 function WordExampleCard({ word, speechRate, compact = false }: { word: Word; speechRate: number; compact?: boolean }) {
   const example = exampleForWord(word);
   return (
@@ -719,22 +860,43 @@ function WordExampleCard({ word, speechRate, compact = false }: { word: Word; sp
 
 function ArticleGuide({
   progress,
+  wordProgress,
+  learningPath,
+  selectedId,
   speechRate,
+  onSelect,
+  onLearningPathChange,
   onProgress,
   onQuiz,
   onPractice,
 }: {
   progress: ArticleProgressMap;
+  wordProgress: ProgressMap;
+  learningPath: LearningPathState;
+  selectedId: string | null;
   speechRate: number;
+  onSelect: (articleId: string | null) => void;
+  onLearningPathChange: (path: LearningPathState) => void;
   onProgress: (articleId: string, patch: { read?: boolean; understood?: boolean }) => void;
   onQuiz: (articleId: string, correct: boolean) => void;
-  onPractice: (wordIds: number[], title: string) => void;
+  onPractice: (wordIds: number[], title: string, articleId: string) => void;
 }) {
-  const [selected, setSelected] = useState<Article | null>(null);
   const [level, setLevel] = useState<"Alles" | ArticleLevel>("Alles");
   const [kind, setKind] = useState<"Alles" | ArticleKind>("Alles");
   const [onlyOpen, setOnlyOpen] = useState(false);
   const [exerciseAnswers, setExerciseAnswers] = useState<Record<number, number>>({});
+  const [showPlacement, setShowPlacement] = useState(false);
+  const selected = selectedId ? articles.find((item) => item.id === selectedId) || null : null;
+  const recommendation = useMemo(
+    () => learningRecommendation(articles, progress, wordProgress, words, learningPath),
+    [progress, wordProgress, learningPath],
+  );
+  const reviewIds = useMemo(
+    () => new Set(articles
+      .filter((article) => needsTheoryReview(article, progress, wordProgress, words))
+      .map((article) => article.id)),
+    [progress, wordProgress],
+  );
 
   const filtered = articles.filter((item) => (
     (level === "Alles" || item.level === level)
@@ -745,10 +907,18 @@ function ArticleGuide({
   const understoodCount = articles.filter((item) => progress[item.id]?.understood).length;
   const percentage = Math.round((understoodCount / articles.length) * 100);
 
+  useEffect(() => {
+    if (!selectedId) return;
+    const frame = window.requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+      document.querySelector("main")?.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [selectedId]);
+
   function openArticle(item: Article) {
-    setSelected(item);
     setExerciseAnswers({});
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    onSelect(item.id);
   }
 
   if (selected) {
@@ -760,7 +930,7 @@ function ArticleGuide({
     const next = articles[currentIndex + 1];
     return (
       <article className="page article-reader">
-        <button className="article-back" onClick={() => setSelected(null)}>
+        <button className="article-back" onClick={() => onSelect(null)}>
           <span aria-hidden="true">←</span> Alle onderwerpen
         </button>
 
@@ -910,7 +1080,7 @@ function ArticleGuide({
                 </div>
               ))}
             </div>
-            <button className="button primary-button full-button" onClick={() => onPractice(relatedWords.map((word) => word.id), selected.title)}>
+            <button className="button primary-button full-button" onClick={() => onPractice(relatedWords.map((word) => word.id), selected.title, selected.id)}>
               Oefen deze leswoorden <span aria-hidden="true">→</span>
             </button>
           </section>
@@ -964,6 +1134,58 @@ function ArticleGuide({
 
   return (
     <div className="page article-guide">
+      <section className="learning-path-card">
+        <div className="learning-path-heading">
+          <div>
+            <p className="eyebrow">Jouw persoonlijke leerpad</p>
+            <h1>{recommendation?.review ? "Tijd om gericht te herhalen" : "Dit is je volgende stap"}</h1>
+          </div>
+          <span className={recommendation?.review ? "review" : ""}>{recommendation?.review ? "Herhaling" : "Aanbevolen"}</span>
+        </div>
+        {recommendation ? (
+          <button className="recommendation-card" onClick={() => openArticle(recommendation.article)}>
+            <span className="recommendation-order">{String(recommendation.article.order).padStart(2, "0")}</span>
+            <span>
+              <small>{recommendation.article.level} · {recommendation.article.kind}</small>
+              <strong>{recommendation.article.title}</strong>
+              <p>{recommendation.reason}</p>
+            </span>
+            <b aria-hidden="true">→</b>
+          </button>
+        ) : (
+          <div className="path-complete">
+            <strong>Je hebt de volledige leerlijn begrepen.</strong>
+            <span>Zwakke onderdelen verschijnen hier automatisch opnieuw zodra oefeningen daar aanleiding toe geven.</span>
+          </div>
+        )}
+        <div className="placement-summary">
+          {learningPath.placement ? (
+            <span>
+              <small>Instaptest</small>
+              <strong>{learningPath.placement.label} · {learningPath.placement.correct}/{learningPath.placement.total} juist</strong>
+            </span>
+          ) : (
+            <span>
+              <small>Nog geen instaptest</small>
+              <strong>Laat de app je beste startpunt bepalen</strong>
+            </span>
+          )}
+          <button onClick={() => setShowPlacement(true)}>
+            {learningPath.placement ? "Opnieuw testen" : "Start instaptest"}
+          </button>
+        </div>
+      </section>
+
+      {showPlacement && (
+        <PlacementTest
+          onCancel={() => setShowPlacement(false)}
+          onComplete={(result) => {
+            onLearningPathChange({ ...learningPath, placement: result });
+            setShowPlacement(false);
+          }}
+        />
+      )}
+
       <section className="guide-hero">
         <div>
           <p className="eyebrow">Leerlijn</p>
@@ -1022,13 +1244,29 @@ function ArticleGuide({
       <section className="article-grid">
         {filtered.map((item) => {
           const itemProgress = progress[item.id];
+          const prerequisite = prerequisiteFor(item, articles);
+          const unlocked = isArticleUnlocked(item, articles, progress, learningPath);
+          const review = reviewIds.has(item.id);
+          const recommended = recommendation?.article.id === item.id;
           return (
-            <button className={`article-tile ${itemProgress?.understood ? "understood" : ""}`} key={item.id} onClick={() => openArticle(item)}>
+            <button
+              className={[
+                "article-tile",
+                itemProgress?.understood ? "understood" : "",
+                review ? "needs-review" : "",
+                recommended ? "recommended" : "",
+              ].filter(Boolean).join(" ")}
+              key={item.id}
+              onClick={() => openArticle(item)}
+            >
               <span className="article-order">{String(item.order).padStart(2, "0")}</span>
-              <span className="article-kind">{item.kind}</span>
+              <span className="article-kind">{review ? "Herhalen" : recommended ? "Aanbevolen" : item.kind}</span>
               <strong className="article-tile-hanzi">{item.chineseTitle}</strong>
               <h3>{item.title}</h3>
               <p>{item.summary}</p>
+              {!unlocked && prerequisite && (
+                <small className="prerequisite-note">Eerst aanbevolen: {prerequisite.title}</small>
+              )}
               <span className="article-tile-footer">
                 <span>{item.level} · {item.minutes} min</span>
                 {itemProgress?.understood
@@ -1064,9 +1302,81 @@ function ArticleGuide({
   );
 }
 
+function PlacementTest({
+  onCancel,
+  onComplete,
+}: {
+  onCancel: () => void;
+  onComplete: (result: ReturnType<typeof resultForPlacement>) => void;
+}) {
+  const questions = useMemo(() => placementQuestions(articles), []);
+  const [index, setIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [answers, setAnswers] = useState<boolean[]>([]);
+  const question = questions[index];
+
+  if (!question) return null;
+  const answered = selectedOption !== null;
+  const correct = selectedOption === question.exercise.answer;
+
+  function choose(optionIndex: number) {
+    if (answered) return;
+    setSelectedOption(optionIndex);
+    setAnswers((current) => [...current, optionIndex === question.exercise.answer]);
+  }
+
+  function nextQuestion() {
+    if (!answered) return;
+    if (index === questions.length - 1) {
+      onComplete(resultForPlacement(answers.filter(Boolean).length, questions.length, articles.length));
+      return;
+    }
+    setIndex((current) => current + 1);
+    setSelectedOption(null);
+  }
+
+  return (
+    <section className="placement-test" aria-label="Instaptest">
+      <div className="placement-test-header">
+        <button onClick={onCancel} aria-label="Sluit instaptest">×</button>
+        <span>Vraag {index + 1} van {questions.length}</span>
+        <div><i style={{ width: `${((index + 1) / questions.length) * 100}%` }} /></div>
+      </div>
+      <p className="eyebrow">{question.level} · {question.articleTitle}</p>
+      <h2>{question.exercise.question}</h2>
+      <div className="placement-options">
+        {question.exercise.options.map((option, optionIndex) => (
+          <button
+            key={option}
+            disabled={answered}
+            className={[
+              answered && optionIndex === question.exercise.answer ? "correct" : "",
+              answered && optionIndex === selectedOption && !correct ? "incorrect" : "",
+            ].filter(Boolean).join(" ")}
+            onClick={() => choose(optionIndex)}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+      {answered && (
+        <div className={`placement-feedback ${correct ? "correct" : "incorrect"}`}>
+          <strong>{correct ? "Juist" : "Niet juist"}</strong>
+          <span>{question.exercise.explanation}</span>
+        </div>
+      )}
+      <button className="button primary-button full-button" disabled={!answered} onClick={nextQuestion}>
+        {index === questions.length - 1 ? "Bekijk mijn instapniveau" : "Volgende vraag"} <span aria-hidden="true">→</span>
+      </button>
+    </section>
+  );
+}
+
 function WordList({
   progress,
   lists,
+  returnArticle,
+  onReturnToTheory,
   onSelect,
   onSpeak,
   onCreateList,
@@ -1076,6 +1386,8 @@ function WordList({
 }: {
   progress: ProgressMap;
   lists: CustomWordList[];
+  returnArticle: Article | null;
+  onReturnToTheory: () => void;
   onSelect: (word: Word) => void;
   onSpeak: (word: Word) => void;
   onCreateList: (name: string) => void;
@@ -1099,6 +1411,11 @@ function WordList({
 
   return (
     <div className="page words-page">
+      {returnArticle && (
+        <button className="theory-return" onClick={onReturnToTheory}>
+          <span aria-hidden="true">←</span> Terug naar theorie: {returnArticle.title}
+        </button>
+      )}
       <div className="page-title-row">
         <div><p className="eyebrow">Naslagwerk</p><h1>11.005 woorden</h1></div>
       </div>
