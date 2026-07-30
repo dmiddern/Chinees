@@ -197,6 +197,15 @@ function App() {
             setSelectedWord(null);
             setTab("write");
           }}
+          onNotesChange={(notes) => {
+            setProgress((current) => ({
+              ...current,
+              [selectedWord.id]: {
+                ...(current[selectedWord.id] || emptyWordProgress()),
+                notes,
+              },
+            }));
+          }}
         />
       )}
     </div>
@@ -544,12 +553,14 @@ function WordSheet({
   speechRate,
   onClose,
   onWrite,
+  onNotesChange,
 }: {
   word: Word;
   progress: ReturnType<typeof emptyWordProgress>;
   speechRate: number;
   onClose: () => void;
   onWrite: () => void;
+  onNotesChange: (notes: string) => void;
 }) {
   return (
     <div className="sheet-backdrop" onClick={onClose}>
@@ -567,6 +578,15 @@ function WordSheet({
           <SkillSummary label="Uitspraak" status={progress.pronunciation.status} />
           <SkillSummary label="Schrijfwijze" status={progress.writing.status} />
         </div>
+        <label className="notes-field">
+          <span>Eigen geheugensteun of voorbeeldzin</span>
+          <textarea
+            value={progress.notes}
+            onChange={(event) => onNotesChange(event.target.value)}
+            placeholder="Bijvoorbeeld: 爱好 = houden van + goed"
+            rows={3}
+          />
+        </label>
         <button className="button primary-button full-button" onClick={onWrite}>Oefen de schrijfwijze</button>
       </article>
     </div>

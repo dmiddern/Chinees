@@ -92,6 +92,7 @@ export default function HanziPractice({ hanzi, onComplete }: Props) {
       )}
 
       <div className="writer-grid" ref={targetRef} />
+      <p className="radical-legend"><span /> De accentkleur markeert het radicaal.</p>
 
       <div className="writer-status" aria-live="polite">
         {mode === "ready" && "Bekijk de volgorde of probeer het zelf."}
