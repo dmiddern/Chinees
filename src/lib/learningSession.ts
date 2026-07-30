@@ -5,6 +5,7 @@ const STORAGE_KEY = "chinees.learning-session.v1";
 export interface LearningExercise {
   wordId: number;
   direction: Direction;
+  skill: Skill;
 }
 
 export interface LearningSession {
@@ -30,8 +31,9 @@ const shuffle = <T,>(items: T[]) => {
 export function createLearningSession(date: string, wordIds: number[], title?: string): LearningSession {
   const queue = shuffle(
     wordIds.flatMap((wordId) => [
-      { wordId, direction: "zh-nl" as const },
-      { wordId, direction: "nl-zh" as const },
+      { wordId, direction: "zh-nl" as const, skill: "meaning" as const },
+      { wordId, direction: "nl-zh" as const, skill: "pronunciation" as const },
+      { wordId, direction: "nl-zh" as const, skill: "writing" as const },
     ]),
   );
 
@@ -51,6 +53,9 @@ export function loadLearningSession(): LearningSession | null {
   try {
     const session = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") as LearningSession | null;
     if (!session || !Array.isArray(session.queue) || !Array.isArray(session.wordIds)) return null;
+    if (session.queue.some((exercise) => !exercise.skill)) {
+      return createLearningSession(session.date, session.wordIds, session.title);
+    }
     return session;
   } catch {
     return null;
