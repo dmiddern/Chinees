@@ -3,6 +3,7 @@ import wordsData from "./data/words.json";
 import { literalGlosses } from "./data/literalGlosses";
 import HanziPractice from "./components/HanziPractice";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
+import { wordMatchesSearch } from "./lib/search";
 import { speakMandarin } from "./lib/speech";
 import type { Direction, HskLevel, ProgressMap, Skill, Word } from "./types";
 
@@ -409,8 +410,7 @@ function WordList({
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<"all" | HskLevel>("all");
   const filtered = useMemo(() => words.filter((word) => {
-    const search = query.toLowerCase().trim();
-    const matches = !search || `${word.hanzi} ${word.pinyin} ${word.meaningNl}`.toLowerCase().includes(search);
+    const matches = wordMatchesSearch(word, query);
     return matches && (level === "all" || word.level === level);
   }), [query, level]);
 
@@ -461,7 +461,7 @@ function Writing({ words, rate, onRate }: { words: Word[]; rate: number; onRate:
   const [query, setQuery] = useState("");
   const [word, setWord] = useState<Word>(() => words[0] || (wordsData as Word[])[0]);
   const matches = query
-    ? words.filter((item) => `${item.hanzi} ${item.pinyin} ${item.meaningNl}`.toLowerCase().includes(query.toLowerCase())).slice(0, 8)
+    ? words.filter((item) => wordMatchesSearch(item, query)).slice(0, 8)
     : [];
 
   return (
