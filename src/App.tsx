@@ -4,7 +4,7 @@ import { literalGlosses } from "./data/literalGlosses";
 import HanziPractice, { StrokeOrderPreview } from "./components/HanziPractice";
 import { clearDailySets, createDailySet, loadDailySets, localDateKey, saveDailySets, type DailySet, type DailySetMap } from "./lib/dailySets";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
-import { wordMatchesSearch } from "./lib/search";
+import { searchWords } from "./lib/search";
 import { speakMandarin } from "./lib/speech";
 import type { Direction, HskLevel, ProgressMap, Skill, Word } from "./types";
 
@@ -506,10 +506,10 @@ function WordList({
 }) {
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<"all" | HskLevel>("all");
-  const filtered = useMemo(() => words.filter((word) => {
-    const matches = wordMatchesSearch(word, query);
-    return matches && (level === "all" || word.level === level);
-  }), [query, level]);
+  const filtered = useMemo(
+    () => searchWords(words.filter((word) => level === "all" || word.level === level), query),
+    [query, level],
+  );
 
   return (
     <div className="page words-page">
@@ -561,7 +561,7 @@ function Writing({ words, initialWord, rate, onRate }: { words: Word[]; initialW
     if (initialWord) setWord(initialWord);
   }, [initialWord]);
   const matches = query
-    ? words.filter((item) => wordMatchesSearch(item, query)).slice(0, 8)
+    ? searchWords(words, query).slice(0, 8)
     : [];
 
   return (
