@@ -11,6 +11,8 @@ Mobiele PWA om de 1.000 woorden van de nieuwe HSK-niveaus 1, 2 en 3 in het Neder
 - Stroke-orderanimaties en schrijfoefeningen met foutcontrole
 - Letterlijke betekenis per karakter als geheugensteun
 - Zoekbare woordenlijst met 1.000 woorden
+- Reclamevrije theoriegids met 32 onderwerpen van uitspraak en zinsbouw tot gevorderde grammatica
+- Afzonderlijke opvolging van gelezen en begrepen theorieartikelen
 - Lokale voortgang en offline PWA
 
 ## Lokaal starten

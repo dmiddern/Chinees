@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import wordsData from "./data/words.json";
 import { literalGlosses } from "./data/literalGlosses";
+import { articleKinds, articleLevels, articleSources, articles, type Article, type ArticleKind, type ArticleLevel } from "./data/articles";
 import HanziPractice, { StrokeOrderPreview } from "./components/HanziPractice";
+import { loadArticleProgress, saveArticleProgress, updateArticleProgress, type ArticleProgressMap } from "./lib/articleProgress";
 import { clearDailySets, createDailySet, loadDailySets, localDateKey, saveDailySets, type DailySet, type DailySetMap } from "./lib/dailySets";
 import { createLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
@@ -9,7 +11,7 @@ import { searchWords } from "./lib/search";
 import { speakMandarin } from "./lib/speech";
 import type { Direction, HskLevel, ProgressMap, Skill, Word } from "./types";
 
-type Tab = "home" | "learn" | "words" | "write" | "settings";
+type Tab = "home" | "learn" | "guide" | "words" | "write" | "settings";
 
 interface Settings {
   levels: HskLevel[];
@@ -42,6 +44,7 @@ const defaultSettings: Settings = {
 const navItems: { id: Tab; label: string; icon: string }[] = [
   { id: "home", label: "Vandaag", icon: "⌂" },
   { id: "learn", label: "Leren", icon: "学" },
+  { id: "guide", label: "Theorie", icon: "文" },
   { id: "words", label: "Woorden", icon: "词" },
   { id: "write", label: "Schrijven", icon: "写" },
   { id: "settings", label: "Instellingen", icon: "⚙" },
@@ -56,6 +59,7 @@ function App() {
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress());
   const [settings, setSettings] = useState<Settings>(() => loadSettings(defaultSettings));
   const [dailySets, setDailySets] = useState<DailySetMap>(() => loadDailySets());
+  const [articleProgress, setArticleProgress] = useState<ArticleProgressMap>(() => loadArticleProgress());
   const [learningSession, setLearningSession] = useState<LearningSession | null>(() => loadLearningSession());
   const [selectedDay, setSelectedDay] = useState<DailySet | null>(null);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
@@ -65,6 +69,7 @@ function App() {
   useEffect(() => saveProgress(progress), [progress]);
   useEffect(() => saveSettings(settings), [settings]);
   useEffect(() => saveDailySets(dailySets), [dailySets]);
+  useEffect(() => saveArticleProgress(articleProgress), [articleProgress]);
   useEffect(() => saveLearningSession(learningSession), [learningSession]);
 
   useEffect(() => {
@@ -211,6 +216,15 @@ function App() {
             onRate={rate}
           />
         )}
+        {tab === "guide" && (
+          <ArticleGuide
+            progress={articleProgress}
+            speechRate={settings.speechRate}
+            onProgress={(articleId, patch) => (
+              setArticleProgress((current) => updateArticleProgress(current, articleId, patch))
+            )}
+          />
+        )}
         {tab === "words" && (
           <WordList
             progress={progress}
@@ -235,6 +249,7 @@ function App() {
               if (window.confirm("Wil je alle leerresultaten en bewaarde daglijsten verwijderen?")) {
                 setProgress({});
                 setDailySets({});
+                setArticleProgress({});
                 setLearningSession(null);
                 clearDailySets();
               }
@@ -591,6 +606,253 @@ function SkillRating({ label, value, onRate }: { label: string; value?: boolean;
         <button className={value === false ? "selected no" : ""} onClick={() => onRate(false)} aria-label={`${label} niet gekend`}>×</button>
         <button className={value === true ? "selected yes" : ""} onClick={() => onRate(true)} aria-label={`${label} gekend`}>✓</button>
       </div>
+    </div>
+  );
+}
+
+function ArticleGuide({
+  progress,
+  speechRate,
+  onProgress,
+}: {
+  progress: ArticleProgressMap;
+  speechRate: number;
+  onProgress: (articleId: string, patch: { read?: boolean; understood?: boolean }) => void;
+}) {
+  const [selected, setSelected] = useState<Article | null>(null);
+  const [level, setLevel] = useState<"Alles" | ArticleLevel>("Alles");
+  const [kind, setKind] = useState<"Alles" | ArticleKind>("Alles");
+  const [onlyOpen, setOnlyOpen] = useState(false);
+
+  const filtered = articles.filter((item) => (
+    (level === "Alles" || item.level === level)
+    && (kind === "Alles" || item.kind === kind)
+    && (!onlyOpen || !progress[item.id]?.understood)
+  ));
+  const readCount = articles.filter((item) => progress[item.id]?.read).length;
+  const understoodCount = articles.filter((item) => progress[item.id]?.understood).length;
+  const percentage = Math.round((understoodCount / articles.length) * 100);
+
+  function openArticle(item: Article) {
+    setSelected(item);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  if (selected) {
+    const itemProgress = progress[selected.id] || { read: false, understood: false };
+    const currentIndex = articles.findIndex((item) => item.id === selected.id);
+    const previous = articles[currentIndex - 1];
+    const next = articles[currentIndex + 1];
+    return (
+      <article className="page article-reader">
+        <button className="article-back" onClick={() => setSelected(null)}>
+          <span aria-hidden="true">←</span> Alle onderwerpen
+        </button>
+
+        <header className="article-header">
+          <div className="article-meta">
+            <span>{selected.level}</span>
+            <span>{selected.hsk}</span>
+            <span>{selected.kind}</span>
+            <span>{selected.minutes} min</span>
+          </div>
+          <div className="article-title-character" aria-hidden="true">{selected.chineseTitle}</div>
+          <p className="eyebrow">Onderwerp {selected.order} van {articles.length}</p>
+          <h1>{selected.title}</h1>
+          <p className="article-lead">{selected.summary}</p>
+        </header>
+
+        <section className="article-body">
+          <h2>Uitleg</h2>
+          {selected.explanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+        </section>
+
+        <section className="article-body">
+          <h2>Patronen</h2>
+          <div className="pattern-list">
+            {selected.patterns.map((pattern) => (
+              <div key={pattern.formula}>
+                <strong>{pattern.formula}</strong>
+                <p>{pattern.meaning}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="article-body">
+          <h2>Voorbeelden</h2>
+          <div className="article-examples">
+            {selected.examples.map((example) => (
+              <div key={`${example.chinese}-${example.pinyin}`} className="article-example">
+                <div>
+                  <strong>{example.chinese}</strong>
+                  <span>{example.pinyin}</span>
+                  <p>{example.dutch}</p>
+                  {example.note && <small>{example.note}</small>}
+                </div>
+                <button
+                  className="article-audio"
+                  onClick={() => speakMandarin(example.chinese, speechRate)}
+                  aria-label={`Luister naar ${example.chinese}`}
+                >
+                  ◖))
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="article-body remember-card">
+          <h2>Onthoud dit</h2>
+          <ul>
+            {selected.remember.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </section>
+
+        <section className="article-check">
+          <div>
+            <p className="eyebrow">Jouw voortgang</p>
+            <h2>Ben je mee?</h2>
+          </div>
+          <label className={itemProgress.read ? "checked" : ""}>
+            <input
+              type="checkbox"
+              checked={itemProgress.read}
+              onChange={(event) => onProgress(selected.id, {
+                read: event.target.checked,
+                understood: event.target.checked ? itemProgress.understood : false,
+              })}
+            />
+            <span aria-hidden="true">{itemProgress.read ? "✓" : ""}</span>
+            Ik heb dit gelezen
+          </label>
+          <label className={itemProgress.understood ? "checked understood" : ""}>
+            <input
+              type="checkbox"
+              checked={itemProgress.understood}
+              onChange={(event) => onProgress(selected.id, { understood: event.target.checked })}
+            />
+            <span aria-hidden="true">{itemProgress.understood ? "✓" : ""}</span>
+            Ik begrijp dit concept
+          </label>
+        </section>
+
+        <nav className="article-pagination" aria-label="Vorige en volgende onderwerp">
+          {previous ? (
+            <button onClick={() => openArticle(previous)}>
+              <small>Vorige</small>
+              <strong>← {previous.title}</strong>
+            </button>
+          ) : <span />}
+          {next ? (
+            <button onClick={() => openArticle(next)}>
+              <small>Volgende</small>
+              <strong>{next.title} →</strong>
+            </button>
+          ) : <span />}
+        </nav>
+      </article>
+    );
+  }
+
+  return (
+    <div className="page article-guide">
+      <section className="guide-hero">
+        <div>
+          <p className="eyebrow">Leerlijn</p>
+          <h1>Begrijp hoe Chinees werkt</h1>
+          <p>Van klanken en zinsbouw tot natuurlijke gesprekken en gevorderde constructies.</p>
+        </div>
+        <div className="guide-progress" style={{ "--progress": `${percentage * 3.6}deg` } as React.CSSProperties}>
+          <strong>{percentage}%</strong>
+          <span>begrepen</span>
+        </div>
+      </section>
+
+      <div className="guide-stats">
+        <span><strong>{articles.length}</strong> onderwerpen</span>
+        <span><strong>{readCount}</strong> gelezen</span>
+        <span><strong>{understoodCount}</strong> begrepen</span>
+      </div>
+
+      <section className="guide-filters" aria-label="Filter onderwerpen">
+        <div>
+          <span>Niveau</span>
+          <div className="filter-chips">
+            {(["Alles", ...articleLevels] as const).map((item) => (
+              <button key={item} className={level === item ? "active" : ""} onClick={() => setLevel(item)}>
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div>
+          <span>Soort</span>
+          <div className="filter-chips">
+            {(["Alles", ...articleKinds] as const).map((item) => (
+              <button key={item} className={kind === item ? "active" : ""} onClick={() => setKind(item)}>
+                {item}
+              </button>
+            ))}
+          </div>
+        </div>
+        <label className="open-filter">
+          <input type="checkbox" checked={onlyOpen} onChange={(event) => setOnlyOpen(event.target.checked)} />
+          Toon alleen wat ik nog niet begrijp
+        </label>
+      </section>
+
+      <div className="article-section-heading">
+        <div>
+          <p className="eyebrow">Jouw route</p>
+          <h2>{filtered.length} onderwerpen</h2>
+        </div>
+        {(level !== "Alles" || kind !== "Alles" || onlyOpen) && (
+          <button onClick={() => { setLevel("Alles"); setKind("Alles"); setOnlyOpen(false); }}>Wis filters</button>
+        )}
+      </div>
+
+      <section className="article-grid">
+        {filtered.map((item) => {
+          const itemProgress = progress[item.id];
+          return (
+            <button className={`article-tile ${itemProgress?.understood ? "understood" : ""}`} key={item.id} onClick={() => openArticle(item)}>
+              <span className="article-order">{String(item.order).padStart(2, "0")}</span>
+              <span className="article-kind">{item.kind}</span>
+              <strong className="article-tile-hanzi">{item.chineseTitle}</strong>
+              <h3>{item.title}</h3>
+              <p>{item.summary}</p>
+              <span className="article-tile-footer">
+                <span>{item.level} · {item.minutes} min</span>
+                {itemProgress?.understood
+                  ? <b className="complete-badge">✓ Begrepen</b>
+                  : itemProgress?.read
+                    ? <b>Gelezen</b>
+                    : <b>Open →</b>}
+              </span>
+            </button>
+          );
+        })}
+      </section>
+
+      {!filtered.length && (
+        <div className="guide-empty">
+          <strong>Alles in deze selectie is begrepen.</strong>
+          <p>Wis de filters om je volledige leerlijn opnieuw te bekijken.</p>
+        </div>
+      )}
+
+      <section className="article-sources">
+        <p className="eyebrow">Bronnen en aanpak</p>
+        <h2>Zelf geschreven, inhoudelijk gecontroleerd</h2>
+        <p>De Nederlandse uitleg en voorbeelden zijn voor deze app geschreven. De ordening en grammaticale dekking zijn gecontroleerd aan de hand van deze open bronnen.</p>
+        {articleSources.map((source) => (
+          <a key={source.url} href={source.url} target="_blank" rel="noreferrer">
+            <span><strong>{source.label}</strong><small>{source.detail}</small></span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </section>
     </div>
   );
 }
