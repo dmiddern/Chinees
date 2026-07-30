@@ -121,6 +121,31 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .stat-card span { color: var(--secondary); font-size: 12px; }
 .stat-card.success strong { color: var(--success); }
 .stat-card.warning strong { color: var(--accent); }
+.daily-history { margin-top: 28px; }
+.daily-history .section-heading { margin-bottom: 10px; }
+.daily-history .section-heading h2 { margin-bottom: 0; }
+.daily-history-list { overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--background); }
+.daily-history-list > button {
+  width: 100%;
+  min-width: 0;
+  min-height: 68px;
+  padding: 11px 14px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  display: grid;
+  grid-template-columns: minmax(115px, auto) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  cursor: pointer;
+}
+.daily-history-list > button:last-child { border-bottom: 0; }
+.daily-history-list > button > span:first-child strong,
+.daily-history-list > button > span:first-child small { display: block; }
+.daily-history-list > button > span:first-child strong { font-size: 13px; text-transform: capitalize; }
+.daily-history-list > button > span:first-child small { margin-top: 3px; color: var(--secondary); font-size: 10px; }
+.daily-word-preview { min-width: 0; overflow: hidden; color: var(--accent-hover); font-family: "Noto Serif SC", serif; font-size: 18px; text-align: right; text-overflow: ellipsis; white-space: nowrap; }
 
 .bottom-nav {
   position: fixed;
@@ -282,6 +307,34 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .skill-summary strong { font-size: 11px; border-radius: 999px; padding: 5px 9px; background: var(--surface); }
 .skill-summary strong.known { color: #3f698e; }
 .skill-summary strong.learning { color: #8f6319; }
+.daily-set-sheet { text-align: left; }
+.daily-set-sheet > h2 { margin-bottom: 4px; font-size: clamp(24px, 7vw, 32px); text-transform: capitalize; }
+.daily-set-meta { margin-bottom: 16px; color: var(--secondary); font-size: 12px; }
+.daily-set-words { border-top: 1px solid var(--border); }
+.daily-set-words > button {
+  width: 100%;
+  min-width: 0;
+  min-height: 66px;
+  padding: 8px 2px;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  display: grid;
+  grid-template-columns: 24px 56px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  cursor: pointer;
+}
+.daily-set-words > button > span:first-child { color: var(--secondary); font-size: 10px; }
+.daily-set-words > button > strong { font-family: "Noto Serif SC", serif; font-size: 27px; }
+.daily-set-words > button > span:nth-child(3) { min-width: 0; }
+.daily-set-words b, .daily-set-words small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.daily-set-words b { color: var(--accent-hover); font-size: 12px; }
+.daily-set-words small { margin-top: 3px; font-size: 12px; }
+.daily-complete { min-height: 65dvh; display: grid; place-content: center; justify-items: center; text-align: center; position: relative; overflow: hidden; }
+.daily-complete .hero-character { position: static; font-size: clamp(100px, 30vw, 160px); }
+.daily-complete p:not(.eyebrow) { color: var(--secondary); }
 .notes-field { display: block; text-align: left; margin-top: 18px; }
 .notes-field > span { display: block; color: var(--secondary); font-size: 11px; font-weight: 800; margin-bottom: 7px; }
 .notes-field textarea { width: 100%; resize: vertical; border: 1px solid var(--border); border-radius: 13px; background: var(--background); padding: 11px 12px; color: var(--primary); font-size: 16px; line-height: 1.45; }
@@ -321,6 +374,8 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   .writer-actions .button { padding-inline: 10px; font-size: 12px; }
   .bottom-nav button { font-size: 9px; }
   .bottom-nav button span { font-size: 19px; }
+  .daily-history-list > button { grid-template-columns: minmax(105px, auto) minmax(0, 1fr) auto; gap: 8px; padding-inline: 11px; }
+  .daily-word-preview { font-size: 16px; }
 }
 
 @media (max-width: 350px) {
@@ -331,6 +386,8 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   .stat-card strong { margin-bottom: 0; }
   .writer-actions { grid-template-columns: 1fr; }
   .sheet-close { right: 12px; top: 12px; }
+  .daily-word-preview { display: none; }
+  .daily-history-list > button { grid-template-columns: 1fr auto; }
 }
 
 @media (max-height: 540px) and (orientation: landscape) {

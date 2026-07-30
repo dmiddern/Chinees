@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import wordsData from "./data/words.json";
 import { literalGlosses } from "./data/literalGlosses";
 import HanziPractice, { StrokeOrderPreview } from "./components/HanziPractice";
+import { clearDailySets, createDailySet, loadDailySets, localDateKey, saveDailySets, type DailySet, type DailySetMap } from "./lib/dailySets";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
 import { wordMatchesSearch } from "./lib/search";
 import { speakMandarin } from "./lib/speech";
@@ -45,8 +46,6 @@ const navItems: { id: Tab; label: string; icon: string }[] = [
   { id: "settings", label: "Instellingen", icon: "⚙" },
 ];
 
-const shuffle = <T,>(items: T[]) => [...items].sort(() => Math.random() - 0.5);
-
 function levelLabel(level: HskLevel) {
   return `HSK ${level}`;
 }
@@ -55,12 +54,15 @@ function App() {
   const [tab, setTab] = useState<Tab>("home");
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress());
   const [settings, setSettings] = useState<Settings>(() => loadSettings(defaultSettings));
+  const [dailySets, setDailySets] = useState<DailySetMap>(() => loadDailySets());
+  const [selectedDay, setSelectedDay] = useState<DailySet | null>(null);
   const [selectedWord, setSelectedWord] = useState<Word | null>(null);
   const [writingWord, setWritingWord] = useState<Word | null>(null);
   const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
 
   useEffect(() => saveProgress(progress), [progress]);
   useEffect(() => saveSettings(settings), [settings]);
+  useEffect(() => saveDailySets(dailySets), [dailySets]);
 
   useEffect(() => {
     const listener = (event: Event) => {
@@ -75,6 +77,31 @@ function App() {
     () => words.filter((word) => settings.levels.includes(word.level)),
     [settings.levels],
   );
+
+  useEffect(() => {
+    setDailySets((current) => createDailySet(current, levelWords, settings.levels, settings.dailyGoal, progress));
+  }, [levelWords, progress, settings.dailyGoal, settings.levels]);
+
+  const todaySet = dailySets[localDateKey()];
+  const todayWords = useMemo(
+    () => (todaySet?.wordIds || []).map((id) => words.find((word) => word.id === id)).filter((word): word is Word => Boolean(word)),
+    [todaySet],
+  );
+  const dailyHistory = useMemo(
+    () => Object.values(dailySets).sort((a, b) => b.date.localeCompare(a.date)),
+    [dailySets],
+  );
+  const todayCompleted = useMemo(() => {
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+    return todayWords.filter((word) => {
+      const item = progress[word.id];
+      return item
+        && (item.meaning.lastReviewedAt || 0) >= startOfToday.getTime()
+        && (item.pronunciation.lastReviewedAt || 0) >= startOfToday.getTime()
+        && (item.writing.lastReviewedAt || 0) >= startOfToday.getTime();
+    }).length;
+  }, [progress, todayWords]);
 
   const stats = useMemo(() => {
     const available = words.filter((word) => settings.levels.includes(word.level));
@@ -134,16 +161,19 @@ function App() {
           <Home
             stats={stats}
             settings={settings}
+            todayWords={todayWords}
+            todayCompleted={todayCompleted}
+            history={dailyHistory}
             onStart={() => setTab("learn")}
             onWrite={() => setTab("write")}
             onToggleLevel={toggleLevel}
+            onOpenDay={setSelectedDay}
           />
         )}
         {tab === "learn" && (
           <Learn
-            key={`${settings.levels.join("-")}-${settings.direction}`}
-            words={levelWords}
-            progress={progress}
+            key={`${todaySet?.date}-${todaySet?.wordIds.join("-")}-${settings.direction}`}
+            words={todayWords}
             settings={settings}
             onSettings={updateSettings}
             onRate={rate}
@@ -170,7 +200,11 @@ function App() {
             onChange={updateSettings}
             onToggleLevel={toggleLevel}
             onReset={() => {
-              if (window.confirm("Wil je alle lokale leerresultaten verwijderen?")) setProgress({});
+              if (window.confirm("Wil je alle leerresultaten en bewaarde daglijsten verwijderen?")) {
+                setProgress({});
+                setDailySets({});
+                clearDailySets();
+              }
             }}
           />
         )}
@@ -212,6 +246,17 @@ function App() {
           }}
         />
       )}
+
+      {selectedDay && (
+        <DailySetSheet
+          set={selectedDay}
+          onClose={() => setSelectedDay(null)}
+          onSelect={(word) => {
+            setSelectedDay(null);
+            setSelectedWord(word);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -219,17 +264,25 @@ function App() {
 function Home({
   stats,
   settings,
+  todayWords,
+  todayCompleted,
+  history,
   onStart,
   onWrite,
   onToggleLevel,
+  onOpenDay,
 }: {
   stats: { total: number; known: number; learning: number; newCount: number; reviews: number };
   settings: Settings;
+  todayWords: Word[];
+  todayCompleted: number;
+  history: DailySet[];
   onStart: () => void;
   onWrite: () => void;
   onToggleLevel: (level: HskLevel) => void;
+  onOpenDay: (set: DailySet) => void;
 }) {
-  const percentage = stats.total ? Math.round((stats.known / stats.total) * 100) : 0;
+  const percentage = todayWords.length ? Math.round((todayCompleted / todayWords.length) * 100) : 0;
   return (
     <div className="page home-page">
       <section className="hero-card">
@@ -257,7 +310,7 @@ function Home({
         <div className="section-heading">
           <div>
             <p className="eyebrow">Vandaag</p>
-            <h2>{stats.reviews ? `${stats.reviews} woorden wachten` : "Klaar voor een nieuwe reeks"}</h2>
+            <h2>{todayWords.length ? `${todayCompleted} van ${todayWords.length} afgerond` : "Je daglijst wordt klaargezet"}</h2>
           </div>
           <div className="goal-ring" style={{ "--progress": `${percentage * 3.6}deg` } as React.CSSProperties}>
             <strong>{percentage}%</strong>
@@ -274,8 +327,38 @@ function Home({
         <StatCard value={stats.learning} label="Bezig" tone="warning" />
         <StatCard value={stats.newCount} label="Nieuw" tone="neutral" />
       </section>
+
+      <section className="daily-history">
+        <div className="section-heading">
+          <div><p className="eyebrow">Daglijsten</p><h2>Terugkijken</h2></div>
+        </div>
+        <div className="daily-history-list">
+          {history.map((set) => {
+            const dayWords = set.wordIds.map((id) => words.find((word) => word.id === id)).filter((word): word is Word => Boolean(word));
+            return (
+              <button key={set.date} onClick={() => onOpenDay(set)}>
+                <span>
+                  <strong>{formatDailyDate(set.date)}</strong>
+                  <small>{dayWords.length} woorden · HSK {set.levels.join(", ")}</small>
+                </span>
+                <span className="daily-word-preview">{dayWords.slice(0, 5).map((word) => word.hanzi).join(" · ")}</span>
+                <span aria-hidden="true">›</span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
     </div>
   );
+}
+
+function formatDailyDate(date: string) {
+  const today = localDateKey();
+  const yesterday = localDateKey(new Date(Date.now() - 24 * 60 * 60 * 1000));
+  if (date === today) return "Vandaag";
+  if (date === yesterday) return "Gisteren";
+  return new Intl.DateTimeFormat("nl-BE", { weekday: "short", day: "numeric", month: "long" })
+    .format(new Date(`${date}T12:00:00`));
 }
 
 function StatCard({ value, label, tone }: { value: number; label: string; tone: string }) {
@@ -289,34 +372,34 @@ function StatCard({ value, label, tone }: { value: number; label: string; tone: 
 
 function Learn({
   words,
-  progress,
   settings,
   onSettings,
   onRate,
 }: {
   words: Word[];
-  progress: ProgressMap;
   settings: Settings;
   onSettings: (patch: Partial<Settings>) => void;
   onRate: (id: number, skill: Skill, correct: boolean) => void;
 }) {
-  const [queue] = useState(() => {
-    const now = Date.now();
-    return shuffle(words).sort((a, b) => {
-      const aProgress = progress[a.id];
-      const bProgress = progress[b.id];
-      const aDue = aProgress ? Math.min(aProgress.meaning.dueAt, aProgress.pronunciation.dueAt) : 0;
-      const bDue = bProgress ? Math.min(bProgress.meaning.dueAt, bProgress.pronunciation.dueAt) : 0;
-      return Number(aDue > now) - Number(bDue > now);
-    });
-  });
+  const queue = words;
   const [index, setIndex] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [promptMode, setPromptMode] = useState<"character" | "strokes">("character");
   const [ratings, setRatings] = useState<Partial<Record<Skill, boolean>>>({});
-  const word = queue[index % Math.max(queue.length, 1)];
+  const word = queue[index];
 
-  if (!word) return <EmptyState title="Kies minstens één niveau" text="Activeer een HSK-niveau bij Instellingen." />;
+  if (!queue.length) return <EmptyState title="Je daglijst wordt klaargezet" text="Ga even terug naar Vandaag en open de leersessie opnieuw." />;
+  if (!word) {
+    return (
+      <div className="page daily-complete">
+        <div className="hero-character">好</div>
+        <p className="eyebrow">Daglijst voltooid</p>
+        <h1>Goed gewerkt</h1>
+        <p>Je hebt de {queue.length} woorden van vandaag doorlopen.</p>
+        <button className="button primary-button" onClick={() => setIndex(0)}>Oefen deze lijst opnieuw</button>
+      </div>
+    );
+  }
 
   function answer(skill: Skill, correct: boolean) {
     onRate(word.id, skill, correct);
@@ -338,7 +421,7 @@ function Learn({
       <div className="page-title-row">
         <div>
           <p className="eyebrow">Oefensessie</p>
-          <h1>{index + 1} <span>van {Math.min(settings.dailyGoal, queue.length)}</span></h1>
+          <h1>{index + 1} <span>van {queue.length}</span></h1>
         </div>
         <span className="level-chip">{levelLabel(word.level)}</span>
       </div>
@@ -614,6 +697,30 @@ function WordSheet({
 function SkillSummary({ label, status }: { label: string; status: string }) {
   const names: Record<string, string> = { new: "Nieuw", learning: "Bezig", known: "Gekend" };
   return <div><span>{label}</span><strong className={status}>{names[status]}</strong></div>;
+}
+
+function DailySetSheet({ set, onClose, onSelect }: { set: DailySet; onClose: () => void; onSelect: (word: Word) => void }) {
+  const dayWords = set.wordIds.map((id) => words.find((word) => word.id === id)).filter((word): word is Word => Boolean(word));
+  return (
+    <div className="sheet-backdrop" onClick={onClose}>
+      <article className="word-sheet daily-set-sheet" onClick={(event) => event.stopPropagation()}>
+        <button className="sheet-close" onClick={onClose} aria-label="Sluiten">×</button>
+        <p className="eyebrow">Daglijst</p>
+        <h2>{formatDailyDate(set.date)}</h2>
+        <p className="daily-set-meta">{dayWords.length} woorden · HSK {set.levels.join(", ")}</p>
+        <div className="daily-set-words">
+          {dayWords.map((word, index) => (
+            <button key={word.id} onClick={() => onSelect(word)}>
+              <span>{index + 1}</span>
+              <strong>{word.hanzi}</strong>
+              <span><b>{word.pinyin}</b><small>{word.meaningNl}</small></span>
+              <span aria-hidden="true">›</span>
+            </button>
+          ))}
+        </div>
+      </article>
+    </div>
+  );
 }
 
 function EmptyState({ title, text }: { title: string; text: string }) {
