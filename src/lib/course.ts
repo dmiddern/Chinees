@@ -1,5 +1,9 @@
 import type { Article, ArticleExercise } from "../data/articles";
-import type { Word } from "../types";
+import type { HskLevel, Word } from "../types";
+
+function levelOrder(level: HskLevel) {
+  return level === "7-9" ? 7 : level;
+}
 
 function unique(items: string[]) {
   return [...new Set(items.filter(Boolean))];
@@ -66,7 +70,7 @@ export function relatedWordsForArticle(article: Article, words: Word[], limit = 
       return { word, score };
     })
     .filter((item) => item.score > 0)
-    .sort((a, b) => b.score - a.score || a.word.level - b.word.level || a.word.id - b.word.id)
+    .sort((a, b) => b.score - a.score || levelOrder(a.word.level) - levelOrder(b.word.level) || a.word.id - b.word.id)
     .slice(0, limit)
     .map((item) => item.word);
 }

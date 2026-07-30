@@ -64,6 +64,10 @@ export function searchWords(items: Word[], query: string) {
   return items
     .map((word, index) => ({ word, index, score: searchScore(word, query) }))
     .filter((result) => result.score >= 0)
-    .sort((a, b) => b.score - a.score || a.word.level - b.word.level || a.index - b.index)
+    .sort((a, b) => {
+      const levelA = a.word.level === "7-9" ? 7 : a.word.level;
+      const levelB = b.word.level === "7-9" ? 7 : b.word.level;
+      return b.score - a.score || levelA - levelB || a.index - b.index;
+    })
     .map((result) => result.word);
 }

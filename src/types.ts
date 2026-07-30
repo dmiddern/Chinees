@@ -1,4 +1,4 @@
-export type HskLevel = 1 | 2 | 3;
+export type HskLevel = 1 | 2 | 3 | 4 | 5 | 6 | "7-9";
 export type Skill = "meaning" | "pronunciation" | "writing";
 export type LearningStatus = "new" | "learning" | "known";
 export type Direction = "zh-nl" | "nl-zh";
@@ -10,7 +10,7 @@ export interface Word {
   pinyin: string;
   wordType: string;
   meaningNl: string;
-  meaningLanguage: "nl";
+  meaningLanguage: "nl" | "en";
   example: string;
   notes: string;
   source: string;
@@ -34,4 +34,3 @@ export interface WordProgress {
 }
 
 export type ProgressMap = Record<number, WordProgress>;
-

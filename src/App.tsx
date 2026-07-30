@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import wordsData from "./data/words.json";
+import { wordsData } from "./data/words";
 import { literalGlosses } from "./data/literalGlosses";
 import { articleKinds, articleLevels, articleSources, articles, type Article, type ArticleKind, type ArticleLevel } from "./data/articles";
 import HanziPractice, { StrokeOrderPreview } from "./components/HanziPractice";
@@ -24,6 +24,7 @@ interface Settings {
 }
 
 const words = wordsData as Word[];
+const hskLevels: HskLevel[] = [1, 2, 3, 4, 5, 6, "7-9"];
 const singleCharacterMeanings = new Map(
   words
     .filter((word) => [...word.hanzi].length === 1)
@@ -147,7 +148,9 @@ function App() {
   function toggleLevel(level: HskLevel) {
     const levels = settings.levels.includes(level)
       ? settings.levels.filter((item) => item !== level)
-      : [...settings.levels, level].sort() as HskLevel[];
+      : [...settings.levels, level].sort(
+        (a, b) => hskLevels.indexOf(a) - hskLevels.indexOf(b),
+      ) as HskLevel[];
     if (levels.length) updateSettings({ levels });
   }
 
@@ -198,7 +201,7 @@ function App() {
           <span className="brand-mark">中</span>
           <span>
             <strong>Chinees</strong>
-            <small>HSK 1 · 2 · 3</small>
+            <small>HSK 1 · 2 · 3 · 4 · 5 · 6 · 7-9</small>
           </span>
         </button>
         {installPrompt && <button className="install-button" onClick={installApp}>Installeer</button>}
@@ -379,7 +382,7 @@ function Home({
       </section>
 
       <section className="level-selector" aria-label="Actieve niveaus">
-        {[1, 2, 3].map((level) => (
+        {hskLevels.map((level) => (
           <button
             key={level}
             className={settings.levels.includes(level as HskLevel) ? "active" : ""}
@@ -545,6 +548,7 @@ function Learn({
     writing: "Schrijfwijze",
   };
   const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
+  const meaningLanguageLabel = word.meaningLanguage === "en" ? "Engels" : "Nederlands";
 
   return (
     <div className="page learn-page">
@@ -558,10 +562,10 @@ function Learn({
 
       <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">
         <span className={exercise.direction === "zh-nl" ? "active" : ""}>
-          Chinees → Nederlands
+          Chinees → {meaningLanguageLabel}
         </span>
         <span className={exercise.direction === "nl-zh" ? "active" : ""}>
-          Nederlands → Chinees
+          {meaningLanguageLabel} → Chinees
         </span>
       </div>
       <p className="skill-focus">Focus: <strong>{skillLabels[exercise.skill]}</strong></p>
@@ -1096,7 +1100,7 @@ function WordList({
   return (
     <div className="page words-page">
       <div className="page-title-row">
-        <div><p className="eyebrow">Naslagwerk</p><h1>1.000 woorden</h1></div>
+        <div><p className="eyebrow">Naslagwerk</p><h1>11.005 woorden</h1></div>
       </div>
       <section className="custom-lists">
         <div className="section-heading">
@@ -1155,10 +1159,10 @@ function WordList({
       </section>
       <label className="search-box">
         <span aria-hidden="true">⌕</span>
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Zoek Chinees, pinyin of Nederlands" />
+        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Zoek Chinees, pinyin of betekenis" />
       </label>
       <div className="filter-chips">
-        {(["all", 1, 2, 3] as const).map((item) => (
+        {(["all", ...hskLevels] as const).map((item) => (
           <button className={level === item ? "active" : ""} key={item} onClick={() => setLevel(item)}>
             {item === "all" ? "Alles" : `HSK ${item}`}
           </button>
@@ -1263,7 +1267,7 @@ function SettingsView({
       <section className="settings-card">
         <h2>Actieve niveaus</h2>
         <div className="level-selector left">
-          {[1, 2, 3].map((level) => (
+          {hskLevels.map((level) => (
             <button className={settings.levels.includes(level as HskLevel) ? "active" : ""} key={level} onClick={() => onToggleLevel(level as HskLevel)}>
               HSK {level}
             </button>
@@ -1287,7 +1291,7 @@ function SettingsView({
       </section>
       <section className="settings-card about-card">
         <h2>Over deze woordenlijst</h2>
-        <p>Nieuwe HSK-standaard: 300 woorden in HSK 1, 200 nieuwe woorden in HSK 2 en 500 nieuwe woorden in HSK 3.</p>
+        <p>Nieuwe HSK-standaard: 300 woorden in HSK 1, 200 nieuwe in HSK 2, 500 in HSK 3, 1.000 in HSK 4, 1.600 in HSK 5, 1.800 in HSK 6 en ongeveer 5.600 in de gezamenlijke gevorderdenband HSK 7-9.</p>
       </section>
       <button className="danger-button" onClick={onReset}>Wis alle leerresultaten</button>
     </div>

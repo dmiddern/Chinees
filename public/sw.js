@@ -1,4 +1,4 @@
-const CACHE = "chinees-v11";
+const CACHE = "chinees-v12";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/icons/icon.svg"];
 
 self.addEventListener("install", (event) => {
