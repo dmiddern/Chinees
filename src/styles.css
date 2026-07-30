@@ -1,21 +1,21 @@
 :root {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #2f3135;
-  background: #f8f7f4;
+  color: #373534;
+  background: #faf8f5;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --background: #f8f7f4;
-  --surface: #ece8e3;
-  --primary: #2f3135;
-  --secondary: #6c7076;
-  --accent: #8c7b6a;
-  --accent-hover: #756556;
-  --border: #d8d4cf;
-  --success: #5e84a8;
-  --warning: #c79a4a;
-  --error: #b25b5b;
+  --background: #faf8f5;
+  --surface: #f0ece6;
+  --primary: #373534;
+  --secondary: #77716c;
+  --accent: #a66a57;
+  --accent-hover: #8c5848;
+  --border: #ddd8d2;
+  --success: #77716c;
+  --warning: #a66a57;
+  --error: #8c5848;
   --radius: 22px;
-  --shadow: 0 16px 50px rgba(47, 49, 53, 0.08);
+  --shadow: 0 16px 50px rgba(55, 53, 52, 0.08);
 }
 
 * { box-sizing: border-box; }
@@ -23,7 +23,7 @@ html { background: var(--background); }
 body { margin: 0; min-width: 320px; min-height: 100vh; background: var(--background); }
 button, input { font: inherit; }
 button { color: inherit; }
-button:focus-visible, input:focus-visible { outline: 3px solid rgba(94, 132, 168, 0.45); outline-offset: 2px; }
+button:focus-visible, input:focus-visible { outline: 3px solid rgba(166, 106, 87, 0.38); outline-offset: 2px; }
 
 .app-shell { min-height: 100vh; padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
 .topbar {
@@ -33,7 +33,7 @@ button:focus-visible, input:focus-visible { outline: 3px solid rgba(94, 132, 168
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(216, 212, 207, 0.8);
-  background: rgba(248, 247, 244, 0.92);
+  background: rgba(250, 248, 245, 0.92);
   backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
@@ -72,7 +72,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   right: -20px;
   bottom: -70px;
   font-size: 220px;
-  color: rgba(140, 123, 106, 0.16);
+  color: rgba(166, 106, 87, 0.16);
   line-height: 1;
   user-select: none;
 }
@@ -89,7 +89,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 }
 .level-selector button.active, .filter-chips button.active { background: var(--primary); color: var(--background); border-color: var(--primary); }
 .today-card, .settings-card {
-  background: #fff;
+  background: var(--background);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 22px;
@@ -103,7 +103,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   background: conic-gradient(var(--accent) var(--progress), var(--surface) 0);
   position: relative;
 }
-.goal-ring::after { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: #fff; }
+.goal-ring::after { content: ""; position: absolute; inset: 7px; border-radius: 50%; background: var(--background); }
 .goal-ring strong { position: relative; z-index: 1; font-size: 13px; }
 .button { border: 0; border-radius: 14px; min-height: 48px; padding: 0 18px; font-weight: 800; cursor: pointer; transition: transform .16s ease, background .16s ease; }
 .button:active { transform: scale(.98); }
@@ -119,14 +119,14 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .stat-card strong { font-size: 25px; margin-bottom: 5px; }
 .stat-card span { color: var(--secondary); font-size: 12px; }
 .stat-card.success strong { color: var(--success); }
-.stat-card.warning strong { color: #956b24; }
+.stat-card.warning strong { color: var(--accent); }
 
 .bottom-nav {
   position: fixed;
   left: 0; right: 0; bottom: 0;
   height: calc(68px + env(safe-area-inset-bottom));
   padding: 7px 8px env(safe-area-inset-bottom);
-  background: rgba(248, 247, 244, .96);
+  background: rgba(250, 248, 245, .96);
   backdrop-filter: blur(18px);
   border-top: 1px solid var(--border);
   display: grid;
@@ -143,12 +143,12 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .level-chip { border: 1px solid var(--border); background: var(--surface); color: var(--accent-hover); border-radius: 999px; padding: 7px 11px; font-size: 11px; font-weight: 800; white-space: nowrap; }
 .segmented-control { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; gap: 4px; border-radius: 14px; background: var(--surface); margin-bottom: 18px; }
 .segmented-control button { border: 0; background: transparent; border-radius: 10px; padding: 10px 5px; font-size: 11px; font-weight: 750; cursor: pointer; }
-.segmented-control button.active { background: #fff; box-shadow: 0 4px 14px rgba(47,49,53,.08); }
+.segmented-control button.active { background: var(--background); box-shadow: 0 4px 14px rgba(55,53,52,.08); }
 .flashcard {
   min-height: 380px;
   border-radius: 28px;
   border: 1px solid var(--border);
-  background: #fff;
+  background: var(--background);
   box-shadow: var(--shadow);
   padding: 24px;
   display: flex;
@@ -178,10 +178,10 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .skill-rating > span { font-size: 14px; font-weight: 750; }
 .skill-rating > div { display: flex; gap: 8px; }
 .skill-rating button { width: 38px; height: 38px; border-radius: 12px; border: 1px solid var(--border); background: var(--background); font-size: 20px; cursor: pointer; }
-.skill-rating button.selected.no { background: var(--error); color: #fff; border-color: var(--error); }
-.skill-rating button.selected.yes { background: var(--success); color: #fff; border-color: var(--success); }
+.skill-rating button.selected.no { background: var(--error); color: var(--background); border-color: var(--error); }
+.skill-rating button.selected.yes { background: var(--success); color: var(--background); border-color: var(--success); }
 
-.search-box { min-height: 50px; border: 1px solid var(--border); border-radius: 15px; background: #fff; display: flex; align-items: center; gap: 10px; padding: 0 14px; box-shadow: 0 6px 20px rgba(47,49,53,.04); }
+.search-box { min-height: 50px; border: 1px solid var(--border); border-radius: 15px; background: var(--background); display: flex; align-items: center; gap: 10px; padding: 0 14px; box-shadow: 0 6px 20px rgba(55,53,52,.04); }
 .search-box span { font-size: 24px; color: var(--secondary); }
 .search-box input { flex: 1; min-width: 0; border: 0; background: transparent; outline: 0; font-size: 14px; }
 .filter-chips { display: flex; gap: 7px; margin: 14px 0; overflow-x: auto; scrollbar-width: none; }
@@ -201,7 +201,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .status-dot.learning { background: var(--warning); }
 .row-audio { width: 44px; border: 0; background: transparent; color: var(--secondary); cursor: pointer; }
 
-.writing-results { border: 1px solid var(--border); border-radius: 14px; background: #fff; margin-top: 6px; overflow: hidden; }
+.writing-results { border: 1px solid var(--border); border-radius: 14px; background: var(--background); margin-top: 6px; overflow: hidden; }
 .writing-results button { width: 100%; border: 0; border-bottom: 1px solid var(--border); background: transparent; display: flex; align-items: center; gap: 12px; padding: 10px 14px; text-align: left; cursor: pointer; }
 .writing-results button:last-child { border-bottom: 0; }
 .writing-results strong { font-family: serif; font-size: 24px; }
@@ -211,10 +211,10 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .writing-word-heading strong { font-family: serif; font-size: 40px; }
 .writing-word-heading span { color: var(--accent-hover); font-weight: 750; margin-top: 3px; }
 .writing-word-heading small { margin-top: 4px; }
-.writing-practice { border: 1px solid var(--border); background: #fff; border-radius: 24px; padding: 18px; box-shadow: var(--shadow); }
+.writing-practice { border: 1px solid var(--border); background: var(--background); border-radius: 24px; padding: 18px; box-shadow: var(--shadow); }
 .character-tabs { display: flex; justify-content: center; gap: 6px; margin-bottom: 12px; }
 .character-tabs button { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 11px; background: var(--surface); font-family: serif; font-size: 22px; cursor: pointer; }
-.character-tabs button.active { background: var(--primary); color: #fff; }
+.character-tabs button.active { background: var(--primary); color: var(--background); }
 .writer-grid {
   width: min(280px, 78vw);
   height: min(280px, 78vw);
@@ -242,9 +242,9 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .settings-card label small { color: var(--secondary); }
 .settings-card input[type="range"] { width: 100%; accent-color: var(--accent); }
 .about-card p { color: var(--secondary); line-height: 1.6; font-size: 13px; margin-bottom: 0; }
-.danger-button { border: 1px solid rgba(178,91,91,.45); background: rgba(178,91,91,.07); color: #8d3d3d; border-radius: 14px; padding: 14px; font-weight: 800; cursor: pointer; }
+.danger-button { border: 1px solid rgba(140,88,72,.45); background: rgba(140,88,72,.08); color: var(--accent-hover); border-radius: 14px; padding: 14px; font-weight: 800; cursor: pointer; }
 
-.sheet-backdrop { position: fixed; inset: 0; background: rgba(47,49,53,.35); backdrop-filter: blur(5px); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
+.sheet-backdrop { position: fixed; inset: 0; background: rgba(55,53,52,.35); backdrop-filter: blur(5px); z-index: 50; display: flex; align-items: flex-end; justify-content: center; }
 .word-sheet { width: min(100%, 600px); max-height: 88vh; overflow-y: auto; background: var(--background); border-radius: 28px 28px 0 0; padding: 28px 24px calc(28px + env(safe-area-inset-bottom)); text-align: center; position: relative; animation: slide-up .25s ease both; }
 @keyframes slide-up { from { transform: translateY(40px); opacity: 0; } }
 .sheet-close { position: absolute; right: 18px; top: 18px; width: 38px; height: 38px; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); font-size: 22px; cursor: pointer; }
@@ -260,7 +260,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .skill-summary strong.learning { color: #8f6319; }
 .notes-field { display: block; text-align: left; margin-top: 18px; }
 .notes-field > span { display: block; color: var(--secondary); font-size: 11px; font-weight: 800; margin-bottom: 7px; }
-.notes-field textarea { width: 100%; resize: vertical; border: 1px solid var(--border); border-radius: 13px; background: #fff; padding: 11px 12px; color: var(--primary); line-height: 1.45; }
+.notes-field textarea { width: 100%; resize: vertical; border: 1px solid var(--border); border-radius: 13px; background: var(--background); padding: 11px 12px; color: var(--primary); line-height: 1.45; }
 .empty-state { min-height: 60vh; text-align: center; display: grid; place-content: center; position: relative; }
 .empty-state .hero-character { position: static; font-size: 120px; }
 .empty-state p { color: var(--secondary); }

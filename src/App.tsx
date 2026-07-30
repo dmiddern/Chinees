@@ -231,7 +231,7 @@ function Home({
       <section className="hero-card">
         <div>
           <p className="eyebrow">Jouw leermoment</p>
-          <h1>Kleine stappen.<br />Elke dag Chinees.</h1>
+          <h1>Leer Chinees</h1>
           <p className="hero-copy">Oefen betekenis, uitspraak en schrijfwijze afzonderlijk op jouw tempo.</p>
         </div>
         <div className="hero-character" aria-hidden="true">学</div>
