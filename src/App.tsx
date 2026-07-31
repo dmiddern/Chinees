@@ -629,7 +629,25 @@ function Learn({
           </>
         ) : (
           <div className="answer-block">
-            <div className="answer-hanzi" style={hanziStyle}>{word.hanzi}</div>
+            {exercise.direction === "nl-zh" && (
+              <div className="prompt-mode-toggle" aria-label="Weergave van het Chinese antwoord">
+                <button
+                  className={session.promptMode === "character" ? "active" : ""}
+                  onClick={() => onSessionChange({ ...session, promptMode: "character" })}
+                >
+                  Karakter
+                </button>
+                <button
+                  className={session.promptMode === "strokes" ? "active" : ""}
+                  onClick={() => onSessionChange({ ...session, promptMode: "strokes" })}
+                >
+                  Schrijfvolgorde
+                </button>
+              </div>
+            )}
+            {exercise.direction === "nl-zh" && session.promptMode === "strokes"
+              ? <StrokeOrderPreview hanzi={word.hanzi} />
+              : <div className="answer-hanzi" style={hanziStyle}>{word.hanzi}</div>}
             <div className="answer-pinyin">{word.pinyin}</div>
             <div className="answer-meaning">{word.meaningNl}</div>
             <div className="literal-meaning"><span>Letterlijk</span>{literalMeaning(word)}</div>
