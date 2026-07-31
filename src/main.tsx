@@ -4,6 +4,7 @@ import App from "./App";
 import "./styles.css";
 import { installHanziFeatures } from "./lib/handwriting";
 import { installCanvasReadyFix } from "./lib/canvasReady";
+import { installStrokeQuizPatch } from "./lib/strokeQuizPatch";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -19,3 +20,4 @@ createRoot(document.getElementById("root")!).render(
 
 installHanziFeatures();
 installCanvasReadyFix();
+installStrokeQuizPatch();
