@@ -4,8 +4,8 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "npm run prepare:hanzi && tsc -b && vite build",
+    "dev": "node scripts/apply-learning-ui-patches.mjs && vite",
+    "build": "node scripts/apply-learning-ui-patches.mjs && npm run prepare:hanzi && tsc -b && vite build",
     "preview": "vite preview",
     "prepare:hanzi": "node scripts/prepare-hanzi-data.mjs"
   },
