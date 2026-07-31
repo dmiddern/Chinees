@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./styles.css";
 import { installHanziFeatures } from "./lib/handwriting";
+import { installCanvasReadyFix } from "./lib/canvasReady";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -17,3 +18,4 @@ createRoot(document.getElementById("root")!).render(
 );
 
 installHanziFeatures();
+installCanvasReadyFix();
