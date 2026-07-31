@@ -40,7 +40,28 @@ function addStyles() {
   document.head.append(style);
 }
 
-function installQuiz(target: HTMLElement, character: string, status: HTMLElement) {
+function applyAutomaticWritingRating() {
+  const card = document.querySelector(".flashcard") as HTMLElement | null;
+  const result = card?.dataset.writingCorrect;
+  if (!card || result === undefined) return;
+
+  const ratingRows = [...document.querySelectorAll(".self-check .skill-rating")];
+  const writingRow = ratingRows.find((row) => row.querySelector("span")?.textContent?.trim() === "Schrijfwijze");
+  if (!writingRow) return;
+
+  const buttons = writingRow.querySelectorAll("button");
+  const target = result === "true" ? buttons[1] : buttons[0];
+  if (target && !target.classList.contains("selected")) {
+    (target as HTMLButtonElement).click();
+  }
+}
+
+function installQuiz(
+  target: HTMLElement,
+  character: string,
+  status: HTMLElement,
+  onComplete: (mistakes: number) => void,
+) {
   const start = () => {
     if (!target.isConnected || target.dataset.ready === "true") return;
     const measured = Math.floor(target.getBoundingClientRect().width);
@@ -93,6 +114,7 @@ function installQuiz(target: HTMLElement, character: string, status: HTMLElement
         status.textContent = summary.totalMistakes === 0
           ? "Perfect — volledig zonder fouten"
           : `Klaar — ${summary.totalMistakes} fout${summary.totalMistakes === 1 ? "" : "en"}`;
+        onComplete(summary.totalMistakes);
       },
     });
   };
@@ -105,16 +127,23 @@ function enhancePractice() {
   const word = currentWord();
   const existing = document.querySelector(".stroke-quiz-practice") as HTMLElement | null;
 
+  // De oude vrije tekenvlakken mogen nooit naast de interactieve oefening blijven staan.
+  document.querySelectorAll(".blank-practice").forEach((element) => element.remove());
+
   if (!card || !word) {
     existing?.remove();
     return;
   }
 
   const wordKey = String(word.id);
-  if (existing?.dataset.wordId === wordKey && card.contains(existing)) return;
+  if (existing?.dataset.wordId === wordKey && card.contains(existing)) {
+    applyAutomaticWritingRating();
+    return;
+  }
 
   existing?.remove();
-  card.querySelector(".blank-practice")?.remove();
+  delete card.dataset.writingCorrect;
+  delete card.dataset.writingMistakes;
 
   const wrapper = document.createElement("section");
   wrapper.className = "stroke-quiz-practice";
@@ -128,6 +157,8 @@ function enhancePractice() {
   row.className = "stroke-quiz-row";
 
   const characters = [...word.hanzi].filter((character) => HANZI.test(character));
+  const results = new Map<number, number>();
+
   characters.forEach((character, index) => {
     const box = document.createElement("div");
     box.className = "stroke-quiz-box";
@@ -142,7 +173,15 @@ function enhancePractice() {
 
     box.append(target, status);
     row.append(box);
-    installQuiz(target, character, status);
+    installQuiz(target, character, status, (mistakes) => {
+      results.set(index, mistakes);
+      if (results.size !== characters.length) return;
+
+      const totalMistakes = [...results.values()].reduce((total, value) => total + value, 0);
+      card.dataset.writingMistakes = String(totalMistakes);
+      card.dataset.writingCorrect = String(totalMistakes === 0);
+      applyAutomaticWritingRating();
+    });
   });
 
   wrapper.append(intro, row);
@@ -166,6 +205,7 @@ export function installStrokeQuizPatch() {
     requestAnimationFrame(() => {
       scheduled = false;
       enhancePractice();
+      applyAutomaticWritingRating();
     });
   };
 
