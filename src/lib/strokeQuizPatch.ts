@@ -15,7 +15,7 @@ function currentWord(): Word | null {
   try {
     const session = JSON.parse(localStorage.getItem("chinees.learning-session.v1") || "null");
     const exercise = session?.queue?.[session.index];
-    if (session?.direction !== "nl-zh" || session?.revealed || !exercise) return null;
+    if (session?.direction !== "nl-zh" || !exercise) return null;
     return words.find((word) => word.id === exercise.wordId) || null;
   } catch {
     return null;
@@ -27,9 +27,12 @@ function addStyles() {
   const style = document.createElement("style");
   style.id = "stroke-quiz-patch-css";
   style.textContent = `
+    .stroke-quiz-practice{margin:18px 0 14px;padding:14px;border:1px solid #ddd8d2;border-radius:18px;background:#fffdfa}
+    .stroke-quiz-practice>p{margin:0 0 12px;text-align:center;color:#6d6863;line-height:1.4}
     .stroke-quiz-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(138px,1fr));gap:12px}
     .stroke-quiz-box{display:grid;gap:7px}
     .stroke-quiz-target{width:100%;aspect-ratio:1;border:1.5px solid #cfc8c0;border-radius:15px;background:#fff;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+    .stroke-quiz-target svg{touch-action:none}
     .stroke-quiz-status{text-align:center;color:#6d6863;min-height:1.35em;font-size:.88rem}
     .stroke-quiz-status.is-error{color:#a54438;font-weight:700}
     .stroke-quiz-status.is-complete{color:#39705d;font-weight:700}
@@ -38,21 +41,29 @@ function addStyles() {
 }
 
 function installQuiz(target: HTMLElement, character: string, status: HTMLElement) {
-  requestAnimationFrame(() => {
-    const size = Math.max(120, Math.floor(target.getBoundingClientRect().width || 160));
+  const start = () => {
+    if (!target.isConnected || target.dataset.ready === "true") return;
+    const measured = Math.floor(target.getBoundingClientRect().width);
+    if (measured < 40) {
+      requestAnimationFrame(start);
+      return;
+    }
+
+    target.dataset.ready = "true";
+    const size = Math.max(138, measured);
     const missesPerStroke = new Map<number, number>();
 
     const writer = HanziWriter.create(target, character, {
       width: size,
       height: size,
-      padding: 10,
+      padding: 12,
       showCharacter: false,
       showOutline: false,
       strokeColor: "#373534",
       radicalColor: "#a66a57",
       drawingColor: "#373534",
-      drawingWidth: 5,
-      highlightColor: "#c87563",
+      drawingWidth: 6,
+      highlightColor: "#b06b55",
       highlightCompleteColor: "#39705d",
       charDataLoader: async (char) => {
         const response = await fetch(`/hanzi-data/${encodeURIComponent(char)}.json`);
@@ -69,13 +80,13 @@ function installQuiz(target: HTMLElement, character: string, status: HTMLElement
         missesPerStroke.set(data.strokeNum, count);
         status.className = "stroke-quiz-status is-error";
         status.textContent = count >= 3
-          ? "3/3 — de juiste streek wordt getoond"
+          ? "3/3 — bekijk de juiste streek en probeer opnieuw"
           : `Niet juist — poging ${count}/3`;
       },
       onCorrectStroke: (data) => {
         missesPerStroke.delete(data.strokeNum);
         status.className = "stroke-quiz-status";
-        status.textContent = `Juist — streek ${data.strokeNum + 1} staat vast`;
+        status.textContent = `Juist — streek ${data.strokeNum + 1} blijft staan`;
       },
       onComplete: (summary) => {
         status.className = "stroke-quiz-status is-complete";
@@ -84,26 +95,40 @@ function installQuiz(target: HTMLElement, character: string, status: HTMLElement
           : `Klaar — ${summary.totalMistakes} fout${summary.totalMistakes === 1 ? "" : "en"}`;
       },
     });
-  });
+  };
+
+  requestAnimationFrame(start);
 }
 
 function enhancePractice() {
-  const wrapper = document.querySelector(".blank-practice") as HTMLElement | null;
-  if (!wrapper || wrapper.dataset.strokeQuiz === "true") return;
-
+  const card = document.querySelector(".flashcard") as HTMLElement | null;
   const word = currentWord();
-  if (!word) return;
+  const existing = document.querySelector(".stroke-quiz-practice") as HTMLElement | null;
 
-  wrapper.dataset.strokeQuiz = "true";
-  wrapper.replaceChildren();
+  if (!card || !word) {
+    existing?.remove();
+    return;
+  }
+
+  const wordKey = String(word.id);
+  if (existing?.dataset.wordId === wordKey && card.contains(existing)) return;
+
+  existing?.remove();
+  card.querySelector(".blank-practice")?.remove();
+
+  const wrapper = document.createElement("section");
+  wrapper.className = "stroke-quiz-practice";
+  wrapper.dataset.wordId = wordKey;
+  wrapper.setAttribute("aria-label", "Interactieve schrijfoefening");
 
   const intro = document.createElement("p");
-  intro.textContent = "Teken de volgende streek. Na drie foute pogingen wordt alleen die streek voorgedaan.";
+  intro.textContent = "Teken elke streek uit je hoofd. Een juiste streek blijft staan; na drie fouten krijg je een hint.";
 
   const row = document.createElement("div");
   row.className = "stroke-quiz-row";
 
-  [...word.hanzi].filter((char) => HANZI.test(char)).forEach((character, index) => {
+  const characters = [...word.hanzi].filter((character) => HANZI.test(character));
+  characters.forEach((character, index) => {
     const box = document.createElement("div");
     box.className = "stroke-quiz-box";
 
@@ -113,7 +138,7 @@ function enhancePractice() {
 
     const status = document.createElement("div");
     status.className = "stroke-quiz-status";
-    status.textContent = `Karakter ${index + 1} — begin met streek 1`;
+    status.textContent = `Karakter ${index + 1} — teken streek 1`;
 
     box.append(target, status);
     row.append(box);
@@ -121,6 +146,12 @@ function enhancePractice() {
   });
 
   wrapper.append(intro, row);
+
+  const reveal = card.querySelector(".reveal-button");
+  const answer = card.querySelector(".answer-block");
+  if (reveal) reveal.before(wrapper);
+  else if (answer) answer.before(wrapper);
+  else card.append(wrapper);
 }
 
 export function installStrokeQuizPatch() {
@@ -139,5 +170,6 @@ export function installStrokeQuizPatch() {
   };
 
   new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+  window.addEventListener("storage", schedule);
   schedule();
 }
