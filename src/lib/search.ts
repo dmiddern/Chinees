@@ -16,17 +16,53 @@ function normalizedWords(value: string) {
     .filter(Boolean);
 }
 
-function searchScore(word: Word, query: string) {
-  const search = normalizeSearch(query);
+interface IndexedWord {
+  hanzi: string;
+  pinyin: string;
+  meaning: string;
+  pinyinWords: string[];
+  dutchWords: string[];
+}
+
+interface SearchQuery {
+  normalized: string;
+  searchesChinese: boolean;
+  usesToneMarks: boolean;
+}
+
+const wordIndex = new WeakMap<Word, IndexedWord>();
+
+function indexWord(word: Word): IndexedWord {
+  const cached = wordIndex.get(word);
+  if (cached) return cached;
+
+  const indexed = {
+    hanzi: normalizeSearch(word.hanzi),
+    pinyin: normalizeSearch(word.pinyin),
+    meaning: normalizeSearch(word.meaningNl),
+    pinyinWords: normalizedWords(word.pinyin),
+    dutchWords: normalizedWords(word.meaningNl),
+  };
+
+  wordIndex.set(word, indexed);
+  return indexed;
+}
+
+function prepareQuery(query: string): SearchQuery {
+  return {
+    normalized: normalizeSearch(query),
+    searchesChinese: /[\u3400-\u9fff]/u.test(query),
+    usesToneMarks: /[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü]/iu.test(query),
+  };
+}
+
+function searchScore(word: Word, query: SearchQuery) {
+  const search = query.normalized;
   if (!search) return 0;
 
-  const searchesChinese = /[\u3400-\u9fff]/u.test(query);
-  const usesToneMarks = /[āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜü]/iu.test(query);
-  const hanzi = normalizeSearch(word.hanzi);
-  const pinyin = normalizeSearch(word.pinyin);
-  const meaning = normalizeSearch(word.meaningNl);
+  const { hanzi, pinyin, meaning, pinyinWords, dutchWords } = indexWord(word);
 
-  if (searchesChinese) {
+  if (query.searchesChinese) {
     if (hanzi === search) return 3000;
     if (hanzi.startsWith(search)) return 2700 - hanzi.length;
     if (hanzi.includes(search)) return 2400 - hanzi.indexOf(search);
@@ -34,8 +70,6 @@ function searchScore(word: Word, query: string) {
   }
 
   let score = -1;
-  const pinyinWords = normalizedWords(word.pinyin);
-  const dutchWords = normalizedWords(word.meaningNl);
 
   if (pinyin === search) score = Math.max(score, 2200);
   if (pinyinWords.includes(search)) score = Math.max(score, 2150);
@@ -49,20 +83,20 @@ function searchScore(word: Word, query: string) {
   if (meaning.startsWith(search)) score = Math.max(score, 1550);
   if (meaning.includes(search)) score = Math.max(score, 700 - meaning.indexOf(search));
 
-  if (usesToneMarks && pinyin.includes(search)) score += 500;
+  if (query.usesToneMarks && pinyin.includes(search)) score += 500;
   return score;
 }
 
 export function wordMatchesSearch(word: Word, query: string) {
-  return searchScore(word, query) >= 0;
+  return searchScore(word, prepareQuery(query)) >= 0;
 }
 
 export function searchWords(items: Word[], query: string) {
-  const search = normalizeSearch(query);
-  if (!search) return [...items];
+  const preparedQuery = prepareQuery(query);
+  if (!preparedQuery.normalized) return [...items];
 
   return items
-    .map((word, index) => ({ word, index, score: searchScore(word, query) }))
+    .map((word, index) => ({ word, index, score: searchScore(word, preparedQuery) }))
     .filter((result) => result.score >= 0)
     .sort((a, b) => {
       const levelA = a.word.level === "7-9" ? 7 : a.word.level;
