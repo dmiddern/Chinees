@@ -37,10 +37,7 @@ export function createLearningSession(
 ): LearningSession {
   const exercises: LearningExercise[] = direction === "zh-nl"
     ? wordIds.map((wordId) => ({ wordId, direction, skill: "meaning" as const }))
-    : wordIds.flatMap((wordId) => [
-      { wordId, direction, skill: "pronunciation" as const },
-      { wordId, direction, skill: "writing" as const },
-    ]);
+    : wordIds.map((wordId) => ({ wordId, direction, skill: "writing" as const }));
   const queue = shuffle(exercises);
 
   return {

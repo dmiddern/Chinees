@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./styles.css";
+import { installHanziFeatures } from "./lib/handwriting";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -14,3 +15,5 @@ createRoot(document.getElementById("root")!).render(
     <App />
   </StrictMode>,
 );
+
+installHanziFeatures();
