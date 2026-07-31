@@ -1,4 +1,5 @@
 import { extendedArticles } from "./extendedArticles";
+import { enrichArticle } from "./articleEnrichment";
 
 export type ArticleLevel = "Start" | "Basis" | "Verdieping" | "Gevorderd";
 export type ArticleKind = "Uitspraak" | "Schrift" | "Grammatica" | "Praktijk";
@@ -8,6 +9,7 @@ export interface ArticleExample {
   pinyin: string;
   dutch: string;
   note?: string;
+  analysis?: string;
 }
 
 export interface ArticleDialogueLine extends ArticleExample {
@@ -35,6 +37,9 @@ export interface Article {
   patterns: { formula: string; meaning: string }[];
   examples: ArticleExample[];
   remember: string[];
+  deepDive?: string[];
+  pitfalls?: string[];
+  practiceSteps?: string[];
   dialogue?: ArticleDialogueLine[];
   culture?: string[];
   exercises?: ArticleExercise[];
@@ -1050,7 +1055,7 @@ const coreArticles: Article[] = [
   ),
 ];
 
-export const articles: Article[] = [...coreArticles, ...extendedArticles];
+export const articles: Article[] = [...coreArticles, ...extendedArticles].map(enrichArticle);
 
 export const articleLevels: ArticleLevel[] = ["Start", "Basis", "Verdieping", "Gevorderd"];
 export const articleKinds: ArticleKind[] = ["Uitspraak", "Schrift", "Grammatica", "Praktijk"];

@@ -782,6 +782,14 @@ function ArticleGuide({
           {selected.explanation.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
         </section>
 
+        {selected.deepDive?.length ? (
+          <section className="article-body deep-dive-card">
+            <p className="eyebrow">Meer diepgang</p>
+            <h2>Nuance en werkelijk gebruik</h2>
+            {selected.deepDive.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+          </section>
+        ) : null}
+
         <section className="article-body">
           <h2>Patronen</h2>
           <div className="pattern-list">
@@ -804,6 +812,7 @@ function ArticleGuide({
                   <span>{example.pinyin}</span>
                   <p>{example.dutch}</p>
                   {example.note && <small>{example.note}</small>}
+                  {example.analysis && <small className="example-analysis">{example.analysis}</small>}
                 </div>
                 <button
                   className="article-audio"
@@ -823,6 +832,26 @@ function ArticleGuide({
             {selected.remember.map((item) => <li key={item}>{item}</li>)}
           </ul>
         </section>
+
+        {selected.pitfalls?.length ? (
+          <section className="article-body pitfalls-card">
+            <p className="eyebrow">Vermijd deze fouten</p>
+            <h2>Veelgemaakte fouten</h2>
+            <ul>
+              {selected.pitfalls.map((item) => <li key={item}>{item}</li>)}
+            </ul>
+          </section>
+        ) : null}
+
+        {selected.practiceSteps?.length ? (
+          <section className="article-body practice-plan-card">
+            <p className="eyebrow">Actief verwerken</p>
+            <h2>Zo oefen je dit onderwerp</h2>
+            <ol>
+              {selected.practiceSteps.map((item) => <li key={item}>{item}</li>)}
+            </ol>
+          </section>
+        ) : null}
 
         {selected.dialogue?.length ? (
           <section className="article-body">

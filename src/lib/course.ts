@@ -21,7 +21,7 @@ export function exercisesForArticle(article: Article): ArticleExercise[] {
   const examples = article.examples.filter((example) => example.chinese && example.dutch);
 
   for (const example of examples) {
-    if (exercises.length >= 3) break;
+    if (exercises.length >= 5) break;
     const options = optionsFor(
       example.dutch,
       examples.filter((candidate) => candidate !== example).map((candidate) => candidate.dutch),
@@ -34,9 +34,12 @@ export function exercisesForArticle(article: Article): ArticleExercise[] {
     });
   }
 
-  if (exercises.length < 3 && article.patterns.length) {
-    const pattern = article.patterns[0];
-    const options = optionsFor(pattern.meaning, article.patterns.slice(1).map((item) => item.meaning));
+  for (const pattern of article.patterns) {
+    if (exercises.length >= 5) break;
+    const options = optionsFor(
+      pattern.meaning,
+      article.patterns.filter((candidate) => candidate !== pattern).map((item) => item.meaning),
+    );
     exercises.push({
       question: `Welke uitleg hoort bij het patroon “${pattern.formula}”?`,
       options,
@@ -45,7 +48,21 @@ export function exercisesForArticle(article: Article): ArticleExercise[] {
     });
   }
 
-  return exercises.slice(0, 3);
+  for (const reminder of article.remember) {
+    if (exercises.length >= 5) break;
+    const options = optionsFor(
+      reminder,
+      article.remember.filter((candidate) => candidate !== reminder),
+    );
+    exercises.push({
+      question: `Welke vuistregel hoort bij “${article.title}”?`,
+      options,
+      answer: options.indexOf(reminder),
+      explanation: reminder,
+    });
+  }
+
+  return exercises.slice(0, 5);
 }
 
 export function relatedWordsForArticle(article: Article, words: Word[], limit = 12): Word[] {
