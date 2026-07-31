@@ -163,6 +163,15 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .daily-practice-selection strong { font-size: 13px; }
 .daily-practice-selection small { margin-top: 4px; color: var(--secondary); font-size: 10px; }
 .daily-practice-selection .button { flex: 0 0 auto; min-height: 44px; padding-inline: 14px; font-size: 12px; white-space: nowrap; }
+.practice-direction-choice { width: 100%; margin-top: 14px; }
+.practice-direction-choice > p { margin: 0 0 8px; color: var(--secondary); font-size: 11px; font-weight: 800; text-align: center; }
+.practice-direction-choice > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.practice-direction-choice .button { min-height: 58px; padding: 9px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; line-height: 1.2; }
+.practice-direction-choice .button strong { font-size: 13px; }
+.practice-direction-choice .button span { font-size: 9px; font-weight: 650; opacity: .78; }
+.practice-direction-choice.compact { width: min(100%, 310px); flex: 0 0 auto; margin-top: 0; }
+.practice-direction-choice.compact > p { text-align: left; }
+.practice-direction-choice.compact .button { min-height: 48px; }
 
 .bottom-nav {
   position: fixed;
@@ -558,6 +567,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .daily-set-sheet > h2 { margin-bottom: 4px; font-size: clamp(24px, 7vw, 32px); text-transform: capitalize; }
 .daily-set-meta { margin-bottom: 16px; color: var(--secondary); font-size: 12px; }
 .daily-set-practice { margin: 0 0 18px; }
+.daily-set-practice .practice-direction-choice { margin-top: 0; }
 .daily-set-words { border-top: 1px solid var(--border); }
 .daily-set-words > button {
   width: 100%;
@@ -643,6 +653,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   .daily-word-preview { font-size: 16px; }
   .daily-practice-selection { align-items: stretch; flex-direction: column; }
   .daily-practice-selection .button { width: 100%; justify-content: space-between; display: flex; align-items: center; }
+  .practice-direction-choice.compact { width: 100%; }
   .selected-list-actions { align-items: flex-start; flex-direction: column; }
 }
 

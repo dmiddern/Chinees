@@ -19,12 +19,12 @@ type Tab = "home" | "learn" | "guide" | "words" | "write" | "settings";
 interface Settings {
   levels: HskLevel[];
   direction: Direction;
-  dailyGoal: number;
   speechRate: number;
 }
 
 const words = wordsData as Word[];
 const hskLevels: HskLevel[] = [1, 2, 3, 4, 5, 6, "7-9"];
+const DAILY_WORD_COUNT = 5;
 const singleCharacterMeanings = new Map(
   words
     .filter((word) => [...word.hanzi].length === 1)
@@ -41,7 +41,6 @@ function literalMeaning(word: Word) {
 const defaultSettings: Settings = {
   levels: [1],
   direction: "zh-nl",
-  dailyGoal: 15,
   speechRate: 0.72,
 };
 
@@ -93,20 +92,14 @@ function App() {
   );
 
   useEffect(() => {
-    setDailySets((current) => createDailySet(current, levelWords, settings.levels, settings.dailyGoal, progress));
-  }, [levelWords, progress, settings.dailyGoal, settings.levels]);
+    setDailySets((current) => createDailySet(current, levelWords, settings.levels, DAILY_WORD_COUNT, progress));
+  }, [levelWords, progress, settings.levels]);
 
   const todaySet = dailySets[localDateKey()];
   const todayWords = useMemo(
     () => (todaySet?.wordIds || []).map((id) => words.find((word) => word.id === id)).filter((word): word is Word => Boolean(word)),
     [todaySet],
   );
-  useEffect(() => {
-    if (!todaySet || !todayWords.length) return;
-    setLearningSession((current) => (
-      current || createLearningSession(todaySet.date, todaySet.wordIds, "vandaag")
-    ));
-  }, [todaySet, todayWords.length]);
   const dailyHistory = useMemo(
     () => Object.values(dailySets).sort((a, b) => b.date.localeCompare(a.date)),
     [dailySets],
@@ -117,9 +110,13 @@ function App() {
     return todayWords.filter((word) => {
       const item = progress[word.id];
       return item
-        && (item.meaning.lastReviewedAt || 0) >= startOfToday.getTime()
-        && (item.pronunciation.lastReviewedAt || 0) >= startOfToday.getTime()
-        && (item.writing.lastReviewedAt || 0) >= startOfToday.getTime();
+        && (
+          (item.meaning.lastReviewedAt || 0) >= startOfToday.getTime()
+          || (
+            (item.pronunciation.lastReviewedAt || 0) >= startOfToday.getTime()
+            && (item.writing.lastReviewedAt || 0) >= startOfToday.getTime()
+          )
+        );
     }).length;
   }, [progress, todayWords]);
 
@@ -165,17 +162,17 @@ function App() {
     setProgress((current) => updateSkill(current, wordId, skill, correct));
   }
 
-  function startToday() {
+  function startToday(direction: Direction) {
     if (!todaySet?.wordIds.length) return;
     setLearningSession((current) => (
-      sessionMatches(current, todaySet.date, todaySet.wordIds)
+      sessionMatches(current, todaySet.date, todaySet.wordIds, direction)
         ? current
-        : createLearningSession(todaySet.date, todaySet.wordIds, "vandaag")
+        : createLearningSession(todaySet.date, todaySet.wordIds, "vandaag", direction)
     ));
     setTab("learn");
   }
 
-  function startDailySetReview(sets: DailySet[]) {
+  function startDailySetReview(sets: DailySet[], direction: Direction) {
     const sortedSets = [...sets].sort((a, b) => a.date.localeCompare(b.date));
     const wordIds = [...new Set(sortedSets.flatMap((set) => set.wordIds))];
     if (!wordIds.length) return;
@@ -183,14 +180,14 @@ function App() {
     const title = sortedSets.length === 1
       ? formatDailyDate(sortedSets[0].date).toLocaleLowerCase("nl-BE")
       : `${sortedSets.length} geselecteerde dagen`;
-    setLearningSession(createLearningSession(`review:${dates.join(",")}`, wordIds, title));
+    setLearningSession(createLearningSession(`review:${dates.join(",")}`, wordIds, title, direction));
     setSelectedDay(null);
     setTab("learn");
   }
 
   function startWordList(wordIds: number[], title: string) {
     if (!wordIds.length) return;
-    setLearningSession(createLearningSession(`list:${Date.now()}`, wordIds, title));
+    setLearningSession(createLearningSession(`list:${Date.now()}`, wordIds, title, settings.direction));
     setTab("learn");
   }
 
@@ -322,7 +319,7 @@ function App() {
         <DailySetSheet
           set={selectedDay}
           onClose={() => setSelectedDay(null)}
-          onPractice={() => startDailySetReview([selectedDay])}
+          onPractice={(direction) => startDailySetReview([selectedDay], direction)}
           onSelect={(word) => {
             setSelectedDay(null);
             setSelectedWord(word);
@@ -350,8 +347,8 @@ function Home({
   todayWords: Word[];
   todayCompleted: number;
   history: DailySet[];
-  onStart: () => void;
-  onPracticeDays: (sets: DailySet[]) => void;
+  onStart: (direction: Direction) => void;
+  onPracticeDays: (sets: DailySet[], direction: Direction) => void;
   onWrite: () => void;
   onToggleLevel: (level: HskLevel) => void;
   onOpenDay: (set: DailySet) => void;
@@ -403,9 +400,7 @@ function Home({
             <strong>{percentage}%</strong>
           </div>
         </div>
-        <button className="button primary-button full-button" onClick={onStart}>
-          Start met leren <span aria-hidden="true">→</span>
-        </button>
+        <PracticeDirectionButtons onChoose={onStart} />
         <button className="text-button" onClick={onWrite}>Of oefen eerst je schrijfwijze</button>
       </section>
 
@@ -457,11 +452,9 @@ function Home({
           <div className="daily-practice-selection">
             <span>
               <strong>{selectedSets.length} {selectedSets.length === 1 ? "dag" : "dagen"} geselecteerd</strong>
-              <small>{selectedWordCount} unieke woorden · beide richtingen</small>
+              <small>{selectedWordCount} unieke woorden · kies één richting</small>
             </span>
-            <button className="button primary-button" onClick={() => onPracticeDays(selectedSets)}>
-              Opnieuw oefenen <span aria-hidden="true">→</span>
-            </button>
+            <PracticeDirectionButtons compact onChoose={(direction) => onPracticeDays(selectedSets, direction)} />
           </div>
         )}
       </section>
@@ -487,6 +480,30 @@ function StatCard({ value, label, tone }: { value: number; label: string; tone: 
   );
 }
 
+function PracticeDirectionButtons({
+  onChoose,
+  compact = false,
+}: {
+  onChoose: (direction: Direction) => void;
+  compact?: boolean;
+}) {
+  return (
+    <div className={`practice-direction-choice ${compact ? "compact" : ""}`}>
+      <p>Kies je oefenrichting</p>
+      <div>
+        <button className="button primary-button" onClick={() => onChoose("zh-nl")}>
+          <strong>中文 → NL</strong>
+          <span>Chinees naar Nederlands</span>
+        </button>
+        <button className="button secondary-button" onClick={() => onChoose("nl-zh")}>
+          <strong>NL → 中文</strong>
+          <span>Nederlands naar Chinees</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Learn({
   session,
   settings,
@@ -500,7 +517,7 @@ function Learn({
 }) {
   function restart() {
     if (!session) return;
-    onSessionChange(createLearningSession(session.date, session.wordIds, session.title));
+    onSessionChange(createLearningSession(session.date, session.wordIds, session.title, session.direction));
   }
 
   if (!session?.queue.length) return <EmptyState title="Je daglijst wordt klaargezet" text="Ga even terug naar Vandaag en open de leersessie opnieuw." />;
@@ -511,7 +528,10 @@ function Learn({
         <div className="hero-character">好</div>
         <p className="eyebrow">Daglijst voltooid</p>
         <h1>Goed gewerkt</h1>
-        <p>Je hebt betekenis, uitspraak en schrijfwijze van {session.wordIds.length} woorden uit {session.title || "deze reeks"} geoefend.</p>
+        <p>
+          Je hebt {session.wordIds.length} woorden uit {session.title || "deze reeks"} geoefend van{" "}
+          {session.direction === "zh-nl" ? "Chinees naar Nederlands" : "Nederlands naar Chinees"}.
+        </p>
         <button className="button primary-button" onClick={restart}>Oefen deze lijst opnieuw</button>
       </div>
     );
@@ -1305,10 +1325,6 @@ function SettingsView({
       </section>
       <section className="settings-card">
         <label>
-          <span><strong>Dagdoel</strong><small>{settings.dailyGoal} woorden per dag</small></span>
-          <input type="range" min="5" max="50" step="5" value={settings.dailyGoal} onChange={(event) => onChange({ dailyGoal: Number(event.target.value) })} />
-        </label>
-        <label>
           <span><strong>Uitspraaksnelheid</strong><small>{Math.round(settings.speechRate * 100)}%</small></span>
           <input type="range" min="0.5" max="1" step="0.05" value={settings.speechRate} onChange={(event) => onChange({ speechRate: Number(event.target.value) })} />
         </label>
@@ -1388,7 +1404,7 @@ function DailySetSheet({
 }: {
   set: DailySet;
   onClose: () => void;
-  onPractice: () => void;
+  onPractice: (direction: Direction) => void;
   onSelect: (word: Word) => void;
 }) {
   const dayWords = set.wordIds.map((id) => words.find((word) => word.id === id)).filter((word): word is Word => Boolean(word));
@@ -1399,9 +1415,9 @@ function DailySetSheet({
         <p className="eyebrow">Daglijst</p>
         <h2>{formatDailyDate(set.date)}</h2>
         <p className="daily-set-meta">{dayWords.length} woorden · HSK {set.levels.join(", ")}</p>
-        <button className="button primary-button full-button daily-set-practice" onClick={onPractice}>
-          Oefen deze dag opnieuw <span aria-hidden="true">→</span>
-        </button>
+        <div className="daily-set-practice">
+          <PracticeDirectionButtons onChoose={onPractice} />
+        </div>
         <div className="daily-set-words">
           {dayWords.map((word, index) => (
             <button key={word.id} onClick={() => onSelect(word)}>

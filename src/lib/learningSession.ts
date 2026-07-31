@@ -11,6 +11,7 @@ export interface LearningExercise {
 export interface LearningSession {
   date: string;
   title?: string;
+  direction: Direction;
   wordIds: number[];
   queue: LearningExercise[];
   index: number;
@@ -28,18 +29,24 @@ const shuffle = <T,>(items: T[]) => {
   return result;
 };
 
-export function createLearningSession(date: string, wordIds: number[], title?: string): LearningSession {
-  const queue = shuffle(
-    wordIds.flatMap((wordId) => [
-      { wordId, direction: "zh-nl" as const, skill: "meaning" as const },
-      { wordId, direction: "nl-zh" as const, skill: "pronunciation" as const },
-      { wordId, direction: "nl-zh" as const, skill: "writing" as const },
-    ]),
-  );
+export function createLearningSession(
+  date: string,
+  wordIds: number[],
+  title: string | undefined,
+  direction: Direction,
+): LearningSession {
+  const exercises: LearningExercise[] = direction === "zh-nl"
+    ? wordIds.map((wordId) => ({ wordId, direction, skill: "meaning" as const }))
+    : wordIds.flatMap((wordId) => [
+      { wordId, direction, skill: "pronunciation" as const },
+      { wordId, direction, skill: "writing" as const },
+    ]);
+  const queue = shuffle(exercises);
 
   return {
     date,
     title,
+    direction,
     wordIds: [...wordIds],
     queue,
     index: 0,
@@ -53,9 +60,9 @@ export function loadLearningSession(): LearningSession | null {
   try {
     const session = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") as LearningSession | null;
     if (!session || !Array.isArray(session.queue) || !Array.isArray(session.wordIds)) return null;
-    if (session.queue.some((exercise) => !exercise.skill)) {
-      return createLearningSession(session.date, session.wordIds, session.title);
-    }
+    if (!session.direction || session.queue.some((exercise) => (
+      !exercise.skill || exercise.direction !== session.direction
+    ))) return null;
     return session;
   } catch {
     return null;
@@ -70,8 +77,14 @@ export function saveLearningSession(session: LearningSession | null) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
 }
 
-export function sessionMatches(session: LearningSession | null, date: string, wordIds: number[]) {
+export function sessionMatches(
+  session: LearningSession | null,
+  date: string,
+  wordIds: number[],
+  direction: Direction,
+) {
   return session?.date === date
+    && session.direction === direction
     && session.wordIds.length === wordIds.length
     && session.wordIds.every((wordId, index) => wordId === wordIds[index]);
 }

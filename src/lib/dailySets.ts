@@ -44,7 +44,17 @@ export function createDailySet(
   progress: ProgressMap,
 ): DailySetMap {
   const date = localDateKey();
-  if (current[date] || !availableWords.length) return current;
+  if (!availableWords.length) return current;
+  if (current[date]) {
+    if (current[date].wordIds.length <= dailyGoal) return current;
+    return {
+      ...current,
+      [date]: {
+        ...current[date],
+        wordIds: current[date].wordIds.slice(0, dailyGoal),
+      },
+    };
+  }
 
   const recentIds = new Set(
     Object.values(current)
