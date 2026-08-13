@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
 import "./styles.css";
+import "./exportBridge";
 import { installHanziFeatures } from "./lib/handwriting";
 import { installCanvasReadyFix } from "./lib/canvasReady";
 import { installStrokeQuizPatch } from "./lib/strokeQuizPatch";
