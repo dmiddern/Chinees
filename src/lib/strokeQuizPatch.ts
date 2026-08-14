@@ -96,6 +96,8 @@ function installQuiz(
     writer.quiz({
       showHintAfterMisses: 3,
       highlightOnComplete: false,
+      leniency: 1.5,
+      acceptBackwardsStrokes: false,
       onMistake: (data) => {
         const count = (missesPerStroke.get(data.strokeNum) || 0) + 1;
         missesPerStroke.set(data.strokeNum, count);
