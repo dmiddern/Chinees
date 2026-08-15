@@ -1,0 +1,123 @@
+name: Optimize word dictionary
+on:
+  push:
+    paths:
+      - '.github/workflows/optimize-word-dictionary.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Optimize dictionary rendering
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('src/App.tsx')
+          s = p.read_text()
+
+          old = '''  const [query, setQuery] = useState("");
+  const [level, setLevel] = useState<"all" | HskLevel | "custom">("all");
+  const [showAddWord, setShowAddWord] = useState(false);'''
+          new = '''  const [query, setQuery] = useState("");
+  const [level, setLevel] = useState<"all" | HskLevel | "custom">("all");
+  const [visibleCount, setVisibleCount] = useState(120);
+  const [showAddWord, setShowAddWord] = useState(false);'''
+          if old not in s: raise SystemExit('state marker not found')
+          s = s.replace(old, new, 1)
+
+          old = '''  const filtered = useMemo(
+    () => searchWords(words.filter((word) => (
+      (level === "all" || (level === "custom" ? word.custom : !word.custom && word.level === level))
+      && (!onlySelectedList || !selectedList || selectedList.wordIds.includes(word.id))
+    )), query),
+    [query, level, onlySelectedList, selectedList],
+  );
+
+  return ('''
+          new = '''  const levelWords = useMemo(
+    () => words.filter((word) => (
+      level === "all" || (level === "custom" ? word.custom : !word.custom && word.level === level)
+    )),
+    [level],
+  );
+  const filtered = useMemo(
+    () => searchWords(levelWords, query),
+    [query, levelWords],
+  );
+  const visibleWords = useMemo(() => filtered.slice(0, visibleCount), [filtered, visibleCount]);
+
+  useEffect(() => {
+    setVisibleCount(120);
+  }, [query, level]);
+
+  return ('''
+          if old not in s: raise SystemExit('filter marker not found')
+          s = s.replace(old, new, 1)
+
+          s = s.replace('{filtered.map((word) => {', '{visibleWords.map((word) => {', 1)
+
+          old = '''      </div>
+    </div>
+  );
+}
+
+function Writing'''
+          new = '''      </div>
+      {visibleCount < filtered.length && (
+        <button
+          className="dictionary-more"
+          type="button"
+          onClick={() => setVisibleCount((count) => Math.min(count + 120, filtered.length))}
+          aria-label="Meer woorden tonen"
+          title="Meer"
+        >
+          ↓
+        </button>
+      )}
+    </div>
+  );
+}
+
+function Writing'''
+          if old not in s: raise SystemExit('render end marker not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+          PY
+      - name: Add compact load-more style
+        run: |
+          cat >> src/styles.css <<'CSS'
+
+          .dictionary-more {
+            width: 48px;
+            height: 48px;
+            margin: 16px auto 4px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: var(--surface);
+            color: var(--primary);
+            display: grid;
+            place-items: center;
+            font-size: 22px;
+            cursor: pointer;
+          }
+          CSS
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+      - name: Commit
+        run: |
+          git config user.name "dmiddern"
+          git config user.email "derry.middernacht@gmail.com"
+          git add src/App.tsx src/styles.css
+          git commit -m "Optimize dictionary rendering" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
