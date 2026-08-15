@@ -165,7 +165,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .daily-practice-selection .button { flex: 0 0 auto; min-height: 44px; padding-inline: 14px; font-size: 12px; white-space: nowrap; }
 .practice-direction-choice { width: 100%; margin-top: 14px; }
 .practice-direction-heading{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 8px;min-height:44px;position:relative}.practice-direction-heading p{margin:0;color:var(--secondary);font-size:11px;font-weight:800;text-align:center}.practice-direction-heading .daily-generate-button{position:absolute;right:0;top:0}.practice-direction-heading.empty{justify-content:flex-start;margin-top:14px}.practice-direction-heading.empty p{text-align:left}.practice-direction-heading.empty .daily-generate-button{position:static;margin-left:auto}
-.practice-direction-choice > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.practice-direction-choice > div:not(.practice-direction-heading) { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .practice-direction-choice .button { min-height: 58px; padding: 9px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; line-height: 1.2; }
 .practice-direction-choice .button strong { font-size: 13px; }
 .practice-direction-choice .button span { font-size: 9px; font-weight: 650; opacity: .78; }
@@ -734,3 +734,5 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .list-toolbar .icon-action svg{display:block}
 
 .precision-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.precision-options button{min-width:0;border:1px solid var(--border);border-radius:13px;background:var(--surface);padding:11px 6px;font-size:12px;font-weight:800;cursor:pointer}.precision-options button.active{background:var(--primary);border-color:var(--primary);color:var(--background)}
+
+.daily-selection-play{width:48px;min-width:48px;padding:0;font-size:18px}

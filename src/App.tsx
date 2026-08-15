@@ -173,6 +173,7 @@ function App() {
 
   function startToday(direction: Direction) {
     if (!todaySet?.wordIds.length) return;
+    updateSettings({ direction });
     setLearningSession((current) => (
       sessionMatches(current, todaySet.date, todaySet.wordIds, direction)
         ? current
@@ -343,6 +344,7 @@ function App() {
       {selectedDay && (
         <DailySetSheet
           set={selectedDay}
+          settings={settings}
           onClose={() => setSelectedDay(null)}
           onPractice={(direction) => startDailySetReview([selectedDay], direction)}
           onSelect={(word) => {
@@ -486,9 +488,14 @@ function Home({
           <div className="daily-practice-selection">
             <span>
               <strong>{selectedSets.length} {selectedSets.length === 1 ? "dag" : "dagen"} geselecteerd</strong>
-              <small>{selectedWordCount} unieke woorden · kies één richting</small>
+              <small>{selectedWordCount} unieke woorden</small>
             </span>
-            <PracticeDirectionButtons compact onChoose={(direction) => onPracticeDays(selectedSets, direction)} />
+            <button
+              className="button primary-button daily-selection-play"
+              onClick={() => onPracticeDays(selectedSets, settings.direction)}
+              aria-label="Oefen geselecteerde lijsten"
+              title="Oefenen"
+            >▶</button>
           </div>
         )}
       </section>
@@ -1527,11 +1534,13 @@ function SkillSummary({ label, status }: { label: string; status: string }) {
 
 function DailySetSheet({
   set,
+  settings,
   onClose,
   onPractice,
   onSelect,
 }: {
   set: DailySet;
+  settings: Settings;
   onClose: () => void;
   onPractice: (direction: Direction) => void;
   onSelect: (word: Word) => void;
@@ -1545,7 +1554,9 @@ function DailySetSheet({
         <h2>{formatDailyDate(set.date)}</h2>
         <p className="daily-set-meta">{dayWords.length} woorden · HSK {set.levels.join(", ")}</p>
         <div className="daily-set-practice">
-          <PracticeDirectionButtons onChoose={onPractice} />
+          <button className="button primary-button full-button" onClick={() => onPractice(settings.direction)}>
+            Oefenen <span aria-hidden="true">▶</span>
+          </button>
         </div>
         <div className="daily-set-words">
           {dayWords.map((word, index) => (
