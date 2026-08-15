@@ -732,3 +732,5 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 @media(max-width:560px){.bottom-nav button{font-size:9px}.bottom-nav button span{font-size:19px}.bottom-nav{gap:2px;padding-left:5px;padding-right:5px}}
 
 .list-toolbar .icon-action svg{display:block}
+
+.precision-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.precision-options button{min-width:0;border:1px solid var(--border);border-radius:13px;background:var(--surface);padding:11px 6px;font-size:12px;font-weight:800;cursor:pointer}.precision-options button.active{background:var(--primary);border-color:var(--primary);color:var(--background)}

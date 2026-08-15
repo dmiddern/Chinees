@@ -22,6 +22,7 @@ interface Settings {
   levels: HskLevel[];
   direction: Direction;
   speechRate: number;
+  drawingPrecision: "relaxed" | "normal" | "precise";
 }
 
 const words = [...(wordsData as Word[]), ...loadCustomWords()];
@@ -44,6 +45,7 @@ const defaultSettings: Settings = {
   levels: [1],
   direction: "zh-nl",
   speechRate: 0.72,
+  drawingPrecision: "normal",
 };
 
 const navItems: { id: Tab; label: string; icon: string }[] = [
@@ -279,6 +281,7 @@ function App() {
             words={words.filter((word) => word.custom || settings.levels.includes(word.level))}
             initialWord={writingWord}
             rate={settings.speechRate}
+            drawingPrecision={settings.drawingPrecision}
             onRate={(wordId, correct) => rate(wordId, "writing", correct)}
           />
         )}
@@ -1360,7 +1363,7 @@ function WordList({
   );
 }
 
-function Writing({ words, initialWord, rate, onRate }: { words: Word[]; initialWord: Word | null; rate: number; onRate: (wordId: number, correct: boolean) => void }) {
+function Writing({ words, initialWord, rate, drawingPrecision, onRate }: { words: Word[]; initialWord: Word | null; rate: number; drawingPrecision: Settings["drawingPrecision"]; onRate: (wordId: number, correct: boolean) => void }) {
   const [query, setQuery] = useState("");
   const [word, setWord] = useState<Word>(() => initialWord || words[0] || (wordsData as Word[])[0]);
   useEffect(() => {
@@ -1399,6 +1402,7 @@ function Writing({ words, initialWord, rate, onRate }: { words: Word[]; initialW
       </div>
       <HanziPractice
         hanzi={word.hanzi}
+        precision={drawingPrecision}
         onComplete={(mistakes) => onRate(word.id, mistakes <= 1)}
       />
     </div>
@@ -1434,6 +1438,25 @@ function SettingsView({
           <span><strong>Uitspraaksnelheid</strong><small>{Math.round(settings.speechRate * 100)}%</small></span>
           <input type="range" min="0.5" max="1" step="0.05" value={settings.speechRate} onChange={(event) => onChange({ speechRate: Number(event.target.value) })} />
         </label>
+      </section>
+      <section className="settings-card">
+        <h2>Tekennauwkeurigheid</h2>
+        <div className="precision-options" role="group" aria-label="Tekennauwkeurigheid">
+          {([
+            ["relaxed", "Soepel"],
+            ["normal", "Normaal"],
+            ["precise", "Precies"],
+          ] as const).map(([value, label]) => (
+            <button
+              key={value}
+              type="button"
+              className={settings.drawingPrecision === value ? "active" : ""}
+              onClick={() => onChange({ drawingPrecision: value })}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
       </section>
       <section className="settings-card about-card">
         <h2>Installeren op je gsm</h2>

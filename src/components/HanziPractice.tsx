@@ -6,6 +6,7 @@ import { literalGlosses } from "../data/literalGlosses";
 
 interface Props {
   hanzi: string;
+  precision?: "relaxed" | "normal" | "precise";
   onComplete?: (mistakes: number) => void;
 }
 
@@ -80,7 +81,7 @@ export function StrokeOrderPreview({ hanzi }: { hanzi: string }) {
   );
 }
 
-export default function HanziPractice({ hanzi, onComplete }: Props) {
+export default function HanziPractice({ hanzi, precision = "normal", onComplete }: Props) {
   const characters = useMemo(() => chineseCharacters(hanzi), [hanzi]);
   const [characterIndex, setCharacterIndex] = useState(0);
   const [mode, setMode] = useState<"ready" | "animating" | "quiz" | "complete">("ready");
@@ -120,7 +121,9 @@ export default function HanziPractice({ hanzi, onComplete }: Props) {
     let currentMistakes = 0;
     setMistakes(0);
     setMode("quiz");
+    const leniency = precision === "relaxed" ? 1.45 : precision === "precise" ? 0.65 : 1;
     writerRef.current.quiz({
+      leniency,
       showHintAfterMisses: 2,
       highlightOnComplete: true,
       onMistake: () => {
