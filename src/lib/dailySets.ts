@@ -1,6 +1,8 @@
 import type { HskLevel, ProgressMap, Word } from "../types";
+import { loadCustomWords } from "./customWords";
 
 const STORAGE_KEY = "chinees.daily-sets.v1";
+const SETTINGS_KEY = "chinees.settings.v1";
 
 export interface DailySet {
   date: string;
@@ -34,6 +36,15 @@ export function clearDailySets() {
   localStorage.removeItem(STORAGE_KEY);
 }
 
+function customWordsEnabled() {
+  try {
+    const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") as { includeCustomDailyWords?: boolean };
+    return settings.includeCustomDailyWords === true;
+  } catch {
+    return false;
+  }
+}
+
 const shuffled = <T,>(items: T[]) => [...items].sort(() => Math.random() - 0.5);
 
 export function createDailySet(
@@ -44,7 +55,11 @@ export function createDailySet(
   progress: ProgressMap,
 ): DailySetMap {
   const date = localDateKey();
-  if (!availableWords.length) return current;
+  const customWords = customWordsEnabled() ? loadCustomWords() : [];
+  const pool = [...availableWords, ...customWords]
+    .filter((word, index, all) => all.findIndex((item) => item.id === word.id) === index);
+
+  if (!pool.length) return current;
   if (current[date]) {
     if (current[date].wordIds.length <= dailyGoal) return current;
     return {
@@ -62,7 +77,7 @@ export function createDailySet(
   const previouslyGeneratedIds = new Set(
     Object.values(current).flatMap((set) => set.wordIds),
   );
-  const eligibleWords = availableWords.filter((word) => !previouslyGeneratedIds.has(word.id));
+  const eligibleWords = pool.filter((word) => !previouslyGeneratedIds.has(word.id));
   if (!eligibleWords.length) return current;
 
   const now = Date.now();
