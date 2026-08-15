@@ -1,5 +1,8 @@
 import type { Word } from "../types";
 
+const DEFAULT_VISIBLE_LIMIT = 180;
+const SEARCH_RESULT_LIMIT = 240;
+
 export function normalizeSearch(value: string) {
   return value
     .normalize("NFD")
@@ -93,7 +96,12 @@ export function wordMatchesSearch(word: Word, query: string) {
 
 export function searchWords(items: Word[], query: string) {
   const preparedQuery = prepareQuery(query);
-  if (!preparedQuery.normalized) return [...items];
+
+  // Opening the dictionary used to hand more than 11,000 React rows to the
+  // browser at once. On mobile that causes a large synchronous render/layout
+  // cost. The dictionary is search-first, so only a compact initial window is
+  // returned until the user searches or filters.
+  if (!preparedQuery.normalized) return items.slice(0, DEFAULT_VISIBLE_LIMIT);
 
   return items
     .map((word, index) => ({ word, index, score: searchScore(word, preparedQuery) }))
@@ -103,5 +111,6 @@ export function searchWords(items: Word[], query: string) {
       const levelB = b.word.level === "7-9" ? 7 : b.word.level;
       return b.score - a.score || levelA - levelB || a.index - b.index;
     })
+    .slice(0, SEARCH_RESULT_LIMIT)
     .map((result) => result.word);
 }
