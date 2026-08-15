@@ -1,4 +1,5 @@
 name: Remove Leren navigation tab
+# one-off cleanup workflow
 
 on:
   push:
