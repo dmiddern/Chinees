@@ -46,8 +46,7 @@ const defaultSettings: Settings = {
 };
 
 const navItems: { id: Tab; label: string; icon: string }[] = [
-  { id: "home", label: "Vandaag", icon: "⌂" },
-  { id: "learn", label: "Leren", icon: "学" },
+  { id: "home", label: "Leren", icon: "学" },
   { id: "guide", label: "Theorie", icon: "文" },
   { id: "words", label: "Woorden", icon: "词" },
   { id: "write", label: "Schrijven", icon: "写" },
