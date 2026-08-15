@@ -1,0 +1,68 @@
+name: Group studied theory topics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/group-studied-theory.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Group studied theory topics
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          path = Path('src/App.tsx')
+          text = path.read_text()
+
+          old = '''  const filtered = articles.filter((item) => (\n    (level === "Alles" || item.level === level)\n    && (kind === "Alles" || item.kind === kind)\n    && (!onlyOpen || !progress[item.id]?.understood)\n  ));\n  const readCount = articles.filter((item) => progress[item.id]?.read).length;'''
+          new = '''  const filtered = articles.filter((item) => (\n    (level === "Alles" || item.level === level)\n    && (kind === "Alles" || item.kind === kind)\n    && (!onlyOpen || !progress[item.id]?.understood)\n  ));\n  const openTopics = filtered.filter((item) => !progress[item.id]?.understood);\n  const studiedTopics = filtered.filter((item) => progress[item.id]?.understood);\n  const readCount = articles.filter((item) => progress[item.id]?.read).length;'''
+          if new not in text:
+              if old not in text:
+                  raise SystemExit('Missing filtered topics target')
+              text = text.replace(old, new, 1)
+
+          old = '''      <div className="article-section-heading">\n        <div>\n          <p className="eyebrow">Jouw route</p>\n          <h2>{filtered.length} onderwerpen</h2>\n        </div>\n        {(level !== "Alles" || kind !== "Alles" || onlyOpen) && (\n          <button onClick={() => { setLevel("Alles"); setKind("Alles"); setOnlyOpen(false); }}>Wis filters</button>\n        )}\n      </div>\n\n      <section className="article-grid">\n        {filtered.map((item) => {\n          const itemProgress = progress[item.id];\n          return (\n            <button className={`article-tile ${itemProgress?.understood ? "understood" : ""}`} key={item.id} onClick={() => openArticle(item)}>\n              <span className="article-order">{String(item.order).padStart(2, "0")}</span>\n              <span className="article-kind">{item.kind}</span>\n              <strong className="article-tile-hanzi">{item.chineseTitle}</strong>\n              <h3>{item.title}</h3>\n              <p>{item.summary}</p>\n              <span className="article-tile-footer">\n                <span>{item.level} · {item.minutes} min</span>\n                {itemProgress?.understood\n                  ? <b className="complete-badge">✓ Begrepen</b>\n                  : itemProgress?.read\n                    ? <b>Gelezen</b>\n                    : <b>Open →</b>}\n              </span>\n            </button>\n          );\n        })}\n      </section>'''
+
+          new = '''      <div className="article-section-heading">\n        <div>\n          <p className="eyebrow">Jouw route</p>\n          <h2>{openTopics.length ? `${openTopics.length} nog te bestuderen` : "Alles bestudeerd"}</h2>\n        </div>\n        {(level !== "Alles" || kind !== "Alles" || onlyOpen) && (\n          <button onClick={() => { setLevel("Alles"); setKind("Alles"); setOnlyOpen(false); }}>Wis filters</button>\n        )}\n      </div>\n\n      {openTopics.length > 0 && (\n        <>\n          <div className="next-topic-label">\n            <span>Volgende onderwerp</span>\n            <strong>{openTopics[0].order} van {articles.length}</strong>\n          </div>\n          <section className="article-grid open-topics-grid">\n            {openTopics.map((item, index) => {\n              const itemProgress = progress[item.id];\n              return (\n                <button className={`article-tile ${index === 0 ? "next-topic" : ""}`} key={item.id} onClick={() => openArticle(item)}>\n                  <span className="article-order">{String(item.order).padStart(2, "0")}</span>\n                  <span className="article-kind">{item.kind}</span>\n                  <strong className="article-tile-hanzi">{item.chineseTitle}</strong>\n                  <h3>{item.title}</h3>\n                  <p>{item.summary}</p>\n                  <span className="article-tile-footer">\n                    <span>{item.level} · {item.minutes} min</span>\n                    {itemProgress?.read ? <b>Gelezen</b> : <b>{index === 0 ? "Bestudeer nu →" : "Open →"}</b>}\n                  </span>\n                </button>\n              );\n            })}\n          </section>\n        </>\n      )}\n\n      {!onlyOpen && studiedTopics.length > 0 && (\n        <details className="studied-topics">\n          <summary>\n            <span><strong>Bestudeerde onderwerpen</strong><small>{studiedTopics.length} onderwerpen</small></span>\n            <span className="studied-chevron" aria-hidden="true">⌄</span>\n          </summary>\n          <section className="article-grid studied-article-grid">\n            {studiedTopics.map((item) => (\n              <button className="article-tile understood" key={item.id} onClick={() => openArticle(item)}>\n                <span className="article-order">{String(item.order).padStart(2, "0")}</span>\n                <span className="article-kind">{item.kind}</span>\n                <strong className="article-tile-hanzi">{item.chineseTitle}</strong>\n                <h3>{item.title}</h3>\n                <p>{item.summary}</p>\n                <span className="article-tile-footer">\n                  <span>{item.level} · {item.minutes} min</span>\n                  <b className="complete-badge">✓ Begrepen</b>\n                </span>\n              </button>\n            ))}\n          </section>\n        </details>\n      )}'''
+
+          if new not in text:
+              if old not in text:
+                  raise SystemExit('Missing theory grid target')
+              text = text.replace(old, new, 1)
+
+          path.write_text(text)
+
+          css = Path('src/styles.css')
+          styles = css.read_text()
+          marker = '''.guide-stats span { padding: 13px 10px;'''
+          addition = '''.next-topic-label { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 10px; padding: 0 2px; color: var(--accent-hover); font-size: 12px; }\n.next-topic-label span { font-weight: 850; text-transform: uppercase; letter-spacing: .08em; }\n.next-topic-label strong { color: var(--secondary); font-size: 11px; }\n.article-tile.next-topic { border-color: rgba(166, 106, 87, .55); box-shadow: 0 12px 34px rgba(166, 106, 87, .12); }\n.studied-topics { margin-top: 24px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); overflow: hidden; }\n.studied-topics > summary { list-style: none; cursor: pointer; min-height: 66px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }\n.studied-topics > summary::-webkit-details-marker { display: none; }\n.studied-topics > summary span:first-child strong, .studied-topics > summary span:first-child small { display: block; }\n.studied-topics > summary strong { font-size: 14px; }\n.studied-topics > summary small { margin-top: 3px; color: var(--secondary); font-size: 11px; }\n.studied-chevron { color: var(--secondary); font-size: 22px; transition: transform .18s ease; }\n.studied-topics[open] .studied-chevron { transform: rotate(180deg); }\n.studied-article-grid { padding: 0 12px 12px; }\n\n'''
+          if '.studied-topics {' not in styles:
+              if marker not in styles:
+                  raise SystemExit('Missing CSS insertion marker')
+              styles = styles.replace(marker, addition + marker, 1)
+          css.write_text(styles)
+          PY
+      - name: Install dependencies
+        run: npm ci
+      - name: Build application
+        run: npm run build
+      - name: Commit change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/App.tsx src/styles.css
+          git commit -m "Group studied theory topics"
+          git push
