@@ -6,6 +6,7 @@ import "./deleteControls.css";
 import "./removeLearnNav.css";
 import "./settingsOverrides.css";
 import "./settingsMobileFix.css";
+import "./practiceOverrides.css";
 import "./exportBridge";
 import { installHanziFeatures } from "./lib/handwriting";
 import { installCanvasReadyFix } from "./lib/canvasReady";
