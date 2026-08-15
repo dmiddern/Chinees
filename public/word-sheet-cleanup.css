@@ -1,0 +1,28 @@
+.word-sheet-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.word-sheet-actions .word-sheet-action {
+  margin: 0;
+  min-height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--background);
+  padding: 8px 12px;
+  color: var(--primary);
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+.word-sheet-actions .word-sheet-action:hover,
+.word-sheet-actions .word-sheet-action:focus-visible {
+  border-color: #c5bdb5;
+  background: var(--surface);
+}
