@@ -1,0 +1,268 @@
+name: Ad hoc daily lists
+on:
+  push:
+    paths:
+      - '.github/workflows/ad-hoc-daily-lists.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Make daily lists ad hoc and allow multiple per day
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('src/lib/dailySets.ts')
+          s = p.read_text()
+          old = '''  if (!pool.length) return current;
+  if (current[date]) {
+    if (current[date].wordIds.length <= dailyGoal) return current;
+    return {
+      ...current,
+      [date]: {
+        ...current[date],
+        wordIds: current[date].wordIds.slice(0, dailyGoal),
+      },
+    };
+  }
+
+  // Een automatisch gegenereerde daglijst mag nooit een woord bevatten dat
+  // al in een eerdere automatisch gegenereerde daglijst stond. Eigen lijsten
+  // worden apart opgeslagen en maken dus bewust geen deel uit van deze set.
+'''
+          new = '''  if (!pool.length) return current;
+
+  // Een gegenereerde daglijst mag nooit een woord bevatten dat al in een
+  // eerdere gegenereerde daglijst stond. Meerdere lijsten op dezelfde dag
+  // zijn toegestaan en krijgen elk een eigen opslagsleutel.
+'''
+          if old not in s: raise SystemExit('daily existing-list block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''  return {
+    ...current,
+    [date]: {
+      date,
+      wordIds: selected.map((word) => word.id),
+      levels: [...levels],
+      createdAt: Date.now(),
+    },
+  };
+'''
+          new = '''  const createdAt = Date.now();
+  const storageKey = `${date}:${createdAt}:${Math.random().toString(36).slice(2, 7)}`;
+  return {
+    ...current,
+    [storageKey]: {
+      date,
+      wordIds: selected.map((word) => word.id),
+      levels: [...levels],
+      createdAt,
+    },
+  };
+'''
+          if old not in s: raise SystemExit('daily return block not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+
+          p = Path('src/App.tsx')
+          s = p.read_text()
+          old = '''  useEffect(() => {
+    setDailySets((current) => createDailySet(current, levelWords, settings.levels, DAILY_WORD_COUNT, progress));
+  }, [levelWords, progress, settings.levels]);
+
+  const todaySet = dailySets[localDateKey()];
+'''
+          new = '''  const todaySet = useMemo(
+    () => Object.values(dailySets)
+      .filter((set) => set.date === localDateKey())
+      .sort((a, b) => b.createdAt - a.createdAt)[0],
+    [dailySets],
+  );
+'''
+          if old not in s: raise SystemExit('automatic creation block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''  const dailyHistory = useMemo(
+    () => Object.values(dailySets).sort((a, b) => b.date.localeCompare(a.date)),
+    [dailySets],
+  );
+'''
+          new = '''  const dailyHistory = useMemo(
+    () => Object.values(dailySets).sort((a, b) => b.createdAt - a.createdAt),
+    [dailySets],
+  );
+'''
+          if old not in s: raise SystemExit('history sort block not found')
+          s = s.replace(old, new, 1)
+
+          marker = '''  function startToday(direction: Direction) {
+'''
+          insert = '''  function generateDailySet() {
+    setDailySets((current) => createDailySet(current, levelWords, settings.levels, DAILY_WORD_COUNT, progress));
+  }
+
+'''
+          if marker not in s: raise SystemExit('startToday marker not found')
+          s = s.replace(marker, insert + marker, 1)
+
+          old = '''    const dates = sortedSets.map((set) => set.date);
+    const title = sortedSets.length === 1
+      ? formatDailyDate(sortedSets[0].date).toLocaleLowerCase("nl-BE")
+      : `${sortedSets.length} geselecteerde dagen`;
+    setLearningSession(createLearningSession(`review:${dates.join(",")}`, wordIds, title, direction));
+'''
+          new = '''    const setIds = sortedSets.map((set) => `${set.date}:${set.createdAt}`);
+    const title = sortedSets.length === 1
+      ? formatDailyDate(sortedSets[0].date).toLocaleLowerCase("nl-BE")
+      : `${sortedSets.length} geselecteerde lijsten`;
+    setLearningSession(createLearningSession(`review:${setIds.join(",")}`, wordIds, title, direction));
+'''
+          if old not in s: raise SystemExit('review identity block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''            onStart={startToday}
+            onPracticeDays={startDailySetReview}
+'''
+          new = '''            onStart={startToday}
+            onGenerate={generateDailySet}
+            onPracticeDays={startDailySetReview}
+'''
+          if old not in s: raise SystemExit('Home props marker not found')
+          s = s.replace(old, new, 1)
+
+          old = '''  onStart,
+  onPracticeDays,
+'''
+          new = '''  onStart,
+  onGenerate,
+  onPracticeDays,
+'''
+          if old not in s: raise SystemExit('Home args marker not found')
+          s = s.replace(old, new, 1)
+
+          old = '''  onStart: (direction: Direction) => void;
+  onPracticeDays: (sets: DailySet[], direction: Direction) => void;
+'''
+          new = '''  onStart: (direction: Direction) => void;
+  onGenerate: () => void;
+  onPracticeDays: (sets: DailySet[], direction: Direction) => void;
+'''
+          if old not in s: raise SystemExit('Home types marker not found')
+          s = s.replace(old, new, 1)
+
+          old = '''  const [selectedDates, setSelectedDates] = useState<string[]>([]);
+  const percentage = todayWords.length ? Math.round((todayCompleted / todayWords.length) * 100) : 0;
+  const selectedSets = history.filter((set) => selectedDates.includes(set.date));
+  const selectedWordCount = new Set(selectedSets.flatMap((set) => set.wordIds)).size;
+  const allSelected = history.length > 0 && selectedDates.length === history.length;
+
+  function toggleDay(date: string) {
+    setSelectedDates((current) => (
+      current.includes(date)
+        ? current.filter((item) => item !== date)
+        : [...current, date]
+    ));
+  }
+'''
+          new = '''  const [selectedSetKeys, setSelectedSetKeys] = useState<string[]>([]);
+  const percentage = todayWords.length ? Math.round((todayCompleted / todayWords.length) * 100) : 0;
+  const setKey = (set: DailySet) => `${set.date}:${set.createdAt}`;
+  const selectedSets = history.filter((set) => selectedSetKeys.includes(setKey(set)));
+  const selectedWordCount = new Set(selectedSets.flatMap((set) => set.wordIds)).size;
+  const allSelected = history.length > 0 && selectedSetKeys.length === history.length;
+
+  function toggleSet(set: DailySet) {
+    const key = setKey(set);
+    setSelectedSetKeys((current) => (
+      current.includes(key)
+        ? current.filter((item) => item !== key)
+        : [...current, key]
+    ));
+  }
+'''
+          if old not in s: raise SystemExit('Home selection state block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''    <div className="page home-page">
+      <section className="hero-card">
+'''
+          new = '''    <div className="page home-page">
+      <div className="home-top-actions">
+        <button className="icon-action primary" type="button" onClick={onGenerate} aria-label="Nieuwe daglijst" title="Nieuwe daglijst">＋</button>
+      </div>
+      <section className="hero-card">
+'''
+          if old not in s: raise SystemExit('home top marker not found')
+          s = s.replace(old, new, 1)
+
+          old = '''        <PracticeDirectionButtons onChoose={onStart} />
+        <button className="text-button" onClick={onWrite}>Of oefen eerst je schrijfwijze</button>
+'''
+          new = '''        {todayWords.length ? <PracticeDirectionButtons onChoose={onStart} /> : <p className="empty-list-copy">Nog geen daglijst</p>}
+        <button className="text-button" onClick={onWrite}>Of oefen eerst je schrijfwijze</button>
+'''
+          if old not in s: raise SystemExit('today practice block not found')
+          s = s.replace(old, new, 1)
+
+          s = s.replace('onClick={() => setSelectedDates(allSelected ? [] : history.map((set) => set.date))}', 'onClick={() => setSelectedSetKeys(allSelected ? [] : history.map(setKey))}', 1)
+          s = s.replace('const selected = selectedDates.includes(set.date);', 'const selected = selectedSetKeys.includes(setKey(set));', 1)
+          s = s.replace('key={set.date}>', 'key={setKey(set)}>', 1)
+          s = s.replace('onClick={() => toggleDay(set.date)}', 'onClick={() => toggleSet(set)}', 1)
+          s = s.replace('<strong>{formatDailyDate(set.date)}</strong>', '<strong>{formatDailyDate(set.date)} · {new Intl.DateTimeFormat("nl-BE", { hour: "2-digit", minute: "2-digit" }).format(new Date(set.createdAt))}</strong>', 1)
+
+          p.write_text(s)
+          PY
+      - name: Improve list action icons
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('src/components/ListManager.tsx')
+          s = p.read_text()
+          marker = '''export default function ListManager({
+'''
+          helper = '''function ActionGlyph({ type }: { type: "play" | "import" | "export" | "trash" }) {
+  const common = { width: 24, height: 24, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
+  if (type === "play") return <svg {...common} fill="currentColor" stroke="none"><path d="M8 5v14l11-7z" /></svg>;
+  if (type === "import") return <svg {...common}><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>;
+  if (type === "export") return <svg {...common}><path d="M12 21V9"/><path d="m7 14 5-5 5 5"/><path d="M5 4h14"/></svg>;
+  return <svg {...common}><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>;
+}
+
+'''
+          if marker not in s: raise SystemExit('ListManager marker not found')
+          s = s.replace(marker, helper + marker, 1)
+          s = s.replace('>▶︎</button>', '><ActionGlyph type="play" /></button>', 1)
+          s = s.replace('>▣</button>', '><ActionGlyph type="import" /></button>', 1)
+          s = s.replace('>⇧</button>', '><ActionGlyph type="export" /></button>', 1)
+          s = s.replace('>⌫</button>', '><ActionGlyph type="trash" /></button>', 1)
+          p.write_text(s)
+          PY
+      - name: Add mobile action positioning
+        run: |
+          cat >> src/styles.css <<'CSS'
+
+          .home-top-actions{display:flex;justify-content:flex-end;margin-bottom:8px}
+          .list-toolbar .icon-action svg{display:block}
+          CSS
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+      - name: Commit
+        run: |
+          git config user.name "dmiddern"
+          git config user.email "derry.middernacht@gmail.com"
+          git add src/App.tsx src/lib/dailySets.ts src/components/ListManager.tsx src/styles.css
+          git commit -m "Make daily lists ad hoc" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
