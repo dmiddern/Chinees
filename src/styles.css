@@ -684,3 +684,10 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+
+/* custom-word-ui */
+.add-word-button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line, #d9d4ca); background: var(--card, #fff); color: inherit; font-size: 28px; line-height: 1; display: grid; place-items: center; cursor: pointer; }
+.add-word-panel { display: grid; gap: 10px; margin: 0 0 18px; padding: 16px; border: 1px solid var(--line, #d9d4ca); border-radius: 16px; background: var(--card, #fff); }
+.add-word-panel input { width: 100%; box-sizing: border-box; border: 1px solid var(--line, #d9d4ca); border-radius: 12px; padding: 12px 14px; font: inherit; background: transparent; color: inherit; }
+.custom-word-mark { display: inline-grid; place-items: center; width: 18px; height: 18px; border: 1px solid currentColor; border-radius: 50%; font-size: 13px; font-weight: 500; line-height: 1; vertical-align: 1px; }

@@ -14,6 +14,7 @@ export interface Word {
   example: string;
   notes: string;
   source: string;
+  custom?: boolean;
 }
 
 export interface SkillProgress {

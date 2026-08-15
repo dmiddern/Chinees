@@ -10,6 +10,7 @@ import { clearDailySets, createDailySet, loadDailySets, localDateKey, saveDailyS
 import { createLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
 import { searchWords } from "./lib/search";
+import { addCustomWord, loadCustomWords, type NewCustomWord } from "./lib/customWords";
 import { speakMandarin } from "./lib/speech";
 import { exampleForWord } from "./lib/wordExamples";
 import type { Direction, HskLevel, ProgressMap, Skill, Word } from "./types";
@@ -22,7 +23,7 @@ interface Settings {
   speechRate: number;
 }
 
-const words = wordsData as Word[];
+const words = [...(wordsData as Word[]), ...loadCustomWords()];
 const hskLevels: HskLevel[] = [1, 2, 3, 4, 5, 6, "7-9"];
 const DAILY_WORD_COUNT = 5;
 const singleCharacterMeanings = new Map(
@@ -53,8 +54,8 @@ const navItems: { id: Tab; label: string; icon: string }[] = [
   { id: "settings", label: "Instellingen", icon: "⚙" },
 ];
 
-function levelLabel(level: HskLevel) {
-  return `HSK ${level}`;
+function levelLabel(level: HskLevel, custom = false) {
+  return custom ? "⊕" : `HSK ${level}`;
 }
 
 function App() {
@@ -87,7 +88,7 @@ function App() {
   }, []);
 
   const levelWords = useMemo(
-    () => words.filter((word) => settings.levels.includes(word.level)),
+    () => words.filter((word) => !word.custom && settings.levels.includes(word.level)),
     [settings.levels],
   );
 
@@ -121,7 +122,7 @@ function App() {
   }, [progress, todayWords]);
 
   const stats = useMemo(() => {
-    const available = words.filter((word) => settings.levels.includes(word.level));
+    const available = words.filter((word) => !word.custom && settings.levels.includes(word.level));
     const known = available.filter((word) => {
       const item = progress[word.id];
       return item?.meaning.status === "known" && item?.pronunciation.status === "known";
@@ -250,11 +251,14 @@ function App() {
             onDeleteList={(listId) => setCustomLists((current) => current.filter((list) => list.id !== listId))}
             onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
             onPracticeList={(list) => startWordList(list.wordIds, list.name)}
+            onAddWord={(input) => {
+              if (addCustomWord(input)) window.location.reload();
+            }}
           />
         )}
         {tab === "write" && (
           <Writing
-            words={levelWords}
+            words={words.filter((word) => word.custom || settings.levels.includes(word.level))}
             initialWord={writingWord}
             rate={settings.speechRate}
             onRate={(wordId, correct) => rate(wordId, "writing", correct)}
@@ -577,7 +581,7 @@ function Learn({
           <p className="eyebrow">Oefensessie · {session.title || "daglijst"}</p>
           <h1>{session.index + 1} <span>van {session.queue.length}</span></h1>
         </div>
-        <span className="level-chip">{levelLabel(word.level)}</span>
+        <span className="level-chip">{levelLabel(word.level, word.custom)}</span>
       </div>
 
       <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">
@@ -1140,6 +1144,7 @@ function WordList({
   onDeleteList,
   onToggleWord,
   onPracticeList,
+  onAddWord,
 }: {
   progress: ProgressMap;
   lists: CustomWordList[];
@@ -1149,16 +1154,21 @@ function WordList({
   onDeleteList: (listId: string) => void;
   onToggleWord: (listId: string, wordId: number) => void;
   onPracticeList: (list: CustomWordList) => void;
+  onAddWord: (input: NewCustomWord) => void;
 }) {
   const [query, setQuery] = useState("");
-  const [level, setLevel] = useState<"all" | HskLevel>("all");
+  const [level, setLevel] = useState<"all" | HskLevel | "custom">("all");
+  const [showAddWord, setShowAddWord] = useState(false);
+  const [newHanzi, setNewHanzi] = useState("");
+  const [newPinyin, setNewPinyin] = useState("");
+  const [newMeaning, setNewMeaning] = useState("");
   const [newListName, setNewListName] = useState("");
   const [selectedListId, setSelectedListId] = useState("");
   const [onlySelectedList, setOnlySelectedList] = useState(false);
   const selectedList = lists.find((list) => list.id === selectedListId);
   const filtered = useMemo(
     () => searchWords(words.filter((word) => (
-      (level === "all" || word.level === level)
+      (level === "all" || (level === "custom" ? word.custom : !word.custom && word.level === level))
       && (!onlySelectedList || !selectedList || selectedList.wordIds.includes(word.id))
     )), query),
     [query, level, onlySelectedList, selectedList],
@@ -1167,8 +1177,22 @@ function WordList({
   return (
     <div className="page words-page">
       <div className="page-title-row">
-        <div><p className="eyebrow">Naslagwerk</p><h1>11.005 woorden</h1></div>
+        <div><p className="eyebrow">Naslagwerk</p><h1>{words.length.toLocaleString("nl-BE")} woorden</h1></div>
+        <button className="add-word-button" onClick={() => setShowAddWord((current) => !current)} aria-label="Voeg een eigen woord toe" title="Voeg een eigen woord toe">+</button>
       </div>
+      {showAddWord && (
+        <form className="add-word-panel" onSubmit={(event) => {
+          event.preventDefault();
+          if (!newHanzi.trim() || !newPinyin.trim() || !newMeaning.trim()) return;
+          onAddWord({ hanzi: newHanzi, pinyin: newPinyin, meaningNl: newMeaning });
+        }}>
+          <div className="section-heading"><div><p className="eyebrow">⊕</p><h2>Woord toevoegen</h2></div></div>
+          <input value={newHanzi} onChange={(event) => setNewHanzi(event.target.value)} placeholder="Chinees, bv. 美国" autoComplete="off" />
+          <input value={newPinyin} onChange={(event) => setNewPinyin(event.target.value)} placeholder="Pinyin, bv. Měiguó" autoComplete="off" />
+          <input value={newMeaning} onChange={(event) => setNewMeaning(event.target.value)} placeholder="Nederlandse betekenis, bv. Amerika" autoComplete="off" />
+          <button type="submit" className="button primary-button">Toevoegen</button>
+        </form>
+      )}
       <section className="custom-lists">
         <div className="section-heading">
           <div><p className="eyebrow">Eigen selectie</p><h2>Mijn woordenlijsten</h2></div>
@@ -1229,9 +1253,9 @@ function WordList({
         <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Zoek Chinees, pinyin of betekenis" />
       </label>
       <div className="filter-chips">
-        {(["all", ...hskLevels] as const).map((item) => (
-          <button className={level === item ? "active" : ""} key={item} onClick={() => setLevel(item)}>
-            {item === "all" ? "Alles" : `HSK ${item}`}
+        {(["all", ...hskLevels, "custom"] as const).map((item) => (
+          <button className={level === item ? "active" : ""} key={item} onClick={() => setLevel(item)} title={item === "custom" ? "Eigen woorden" : undefined}>
+            {item === "all" ? "Alles" : item === "custom" ? "⊕" : `HSK ${item}`}
           </button>
         ))}
       </div>
@@ -1247,7 +1271,7 @@ function WordList({
               <button className="word-main" onClick={() => onSelect(word)}>
                 <span className="word-hanzi">{word.hanzi}</span>
                 <span className="word-info">
-                  <strong>{word.pinyin}</strong>
+                  <strong>{word.pinyin} {word.custom ? <span className="custom-word-mark" title="Eigen woord">⊕</span> : null}</strong>
                   <small>{word.meaningNl}</small>
                   <small className="literal-preview">Letterlijk: {literalMeaning(word)}</small>
                 </span>
