@@ -1,0 +1,54 @@
+name: Clean settings mobile
+on:
+  push:
+    paths:
+      - '.github/workflows/clean-settings-mobile.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Clean settings screen
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('src/App.tsx')
+          s = p.read_text()
+          blocks = [
+'''      <section className="settings-card about-card">\n        <h2>Installeren op je gsm</h2>\n        <p><strong>iPhone:</strong> open de site in Safari, tik op Delen en kies ‘Zet op beginscherm’.</p>\n        <p><strong>Android:</strong> open het browsermenu en kies ‘App installeren’.</p>\n      </section>\n''',
+'''      <section className="settings-card about-card">\n        <h2>Over deze woordenlijst</h2>\n        <p>Nieuwe HSK-standaard: 300 woorden in HSK 1, 200 nieuwe in HSK 2, 500 in HSK 3, 1.000 in HSK 4, 1.600 in HSK 5, 1.800 in HSK 6 en ongeveer 5.600 in de gezamenlijke gevorderdenband HSK 7-9.</p>\n      </section>\n''',
+'''      <button className="danger-button" onClick={onReset}>Wis alle leerresultaten</button>\n'''
+          ]
+          for block in blocks:
+              if block in s:
+                  s = s.replace(block, '', 1)
+          p.write_text(s)
+
+          css = Path('src/styles.css')
+          styles = css.read_text()
+          addition = '''\n/* Keep HSK controls inside the mobile settings viewport. */\n.settings-page .level-selector.left {\n  flex-wrap: wrap;\n  justify-content: flex-start;\n  max-width: 100%;\n}\n.settings-page .level-selector.left button {\n  flex: 0 0 auto;\n}\n'''
+          if '.settings-page .level-selector.left {' not in styles:
+              styles += addition
+          css.write_text(styles)
+          PY
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/App.tsx src/styles.css
+          git commit -m "Simplify settings for mobile" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
