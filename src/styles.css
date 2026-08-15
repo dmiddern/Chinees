@@ -242,6 +242,20 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   background: var(--background);
   overflow: hidden;
 }
+.next-topic-label { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0 0 10px; padding: 0 2px; color: var(--accent-hover); font-size: 12px; }
+.next-topic-label span { font-weight: 850; text-transform: uppercase; letter-spacing: .08em; }
+.next-topic-label strong { color: var(--secondary); font-size: 11px; }
+.article-tile.next-topic { border-color: rgba(166, 106, 87, .55); box-shadow: 0 12px 34px rgba(166, 106, 87, .12); }
+.studied-topics { margin-top: 24px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); overflow: hidden; }
+.studied-topics > summary { list-style: none; cursor: pointer; min-height: 66px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.studied-topics > summary::-webkit-details-marker { display: none; }
+.studied-topics > summary span:first-child strong, .studied-topics > summary span:first-child small { display: block; }
+.studied-topics > summary strong { font-size: 14px; }
+.studied-topics > summary small { margin-top: 3px; color: var(--secondary); font-size: 11px; }
+.studied-chevron { color: var(--secondary); font-size: 22px; transition: transform .18s ease; }
+.studied-topics[open] .studied-chevron { transform: rotate(180deg); }
+.studied-article-grid { padding: 0 12px 12px; }
+
 .guide-stats span { padding: 13px 10px; color: var(--secondary); font-size: 11px; text-align: center; border-right: 1px solid var(--border); }
 .guide-stats span:last-child { border-right: 0; }
 .guide-stats strong { display: block; color: var(--primary); font-size: 19px; margin-bottom: 2px; }

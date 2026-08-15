@@ -783,6 +783,8 @@ function ArticleGuide({
     && (kind === "Alles" || item.kind === kind)
     && (!onlyOpen || !progress[item.id]?.understood)
   ));
+  const openTopics = filtered.filter((item) => !progress[item.id]?.understood);
+  const studiedTopics = filtered.filter((item) => progress[item.id]?.understood);
   const readCount = articles.filter((item) => progress[item.id]?.read).length;
   const understoodCount = articles.filter((item) => progress[item.id]?.understood).length;
   const percentage = Math.round((understoodCount / articles.length) * 100);
@@ -1083,35 +1085,63 @@ function ArticleGuide({
       <div className="article-section-heading">
         <div>
           <p className="eyebrow">Jouw route</p>
-          <h2>{filtered.length} onderwerpen</h2>
+          <h2>{openTopics.length ? `${openTopics.length} nog te bestuderen` : "Alles bestudeerd"}</h2>
         </div>
         {(level !== "Alles" || kind !== "Alles" || onlyOpen) && (
           <button onClick={() => { setLevel("Alles"); setKind("Alles"); setOnlyOpen(false); }}>Wis filters</button>
         )}
       </div>
 
-      <section className="article-grid">
-        {filtered.map((item) => {
-          const itemProgress = progress[item.id];
-          return (
-            <button className={`article-tile ${itemProgress?.understood ? "understood" : ""}`} key={item.id} onClick={() => openArticle(item)}>
-              <span className="article-order">{String(item.order).padStart(2, "0")}</span>
-              <span className="article-kind">{item.kind}</span>
-              <strong className="article-tile-hanzi">{item.chineseTitle}</strong>
-              <h3>{item.title}</h3>
-              <p>{item.summary}</p>
-              <span className="article-tile-footer">
-                <span>{item.level} · {item.minutes} min</span>
-                {itemProgress?.understood
-                  ? <b className="complete-badge">✓ Begrepen</b>
-                  : itemProgress?.read
-                    ? <b>Gelezen</b>
-                    : <b>Open →</b>}
-              </span>
-            </button>
-          );
-        })}
-      </section>
+      {openTopics.length > 0 && (
+        <>
+          <div className="next-topic-label">
+            <span>Volgende onderwerp</span>
+            <strong>{openTopics[0].order} van {articles.length}</strong>
+          </div>
+          <section className="article-grid open-topics-grid">
+            {openTopics.map((item, index) => {
+              const itemProgress = progress[item.id];
+              return (
+                <button className={`article-tile ${index === 0 ? "next-topic" : ""}`} key={item.id} onClick={() => openArticle(item)}>
+                  <span className="article-order">{String(item.order).padStart(2, "0")}</span>
+                  <span className="article-kind">{item.kind}</span>
+                  <strong className="article-tile-hanzi">{item.chineseTitle}</strong>
+                  <h3>{item.title}</h3>
+                  <p>{item.summary}</p>
+                  <span className="article-tile-footer">
+                    <span>{item.level} · {item.minutes} min</span>
+                    {itemProgress?.read ? <b>Gelezen</b> : <b>{index === 0 ? "Bestudeer nu →" : "Open →"}</b>}
+                  </span>
+                </button>
+              );
+            })}
+          </section>
+        </>
+      )}
+
+      {!onlyOpen && studiedTopics.length > 0 && (
+        <details className="studied-topics">
+          <summary>
+            <span><strong>Bestudeerde onderwerpen</strong><small>{studiedTopics.length} onderwerpen</small></span>
+            <span className="studied-chevron" aria-hidden="true">⌄</span>
+          </summary>
+          <section className="article-grid studied-article-grid">
+            {studiedTopics.map((item) => (
+              <button className="article-tile understood" key={item.id} onClick={() => openArticle(item)}>
+                <span className="article-order">{String(item.order).padStart(2, "0")}</span>
+                <span className="article-kind">{item.kind}</span>
+                <strong className="article-tile-hanzi">{item.chineseTitle}</strong>
+                <h3>{item.title}</h3>
+                <p>{item.summary}</p>
+                <span className="article-tile-footer">
+                  <span>{item.level} · {item.minutes} min</span>
+                  <b className="complete-badge">✓ Begrepen</b>
+                </span>
+              </button>
+            ))}
+          </section>
+        </details>
+      )}
 
       {!filtered.length && (
         <div className="guide-empty">
