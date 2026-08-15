@@ -1,0 +1,29 @@
+/* Mobile settings cleanup and Hanzi parameter controls */
+.settings-page .level-selector.left{
+  display:flex;
+  flex-wrap:wrap;
+  overflow:visible;
+  max-width:100%;
+  justify-content:flex-start;
+}
+.settings-page .level-selector.left button{flex:0 0 auto}
+.settings-page .about-card,
+.settings-page .danger-button{display:none!important}
+
+.hanzi-param-grid{display:grid;gap:0}
+.hanzi-param-row{
+  min-height:54px;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) 92px;
+  align-items:center;
+  gap:12px!important;
+  padding:10px 0!important;
+  border-top:1px solid var(--border);
+}
+.hanzi-param-row:first-child{border-top:0}
+.hanzi-param-row>span{display:block!important;min-width:0}
+.hanzi-param-row strong,.hanzi-param-row small{display:block}
+.hanzi-param-row strong{font-size:13px}
+.hanzi-param-row small{margin-top:2px;color:var(--secondary);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:9px}
+.hanzi-param-row input[type="number"]{width:92px;height:38px;border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:0 9px;text-align:right;color:var(--primary)}
+.hanzi-param-row input[type="checkbox"]{justify-self:end;width:24px;height:24px;accent-color:var(--accent)}
