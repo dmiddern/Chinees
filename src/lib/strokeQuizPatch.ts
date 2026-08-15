@@ -27,12 +27,14 @@ function addStyles() {
   const style = document.createElement("style");
   style.id = "stroke-quiz-patch-css";
   style.textContent = `
-    .stroke-quiz-practice{margin:12px 0 14px;padding:14px;border:1px solid #ddd8d2;border-radius:18px;background:#fffdfa}
-    .stroke-quiz-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(138px,1fr));gap:12px}
-    .stroke-quiz-box{display:grid;gap:7px}
-    .stroke-quiz-target{width:100%;aspect-ratio:1;border:1.5px solid #cfc8c0;border-radius:15px;background:#fff;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
-    .stroke-quiz-target svg{touch-action:none}
-    .stroke-quiz-status{text-align:center;color:#6d6863;min-height:1.35em;font-size:.88rem}
+    .stroke-quiz-practice{margin:12px 0 14px;padding:14px;border:1px solid #ddd8d2;border-radius:18px;background:#fffdfa;min-width:0}
+    .stroke-quiz-row{display:grid;grid-template-columns:1fr;gap:12px;min-width:0;width:100%}
+    .stroke-quiz-row[data-count="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .stroke-quiz-row[data-count="3"],.stroke-quiz-row[data-count="4"]{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .stroke-quiz-box{display:grid;grid-template-rows:auto minmax(2.7em,auto);gap:7px;min-width:0;width:100%;align-content:start}
+    .stroke-quiz-target{width:100%;max-width:100%;aspect-ratio:1;border:1.5px solid #cfc8c0;border-radius:15px;background:#fff;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;min-width:0}
+    .stroke-quiz-target svg{touch-action:none;display:block;max-width:100%}
+    .stroke-quiz-status{text-align:center;color:#6d6863;min-height:2.7em;font-size:.88rem;line-height:1.25;min-width:0;max-width:100%;overflow-wrap:anywhere}
     .stroke-quiz-status.is-error{color:#a54438;font-weight:700}
     .stroke-quiz-status.is-complete{color:#39705d;font-weight:700}
   `;
@@ -70,7 +72,7 @@ function installQuiz(
     }
 
     target.dataset.ready = "true";
-    const size = Math.max(138, measured);
+    const size = measured;
     const missesPerStroke = new Map<number, number>();
 
     const writer = HanziWriter.create(target, character, {
@@ -150,10 +152,12 @@ function enhancePractice() {
   wrapper.dataset.wordId = wordKey;
   wrapper.setAttribute("aria-label", "Interactieve schrijfoefening");
 
+  const characters = [...word.hanzi].filter((character) => HANZI.test(character));
+
   const row = document.createElement("div");
   row.className = "stroke-quiz-row";
+  row.dataset.count = String(characters.length);
 
-  const characters = [...word.hanzi].filter((character) => HANZI.test(character));
   const results = new Map<number, number>();
 
   characters.forEach((character, index) => {
