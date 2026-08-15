@@ -76,10 +76,6 @@ function installDrawResultFix() {
     const input = document.querySelector('.words-page .search-box input');
     if (!character || !input) return;
 
-    // handwriting.ts mutates input.value directly. For a React-controlled input
-    // that also updates React's internal value tracker, so its synthetic
-    // onChange can ignore the following input event. Replace that click action
-    // completely and write through the native prototype setter instead.
     event.preventDefault();
     event.stopImmediatePropagation();
     setDrawnCharacterAsRealInput(input, character);
@@ -89,9 +85,14 @@ function installDrawResultFix() {
 
 function installChineseSearchFix() {
   const input = document.querySelector('.words-page .search-box input');
-  if (!input || input.dataset.chineseSearchFix === "4") return;
+  if (!input || input.dataset.chineseSearchFix === "5") return;
 
-  input.dataset.chineseSearchFix = "4";
+  input.dataset.chineseSearchFix = "5";
+
+  input.addEventListener("focus", () => {
+    if (!input.value) return;
+    requestAnimationFrame(() => input.select());
+  });
 
   input.addEventListener("input", () => {
     queueMicrotask(() => syncSearch(input));
