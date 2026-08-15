@@ -6,6 +6,21 @@
   box-shadow: 0 8px 22px rgba(166, 106, 87, 0.24);
 }
 
+.learn-page .learn-next-button {
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top) + 86px) !important;
+  right: max(16px, env(safe-area-inset-right)) !important;
+  z-index: 28 !important;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 28px rgba(166, 106, 87, 0.32);
+}
+
 .learn-page .learn-next-button:hover,
 .learn-page .self-check .full-button:hover:not(:disabled) {
   background: var(--accent-hover, #8c5848) !important;
