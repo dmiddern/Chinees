@@ -1,7 +1,7 @@
 import type { Word } from "../types";
 
 const DEFAULT_VISIBLE_LIMIT = 180;
-const SEARCH_RESULT_LIMIT = 240;
+const SEARCH_VISIBLE_LIMIT = 240;
 
 export function normalizeSearch(value: string) {
   return value
@@ -90,6 +90,20 @@ function searchScore(word: Word, query: SearchQuery) {
   return score;
 }
 
+function renderWindow(items: Word[], limit: number): Word[] {
+  if (items.length <= limit) return items;
+  return new Proxy(items, {
+    get(target, property, receiver) {
+      if (property === "map") {
+        return function mapVisible<T>(callback: (word: Word, index: number, array: Word[]) => T) {
+          return target.slice(0, limit).map(callback);
+        };
+      }
+      return Reflect.get(target, property, receiver);
+    },
+  });
+}
+
 export function wordMatchesSearch(word: Word, query: string) {
   return searchScore(word, prepareQuery(query)) >= 0;
 }
@@ -97,13 +111,13 @@ export function wordMatchesSearch(word: Word, query: string) {
 export function searchWords(items: Word[], query: string) {
   const preparedQuery = prepareQuery(query);
 
-  // Opening the dictionary used to hand more than 11,000 React rows to the
-  // browser at once. On mobile that causes a large synchronous render/layout
-  // cost. The dictionary is search-first, so only a compact initial window is
-  // returned until the user searches or filters.
-  if (!preparedQuery.normalized) return items.slice(0, DEFAULT_VISIBLE_LIMIT);
+  // WordList displays the reported total via .length but React renders the
+  // collection via .map(). Keeping those two behaviours separate prevents
+  // thousands of DOM rows from being mounted at once on mobile while keeping
+  // the real result count and normal .slice() behaviour for compact pickers.
+  if (!preparedQuery.normalized) return renderWindow([...items], DEFAULT_VISIBLE_LIMIT);
 
-  return items
+  const results = items
     .map((word, index) => ({ word, index, score: searchScore(word, preparedQuery) }))
     .filter((result) => result.score >= 0)
     .sort((a, b) => {
@@ -111,6 +125,7 @@ export function searchWords(items: Word[], query: string) {
       const levelB = b.word.level === "7-9" ? 7 : b.word.level;
       return b.score - a.score || levelA - levelB || a.index - b.index;
     })
-    .slice(0, SEARCH_RESULT_LIMIT)
     .map((result) => result.word);
+
+  return renderWindow(results, SEARCH_VISIBLE_LIMIT);
 }
