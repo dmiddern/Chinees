@@ -8,6 +8,11 @@ export interface NewCustomWord {
   meaningNl: string;
 }
 
+export interface BulkAddResult {
+  added: number;
+  skipped: number;
+}
+
 export function loadCustomWords(): Word[] {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -26,26 +31,61 @@ export function loadCustomWords(): Word[] {
   }
 }
 
-export function addCustomWord(input: NewCustomWord) {
-  const current = loadCustomWords();
-  const hanzi = input.hanzi.trim();
-  const pinyin = input.pinyin.trim();
-  const meaningNl = input.meaningNl.trim();
-  if (!hanzi || !pinyin || !meaningNl) return false;
-  if (current.some((word) => word.hanzi === hanzi && word.pinyin.toLowerCase() === pinyin.toLowerCase())) return false;
-  const word: Word = {
-    id: -Date.now(),
-    level: 1,
-    hanzi,
-    pinyin,
-    wordType: "eigen woord",
-    meaningNl,
-    meaningLanguage: "nl",
-    example: "",
-    notes: "",
-    source: "custom",
-    custom: true,
+function normalize(input: NewCustomWord): NewCustomWord {
+  return {
+    hanzi: input.hanzi.trim(),
+    pinyin: input.pinyin.trim(),
+    meaningNl: input.meaningNl.trim(),
   };
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...current, word]));
-  return true;
+}
+
+function wordKey(word: Pick<NewCustomWord, "hanzi" | "pinyin">) {
+  return `${word.hanzi.trim()}\u0000${word.pinyin.trim().toLocaleLowerCase()}`;
+}
+
+export function addCustomWords(inputs: NewCustomWord[]): BulkAddResult {
+  const current = loadCustomWords();
+  const existing = new Set(current.map(wordKey));
+  const now = Date.now();
+  const addedWords: Word[] = [];
+  let skipped = 0;
+
+  inputs.forEach((raw, index) => {
+    const input = normalize(raw);
+    if (!input.hanzi || !input.pinyin || !input.meaningNl) {
+      skipped += 1;
+      return;
+    }
+
+    const key = wordKey(input);
+    if (existing.has(key)) {
+      skipped += 1;
+      return;
+    }
+    existing.add(key);
+
+    addedWords.push({
+      id: -(now * 1000 + index + 1),
+      level: 1,
+      hanzi: input.hanzi,
+      pinyin: input.pinyin,
+      wordType: "eigen woord",
+      meaningNl: input.meaningNl,
+      meaningLanguage: "nl",
+      example: "",
+      notes: "",
+      source: "custom",
+      custom: true,
+    });
+  });
+
+  if (addedWords.length) {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...current, ...addedWords]));
+  }
+
+  return { added: addedWords.length, skipped };
+}
+
+export function addCustomWord(input: NewCustomWord) {
+  return addCustomWords([input]).added === 1;
 }
