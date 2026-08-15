@@ -1,9 +1,34 @@
+function isOwnWord(sheet) {
+  try {
+    const hanzi = sheet.querySelector('.sheet-hanzi')?.textContent?.trim();
+    const pinyin = sheet.querySelector('.sheet-pinyin')?.textContent?.trim().toLocaleLowerCase();
+    if (!hanzi) return false;
+
+    const customWords = JSON.parse(localStorage.getItem('chinese-custom-words-v1') || '[]');
+    if (!Array.isArray(customWords)) return false;
+
+    return customWords.some((word) => (
+      word?.hanzi?.trim() === hanzi
+      && (!pinyin || word?.pinyin?.trim().toLocaleLowerCase() === pinyin)
+    ));
+  } catch {
+    return false;
+  }
+}
+
 function enhanceWordSheet() {
   const sheet = document.querySelector('.word-sheet');
   if (!sheet) return;
 
   sheet.querySelector('.skill-summary')?.remove();
   sheet.querySelector('.notes-field')?.remove();
+
+  const levelChip = sheet.querySelector('.level-chip');
+  if (levelChip && isOwnWord(sheet)) {
+    levelChip.textContent = '⊕';
+    levelChip.setAttribute('title', 'Eigen woord');
+    levelChip.setAttribute('aria-label', 'Eigen woord');
+  }
 
   const listen = sheet.querySelector('.audio-button');
   const write = [...sheet.querySelectorAll('button')].find((button) => button.textContent?.trim() === 'Oefen de schrijfwijze');
