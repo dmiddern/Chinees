@@ -56,16 +56,17 @@ export function createDailySet(
     };
   }
 
-  const recentIds = new Set(
-    Object.values(current)
-      .filter((set) => {
-        const age = Date.now() - new Date(`${set.date}T12:00:00`).getTime();
-        return age >= 0 && age <= 7 * 24 * 60 * 60 * 1000;
-      })
-      .flatMap((set) => set.wordIds),
+  // Een automatisch gegenereerde daglijst mag nooit een woord bevatten dat
+  // al in een eerdere automatisch gegenereerde daglijst stond. Eigen lijsten
+  // worden apart opgeslagen en maken dus bewust geen deel uit van deze set.
+  const previouslyGeneratedIds = new Set(
+    Object.values(current).flatMap((set) => set.wordIds),
   );
+  const eligibleWords = availableWords.filter((word) => !previouslyGeneratedIds.has(word.id));
+  if (!eligibleWords.length) return current;
+
   const now = Date.now();
-  const due = shuffled(availableWords.filter((word) => {
+  const due = shuffled(eligibleWords.filter((word) => {
     const item = progress[word.id];
     if (!item) return false;
     const attempts = item.meaning.correct + item.meaning.incorrect
@@ -73,14 +74,14 @@ export function createDailySet(
       + item.writing.correct + item.writing.incorrect;
     return attempts > 0 && Math.min(item.meaning.dueAt, item.pronunciation.dueAt, item.writing.dueAt) <= now;
   }));
-  const unseen = shuffled(availableWords.filter((word) => !progress[word.id] && !recentIds.has(word.id)));
+  const unseen = shuffled(eligibleWords.filter((word) => !progress[word.id]));
   const dueIds = new Set(due.map((word) => word.id));
   const unseenIds = new Set(unseen.map((word) => word.id));
-  const other = shuffled(availableWords.filter((word) => !dueIds.has(word.id) && !unseenIds.has(word.id)));
+  const other = shuffled(eligibleWords.filter((word) => !dueIds.has(word.id) && !unseenIds.has(word.id)));
   const reviewCount = Math.min(due.length, Math.max(1, Math.floor(dailyGoal * 0.3)));
   const selected = [...due.slice(0, reviewCount), ...unseen, ...other]
     .filter((word, index, list) => list.findIndex((item) => item.id === word.id) === index)
-    .slice(0, Math.min(dailyGoal, availableWords.length));
+    .slice(0, Math.min(dailyGoal, eligibleWords.length));
 
   return {
     ...current,
