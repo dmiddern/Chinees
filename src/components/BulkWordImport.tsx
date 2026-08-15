@@ -87,7 +87,7 @@ export default function BulkWordImport() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const updateVisibility = () => setVisible(Boolean(document.querySelector(".words-page")));
+    const updateVisibility = () => setVisible(Boolean(document.querySelector(".words-page .add-word-panel")));
     updateVisibility();
     const observer = new MutationObserver(updateVisibility);
     observer.observe(document.body, { childList: true, subtree: true });
