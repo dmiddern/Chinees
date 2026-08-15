@@ -1,4 +1,4 @@
-const CACHE = "chinees-v14";
+const CACHE = "chinees-v15";
 const APP_SHELL = ["/", "/manifest.webmanifest", "/icons/icon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -15,6 +15,23 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+
+  const isAppAsset = event.request.mode === "navigate"
+    || event.request.destination === "script"
+    || event.request.destination === "style";
+
+  if (isAppAsset) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response.ok) caches.open(CACHE).then((cache) => cache.put(event.request, response.clone()));
+          return response;
+        })
+        .catch(() => caches.match(event.request).then((cached) => cached || caches.match("/"))),
+    );
+    return;
+  }
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const network = fetch(event.request)
@@ -22,7 +39,7 @@ self.addEventListener("fetch", (event) => {
           if (response.ok) caches.open(CACHE).then((cache) => cache.put(event.request, response.clone()));
           return response;
         })
-        .catch(() => cached || (event.request.mode === "navigate" ? caches.match("/") : undefined));
+        .catch(() => cached);
       return cached || network;
     }),
   );
