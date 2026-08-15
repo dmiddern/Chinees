@@ -4,6 +4,7 @@ import App from "./App";
 import "./styles.css";
 import "./deleteControls.css";
 import "./removeLearnNav.css";
+import "./settingsOverrides.css";
 import "./exportBridge";
 import { installHanziFeatures } from "./lib/handwriting";
 import { installCanvasReadyFix } from "./lib/canvasReady";
