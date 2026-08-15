@@ -1,0 +1,48 @@
+name: Align daily plus
+on:
+  push:
+    paths:
+      - '.github/workflows/align-daily-plus.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Align plus with direction heading
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('src/App.tsx')
+          s = p.read_text()
+          s = s.replace('''    <div className="page home-page">\n      <div className="home-top-actions">\n        <button className="icon-action primary" type="button" onClick={onGenerate} aria-label="Nieuwe daglijst" title="Nieuwe daglijst">＋</button>\n      </div>\n      <section className="hero-card">''','''    <div className="page home-page">\n      <section className="hero-card">''',1)
+          s = s.replace('''        {todayWords.length ? <PracticeDirectionButtons onChoose={onStart} /> : <p className="empty-list-copy">Nog geen daglijst</p>}''','''        {todayWords.length ? <PracticeDirectionButtons onChoose={onStart} onGenerate={onGenerate} /> : (\n          <div className="practice-direction-heading empty">\n            <p>Nog geen daglijst</p>\n            <button className="icon-action primary daily-generate-button" type="button" onClick={onGenerate} aria-label="Nieuwe daglijst" title="Nieuwe daglijst">＋</button>\n          </div>\n        )}''',1)
+          s = s.replace('''function PracticeDirectionButtons({\n  onChoose,\n  compact = false,\n}: {\n  onChoose: (direction: Direction) => void;\n  compact?: boolean;\n}) {\n  return (\n    <div className={`practice-direction-choice ${compact ? "compact" : ""}`}>\n      <p>Kies je oefenrichting</p>''','''function PracticeDirectionButtons({\n  onChoose,\n  compact = false,\n  onGenerate,\n}: {\n  onChoose: (direction: Direction) => void;\n  compact?: boolean;\n  onGenerate?: () => void;\n}) {\n  return (\n    <div className={`practice-direction-choice ${compact ? "compact" : ""}`}>\n      <div className="practice-direction-heading">\n        <p>Kies je oefenrichting</p>\n        {onGenerate && (\n          <button className="icon-action primary daily-generate-button" type="button" onClick={onGenerate} aria-label="Nieuwe daglijst" title="Nieuwe daglijst">＋</button>\n        )}\n      </div>''',1)
+          p.write_text(s)
+
+          p = Path('src/styles.css')
+          s = p.read_text()
+          s = s.replace('.practice-direction-choice > p { margin: 0 0 8px; color: var(--secondary); font-size: 11px; font-weight: 800; text-align: center; }', '.practice-direction-heading{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 8px;min-height:44px;position:relative}.practice-direction-heading p{margin:0;color:var(--secondary);font-size:11px;font-weight:800;text-align:center}.practice-direction-heading .daily-generate-button{position:absolute;right:0;top:0}.practice-direction-heading.empty{justify-content:flex-start;margin-top:14px}.practice-direction-heading.empty p{text-align:left}.practice-direction-heading.empty .daily-generate-button{position:static;margin-left:auto}')
+          s = s.replace('.practice-direction-choice.compact > p { text-align: left; }', '.practice-direction-choice.compact .practice-direction-heading{justify-content:flex-start;min-height:0}.practice-direction-choice.compact .practice-direction-heading p{text-align:left}')
+          s = s.replace('\n.home-top-actions{display:flex;justify-content:flex-end;margin-bottom:8px}', '')
+          p.write_text(s)
+          PY
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/App.tsx src/styles.css
+          git commit -m "Align daily list plus with direction heading" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
