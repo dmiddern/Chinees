@@ -11,6 +11,7 @@ interface Props {
   onComplete?: (mistakes: number) => void;
 }
 
+const WRITER_SIZE = 280;
 const chineseCharacters = (value: string) => [...value].filter((character) => /[\u3400-\u9fff]/.test(character));
 const radicals = radicalsData as Record<string, { radical: string; meaning: string }>;
 
@@ -111,7 +112,7 @@ export default function HanziPractice({ hanzi, onComplete }: Props) {
     setMistakes(0);
 
     writerRef.current = HanziWriter.create(targetRef.current, character, {
-      ...writerOptions(280),
+      ...writerOptions(WRITER_SIZE),
     });
   }, [character]);
 
@@ -163,7 +164,21 @@ export default function HanziPractice({ hanzi, onComplete }: Props) {
         </div>
       )}
 
-      <div className="writer-grid" ref={targetRef} />
+      <div
+        className="writer-grid"
+        ref={targetRef}
+        style={{
+          width: WRITER_SIZE,
+          height: WRITER_SIZE,
+          minWidth: WRITER_SIZE,
+          minHeight: WRITER_SIZE,
+          maxWidth: WRITER_SIZE,
+          maxHeight: WRITER_SIZE,
+          flex: `0 0 ${WRITER_SIZE}px`,
+          overflow: "hidden",
+          contain: "layout size paint",
+        }}
+      />
       <p className="radical-legend"><span /> {radicalDescription(character)}</p>
 
       <div className="writer-status" aria-live="polite">
