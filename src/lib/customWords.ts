@@ -1,3 +1,4 @@
+import { wordsData } from "../data/words";
 import type { Word } from "../types";
 
 const STORAGE_KEY = "chinese-custom-words-v1";
@@ -43,6 +44,8 @@ function wordKey(word: Pick<NewCustomWord, "hanzi" | "pinyin">) {
   return `${word.hanzi.trim()}\u0000${word.pinyin.trim().toLocaleLowerCase()}`;
 }
 
+const hskHanzi = new Set((wordsData as Word[]).map((word) => word.hanzi.trim()));
+
 export function addCustomWords(inputs: NewCustomWord[]): BulkAddResult {
   const current = loadCustomWords();
   const existing = new Set(current.map(wordKey));
@@ -53,6 +56,13 @@ export function addCustomWords(inputs: NewCustomWord[]): BulkAddResult {
   inputs.forEach((raw, index) => {
     const input = normalize(raw);
     if (!input.hanzi || !input.pinyin || !input.meaningNl) {
+      skipped += 1;
+      return;
+    }
+
+    // Een woord dat al in eender welk ingebouwd HSK-niveau voorkomt,
+    // hoort niet nog eens als eigen woord opgeslagen te worden.
+    if (hskHanzi.has(input.hanzi)) {
       skipped += 1;
       return;
     }
