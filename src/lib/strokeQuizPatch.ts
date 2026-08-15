@@ -27,8 +27,7 @@ function addStyles() {
   const style = document.createElement("style");
   style.id = "stroke-quiz-patch-css";
   style.textContent = `
-    .stroke-quiz-practice{margin:18px 0 14px;padding:14px;border:1px solid #ddd8d2;border-radius:18px;background:#fffdfa}
-    .stroke-quiz-practice>p{margin:0 0 12px;text-align:center;color:#6d6863;line-height:1.4}
+    .stroke-quiz-practice{margin:12px 0 14px;padding:14px;border:1px solid #ddd8d2;border-radius:18px;background:#fffdfa}
     .stroke-quiz-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(138px,1fr));gap:12px}
     .stroke-quiz-box{display:grid;gap:7px}
     .stroke-quiz-target{width:100%;aspect-ratio:1;border:1.5px solid #cfc8c0;border-radius:15px;background:#fff;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
@@ -129,7 +128,6 @@ function enhancePractice() {
   const word = currentWord();
   const existing = document.querySelector(".stroke-quiz-practice") as HTMLElement | null;
 
-  // De oude vrije tekenvlakken mogen nooit naast de interactieve oefening blijven staan.
   document.querySelectorAll(".blank-practice").forEach((element) => element.remove());
 
   if (!card || !word) {
@@ -151,9 +149,6 @@ function enhancePractice() {
   wrapper.className = "stroke-quiz-practice";
   wrapper.dataset.wordId = wordKey;
   wrapper.setAttribute("aria-label", "Interactieve schrijfoefening");
-
-  const intro = document.createElement("p");
-  intro.textContent = "Teken elke streek uit je hoofd. Een juiste streek blijft staan; na drie fouten krijg je een hint.";
 
   const row = document.createElement("div");
   row.className = "stroke-quiz-row";
@@ -182,11 +177,14 @@ function enhancePractice() {
       const totalMistakes = [...results.values()].reduce((total, value) => total + value, 0);
       card.dataset.writingMistakes = String(totalMistakes);
       card.dataset.writingCorrect = String(totalMistakes === 0);
-      applyAutomaticWritingRating();
+
+      const reveal = card.querySelector(".reveal-button") as HTMLButtonElement | null;
+      if (reveal) reveal.click();
+      requestAnimationFrame(applyAutomaticWritingRating);
     });
   });
 
-  wrapper.append(intro, row);
+  wrapper.append(row);
 
   const reveal = card.querySelector(".reveal-button");
   const answer = card.querySelector(".answer-block");
