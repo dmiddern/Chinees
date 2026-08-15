@@ -10,6 +10,7 @@ import { installCanvasReadyFix } from "./lib/canvasReady";
 import { installStrokeQuizPatch } from "./lib/strokeQuizPatch";
 import { installCustomDeleteControls } from "./lib/deleteControls";
 import { installCustomDailySourceToggle } from "./lib/customDailySource";
+import { installPracticeExit } from "./lib/practiceExit";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -28,3 +29,4 @@ installCanvasReadyFix();
 installStrokeQuizPatch();
 installCustomDeleteControls();
 installCustomDailySourceToggle();
+installPracticeExit();
