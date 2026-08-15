@@ -35,20 +35,63 @@ function notifyReactDirectly(input) {
 function syncSearch(input) {
   ensureAllFilterForSearch(input);
 
-  // iOS Chinese handwriting/IME may commit the visible Hanzi without React's
-  // synthetic onChange being emitted reliably. Calling the current React prop
-  // directly guarantees that WordList's setQuery receives input.value.
   if (notifyReactDirectly(input)) return;
-
-  // Fallback for non-React or changed internals.
   input.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
+}
+
+function setDrawnCharacterAsRealInput(input, character) {
+  const descriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
+  const nativeSetter = descriptor?.set;
+  const nextValue = `${input.value || ""}${character}`;
+
+  if (nativeSetter) nativeSetter.call(input, nextValue);
+  else input.value = nextValue;
+
+  try {
+    input.dispatchEvent(new InputEvent("input", {
+      bubbles: true,
+      composed: true,
+      inputType: "insertText",
+      data: character,
+    }));
+  } catch {
+    input.dispatchEvent(new Event("input", { bubbles: true, composed: true }));
+  }
+
+  requestAnimationFrame(() => {
+    syncSearch(input);
+    input.focus();
+  });
+}
+
+function installDrawResultFix() {
+  if (document.documentElement.dataset.drawSearchReactFix === "1") return;
+  document.documentElement.dataset.drawSearchReactFix = "1";
+
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest?.(".draw-results button");
+    if (!button) return;
+
+    const character = button.textContent?.trim();
+    const input = document.querySelector('.words-page .search-box input');
+    if (!character || !input) return;
+
+    // handwriting.ts mutates input.value directly. For a React-controlled input
+    // that also updates React's internal value tracker, so its synthetic
+    // onChange can ignore the following input event. Replace that click action
+    // completely and write through the native prototype setter instead.
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    setDrawnCharacterAsRealInput(input, character);
+    document.querySelector(".hanzi-overlay")?.remove();
+  }, true);
 }
 
 function installChineseSearchFix() {
   const input = document.querySelector('.words-page .search-box input');
-  if (!input || input.dataset.chineseSearchFix === "3") return;
+  if (!input || input.dataset.chineseSearchFix === "4") return;
 
-  input.dataset.chineseSearchFix = "3";
+  input.dataset.chineseSearchFix = "4";
 
   input.addEventListener("input", () => {
     queueMicrotask(() => syncSearch(input));
@@ -70,6 +113,7 @@ function scheduleInstall() {
   requestAnimationFrame(() => {
     scheduled = false;
     installChineseSearchFix();
+    installDrawResultFix();
   });
 }
 
