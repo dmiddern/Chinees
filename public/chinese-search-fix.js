@@ -13,31 +13,45 @@ function ensureAllFilterForSearch(input) {
   }
 }
 
-function forceReactInput(input) {
-  const value = input.value;
-  if (!value) return;
+function notifyReactDirectly(input) {
+  const propsKey = Object.keys(input).find((key) => key.startsWith("__reactProps$"));
+  const props = propsKey ? input[propsKey] : null;
+  if (typeof props?.onChange !== "function") return false;
 
-  // iOS Chinese handwriting/IME can update the visible input value at the end
-  // of composition without React seeing a normal onChange. Use the native value
-  // setter so React's value tracker notices the change, then emit a real input
-  // event. This makes the current Hanzi immediately become the React search query.
-  const descriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
-  const nativeSetter = descriptor?.set;
-  if (!nativeSetter) return;
+  props.onChange({
+    target: input,
+    currentTarget: input,
+    type: "change",
+    nativeEvent: null,
+    isDefaultPrevented: () => false,
+    isPropagationStopped: () => false,
+    preventDefault() {},
+    stopPropagation() {},
+    persist() {},
+  });
+  return true;
+}
 
-  nativeSetter.call(input, "");
-  nativeSetter.call(input, value);
-  input.dispatchEvent(new Event("input", { bubbles: true, composed: true }));
+function syncSearch(input) {
+  ensureAllFilterForSearch(input);
+
+  // iOS Chinese handwriting/IME may commit the visible Hanzi without React's
+  // synthetic onChange being emitted reliably. Calling the current React prop
+  // directly guarantees that WordList's setQuery receives input.value.
+  if (notifyReactDirectly(input)) return;
+
+  // Fallback for non-React or changed internals.
+  input.dispatchEvent(new Event("change", { bubbles: true, composed: true }));
 }
 
 function installChineseSearchFix() {
   const input = document.querySelector('.words-page .search-box input');
-  if (!input || input.dataset.chineseSearchFix === "2") return;
+  if (!input || input.dataset.chineseSearchFix === "3") return;
 
-  input.dataset.chineseSearchFix = "2";
+  input.dataset.chineseSearchFix = "3";
 
   input.addEventListener("input", () => {
-    ensureAllFilterForSearch(input);
+    queueMicrotask(() => syncSearch(input));
   }, true);
 
   input.addEventListener("change", () => {
@@ -45,8 +59,7 @@ function installChineseSearchFix() {
   }, true);
 
   input.addEventListener("compositionend", () => {
-    ensureAllFilterForSearch(input);
-    queueMicrotask(() => forceReactInput(input));
+    requestAnimationFrame(() => syncSearch(input));
   }, true);
 }
 
