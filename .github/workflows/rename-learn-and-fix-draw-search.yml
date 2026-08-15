@@ -1,0 +1,55 @@
+name: Rename Leren and fix draw search
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/rename-learn-and-fix-draw-search.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply navigation and handwriting search changes
+        run: |
+          python <<'PY'
+          from pathlib import Path
+
+          app = Path('src/App.tsx')
+          text = app.read_text()
+          text = text.replace('  { id: "home", label: "Vandaag", icon: "⌂" },\n  { id: "learn", label: "Leren", icon: "学" },', '  { id: "home", label: "Leren", icon: "学" },', 1)
+          app.write_text(text)
+
+          handwriting = Path('src/lib/handwriting.ts')
+          text = handwriting.read_text()
+          old = '''function enhanceWordSearch(){const input=document.querySelector('.word-list input[type="search"],.word-list input, .words-page input[type="search"],.words-page input') as HTMLInputElement|null;if(!input||document.querySelector(".draw-search-open"))return;const b=document.createElement("button");b.type="button";b.className="draw-search-open";b.textContent="✎ Teken karakter";b.onclick=()=>openDrawingSearch(input);input.insertAdjacentElement("afterend",b)}'''
+          new = '''function enhanceWordSearch(){const input=document.querySelector('.words-page .search-box input') as HTMLInputElement|null;if(!input||document.querySelector(".draw-search-open"))return;const b=document.createElement("button");b.type="button";b.className="draw-search-open";b.textContent="✎ Teken karakter";b.onclick=()=>openDrawingSearch(input);input.closest(".search-box")?.insertAdjacentElement("afterend",b)}'''
+          if old not in text:
+              raise SystemExit('Could not find handwriting search target')
+          handwriting.write_text(text.replace(old, new, 1))
+
+          css = Path('src/styles.css')
+          styles = css.read_text()
+          styles = styles.replace('grid-template-columns: repeat(6, 1fr);', 'grid-template-columns: repeat(5, 1fr);', 1)
+          css.write_text(styles)
+          PY
+      - name: Install dependencies
+        run: npm ci
+      - name: Build application
+        run: npm run build
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/App.tsx src/lib/handwriting.ts src/styles.css
+          git commit -m "Rename home to Leren and move draw search to dictionary" || exit 0
+          git push
