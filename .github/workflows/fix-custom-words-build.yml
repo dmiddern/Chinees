@@ -1,0 +1,82 @@
+name: Fix custom words build
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/fix-custom-words-build.yml
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply custom vocabulary feature
+        run: |
+          python <<'PY'
+          from pathlib import Path
+          import json
+
+          def replace_once(text, old, new, label):
+              if new in text:
+                  return text
+              if old not in text:
+                  raise SystemExit(f'Missing patch target: {label}')
+              return text.replace(old, new, 1)
+
+          types = Path('src/types.ts')
+          text = types.read_text()
+          text = replace_once(text, '  level: HskLevel;\n', '  level: HskLevel | "custom";\n', 'custom word level')
+          types.write_text(text)
+
+          Path('src/lib/customWords.ts').write_text('''import type { Word } from "../types";\n\nconst STORAGE_KEY = "chinese-custom-words-v1";\n\nexport interface NewCustomWord {\n  hanzi: string;\n  pinyin: string;\n  meaningNl: string;\n}\n\nexport function loadCustomWords(): Word[] {\n  try {\n    const raw = window.localStorage.getItem(STORAGE_KEY);\n    if (!raw) return [];\n    const parsed = JSON.parse(raw) as Word[];\n    return Array.isArray(parsed)\n      ? parsed.filter((word) => word?.hanzi && word?.pinyin && word?.meaningNl).map((word) => ({ ...word, level: "custom" as const, source: "custom" }))\n      : [];\n  } catch {\n    return [];\n  }\n}\n\nexport function addCustomWord(input: NewCustomWord) {\n  const current = loadCustomWords();\n  const hanzi = input.hanzi.trim();\n  const pinyin = input.pinyin.trim();\n  const meaningNl = input.meaningNl.trim();\n  if (!hanzi || !pinyin || !meaningNl) return;\n  if (current.some((word) => word.hanzi === hanzi && word.pinyin.toLowerCase() === pinyin.toLowerCase())) return;\n  const word: Word = { id: -Date.now(), level: "custom", hanzi, pinyin, wordType: "eigen woord", meaningNl, meaningLanguage: "nl", example: "", notes: "", source: "custom" };\n  window.localStorage.setItem(STORAGE_KEY, JSON.stringify([...current, word]));\n}\n''')
+
+          app = Path('src/App.tsx')
+          text = app.read_text()
+          text = replace_once(text, 'import { searchWords } from "./lib/search";\n', 'import { searchWords } from "./lib/search";\nimport { addCustomWord, loadCustomWords, type NewCustomWord } from "./lib/customWords";\n', 'custom import')
+          text = replace_once(text, 'const words = wordsData as Word[];\n', 'const words = [...(wordsData as Word[]), ...loadCustomWords()];\n', 'combined words')
+          text = replace_once(text, 'function levelLabel(level: HskLevel) {\n  return `HSK ${level}`;\n}', 'function levelLabel(level: Word["level"]) {\n  return level === "custom" ? "⊕" : `HSK ${level}`;\n}', 'level label')
+          text = replace_once(text, '    () => words.filter((word) => settings.levels.includes(word.level)),\n', '    () => words.filter((word) => word.level !== "custom" && settings.levels.includes(word.level)),\n', 'level words')
+          text = replace_once(text, '    const available = words.filter((word) => settings.levels.includes(word.level));\n', '    const available = words.filter((word) => word.level !== "custom" && settings.levels.includes(word.level));\n', 'stats words')
+          text = replace_once(text, '''            onPracticeList={(list) => startWordList(list.wordIds, list.name)}\n          />''', '''            onPracticeList={(list) => startWordList(list.wordIds, list.name)}\n            onAddWord={(input) => {\n              addCustomWord(input);\n              window.location.reload();\n            }}\n          />''', 'WordList callback')
+          text = replace_once(text, '            words={levelWords}\n', '            words={words.filter((word) => word.level === "custom" || settings.levels.includes(word.level))}\n', 'writing words')
+          text = replace_once(text, '''  onPracticeList,\n}: {\n  progress: ProgressMap;\n  lists: CustomWordList[];\n  onSelect: (word: Word) => void;\n  onSpeak: (word: Word) => void;\n  onCreateList: (name: string) => void;\n  onDeleteList: (listId: string) => void;\n  onToggleWord: (listId: string, wordId: number) => void;\n  onPracticeList: (list: CustomWordList) => void;\n}) {''', '''  onPracticeList,\n  onAddWord,\n}: {\n  progress: ProgressMap;\n  lists: CustomWordList[];\n  onSelect: (word: Word) => void;\n  onSpeak: (word: Word) => void;\n  onCreateList: (name: string) => void;\n  onDeleteList: (listId: string) => void;\n  onToggleWord: (listId: string, wordId: number) => void;\n  onPracticeList: (list: CustomWordList) => void;\n  onAddWord: (input: NewCustomWord) => void;\n}) {''', 'WordList signature')
+          text = replace_once(text, '  const [level, setLevel] = useState<"all" | HskLevel>("all");\n', '  const [level, setLevel] = useState<"all" | HskLevel | "custom">("all");\n  const [showAddWord, setShowAddWord] = useState(false);\n  const [newHanzi, setNewHanzi] = useState("");\n  const [newPinyin, setNewPinyin] = useState("");\n  const [newMeaning, setNewMeaning] = useState("");\n', 'WordList state')
+          text = replace_once(text, '''      <div className="page-title-row">\n        <div><p className="eyebrow">Naslagwerk</p><h1>11.005 woorden</h1></div>\n      </div>''', '''      <div className="page-title-row">\n        <div><p className="eyebrow">Naslagwerk</p><h1>{words.length.toLocaleString("nl-BE")} woorden</h1></div>\n        <button className="add-word-button" onClick={() => setShowAddWord((current) => !current)} aria-label="Voeg een eigen woord toe" title="Voeg een eigen woord toe">+</button>\n      </div>\n      {showAddWord && (\n        <form className="add-word-panel" onSubmit={(event) => {\n          event.preventDefault();\n          if (!newHanzi.trim() || !newPinyin.trim() || !newMeaning.trim()) return;\n          onAddWord({ hanzi: newHanzi, pinyin: newPinyin, meaningNl: newMeaning });\n        }}>\n          <div className="section-heading"><div><p className="eyebrow">⊕</p><h2>Woord toevoegen</h2></div></div>\n          <input value={newHanzi} onChange={(event) => setNewHanzi(event.target.value)} placeholder="Chinees, bv. 美国" autoComplete="off" />\n          <input value={newPinyin} onChange={(event) => setNewPinyin(event.target.value)} placeholder="Pinyin, bv. Měiguó" autoComplete="off" />\n          <input value={newMeaning} onChange={(event) => setNewMeaning(event.target.value)} placeholder="Nederlandse betekenis, bv. Amerika" autoComplete="off" />\n          <button type="submit" className="button primary-button">Toevoegen</button>\n        </form>\n      )}''', 'add panel')
+          text = replace_once(text, '''        {(["all", ...hskLevels] as const).map((item) => (\n          <button className={level === item ? "active" : ""} key={item} onClick={() => setLevel(item)}>\n            {item === "all" ? "Alles" : `HSK ${item}`}\n          </button>\n        ))}''', '''        {(["all", ...hskLevels, "custom"] as const).map((item) => (\n          <button className={level === item ? "active" : ""} key={item} onClick={() => setLevel(item)} title={item === "custom" ? "Eigen woorden" : undefined}>\n            {item === "all" ? "Alles" : item === "custom" ? "⊕" : `HSK ${item}`}\n          </button>\n        ))}''', 'custom filter')
+          text = replace_once(text, '''                  <strong>{word.pinyin}</strong>\n                  <small>{word.meaningNl}</small>''', '''                  <strong>{word.pinyin} {word.level === "custom" ? <span className="custom-word-mark" title="Eigen woord">⊕</span> : null}</strong>\n                  <small>{word.meaningNl}</small>''', 'custom mark')
+          app.write_text(text)
+
+          styles = Path('src/styles.css')
+          css = styles.read_text()
+          if '/* custom-word-ui */' not in css:
+              css += '''\n\n/* custom-word-ui */\n.add-word-button { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line, #d9d4ca); background: var(--card, #fff); color: inherit; font-size: 28px; line-height: 1; display: grid; place-items: center; cursor: pointer; }\n.add-word-panel { display: grid; gap: 10px; margin: 0 0 18px; padding: 16px; border: 1px solid var(--line, #d9d4ca); border-radius: 16px; background: var(--card, #fff); }\n.add-word-panel input { width: 100%; box-sizing: border-box; border: 1px solid var(--line, #d9d4ca); border-radius: 12px; padding: 12px 14px; font: inherit; background: transparent; color: inherit; }\n.custom-word-mark { display: inline-grid; place-items: center; width: 18px; height: 18px; border: 1px solid currentColor; border-radius: 50%; font-size: 13px; font-weight: 500; line-height: 1; vertical-align: 1px; }\n'''
+          styles.write_text(css)
+
+          # The old one-off source patch scripts are already committed. Keeping them in every build
+          # clashes with the custom filter state, so build the committed source directly.
+          package = Path('package.json')
+          data = json.loads(package.read_text())
+          data['scripts']['dev'] = 'vite'
+          data['scripts']['build'] = 'npm run prepare:hanzi && tsc -b && vite build'
+          package.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+          PY
+      - name: Install dependencies
+        run: npm ci
+      - name: Build application
+        run: npm run build
+      - name: Commit application change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/App.tsx src/types.ts src/styles.css src/lib/customWords.ts package.json
+          git commit -m "Add custom vocabulary support"
+          git push
