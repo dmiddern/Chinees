@@ -43,6 +43,14 @@ function idsFromText(text: string, words: Word[]) {
   return { ids: [...found], unmatched };
 }
 
+function ActionGlyph({ type }: { type: "play" | "import" | "export" | "trash" }) {
+  const common = { width: 24, height: 24, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
+  if (type === "play") return <svg {...common} fill="currentColor" stroke="none"><path d="M8 5v14l11-7z" /></svg>;
+  if (type === "import") return <svg {...common}><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>;
+  if (type === "export") return <svg {...common}><path d="M12 21V9"/><path d="m7 14 5-5 5 5"/><path d="M5 4h14"/></svg>;
+  return <svg {...common}><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg>;
+}
+
 export default function ListManager({
   lists,
   words,
@@ -100,10 +108,10 @@ export default function ListManager({
       {selected ? (
         <>
           <div className="list-toolbar">
-            <button className="icon-action" onClick={() => onPractice(selected)} disabled={!selected.wordIds.length} aria-label="Oefenen" title="Oefenen">▶︎</button>
-            <button className="icon-action" onClick={() => setImportOpen((value) => !value)} aria-label="Lijst plakken" title="Lijst plakken">▣</button>
-            <button className="icon-action" onClick={exportList} disabled={!selected.wordIds.length} aria-label="Exporteren" title="Exporteren">⇧</button>
-            <button className="icon-action danger" onClick={() => { if (window.confirm(`“${selected.name}” verwijderen?`)) onDelete(selected.id); }} aria-label="Verwijderen" title="Verwijderen">⌫</button>
+            <button className="icon-action" onClick={() => onPractice(selected)} disabled={!selected.wordIds.length} aria-label="Oefenen" title="Oefenen"><ActionGlyph type="play" /></button>
+            <button className="icon-action" onClick={() => setImportOpen((value) => !value)} aria-label="Lijst plakken" title="Lijst plakken"><ActionGlyph type="import" /></button>
+            <button className="icon-action" onClick={exportList} disabled={!selected.wordIds.length} aria-label="Exporteren" title="Exporteren"><ActionGlyph type="export" /></button>
+            <button className="icon-action danger" onClick={() => { if (window.confirm(`“${selected.name}” verwijderen?`)) onDelete(selected.id); }} aria-label="Verwijderen" title="Verwijderen"><ActionGlyph type="trash" /></button>
           </div>
 
           {importOpen && (

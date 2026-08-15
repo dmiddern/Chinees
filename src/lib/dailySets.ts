@@ -60,20 +60,10 @@ export function createDailySet(
     .filter((word, index, all) => all.findIndex((item) => item.id === word.id) === index);
 
   if (!pool.length) return current;
-  if (current[date]) {
-    if (current[date].wordIds.length <= dailyGoal) return current;
-    return {
-      ...current,
-      [date]: {
-        ...current[date],
-        wordIds: current[date].wordIds.slice(0, dailyGoal),
-      },
-    };
-  }
 
-  // Een automatisch gegenereerde daglijst mag nooit een woord bevatten dat
-  // al in een eerdere automatisch gegenereerde daglijst stond. Eigen lijsten
-  // worden apart opgeslagen en maken dus bewust geen deel uit van deze set.
+  // Een gegenereerde daglijst mag nooit een woord bevatten dat al in een
+  // eerdere gegenereerde daglijst stond. Meerdere lijsten op dezelfde dag
+  // zijn toegestaan en krijgen elk een eigen opslagsleutel.
   const previouslyGeneratedIds = new Set(
     Object.values(current).flatMap((set) => set.wordIds),
   );
@@ -98,13 +88,15 @@ export function createDailySet(
     .filter((word, index, list) => list.findIndex((item) => item.id === word.id) === index)
     .slice(0, Math.min(dailyGoal, eligibleWords.length));
 
+  const createdAt = Date.now();
+  const storageKey = `${date}:${createdAt}:${Math.random().toString(36).slice(2, 7)}`;
   return {
     ...current,
-    [date]: {
+    [storageKey]: {
       date,
       wordIds: selected.map((word) => word.id),
       levels: [...levels],
-      createdAt: Date.now(),
+      createdAt,
     },
   };
 }

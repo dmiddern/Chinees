@@ -730,3 +730,6 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .list-search-results strong,.list-word-rows strong{grid-row:1/3;font-family:"Noto Serif SC",serif;font-size:23px}.list-search-results span,.list-word-rows span{font-size:11px;color:var(--accent-hover)}.list-search-results small,.list-word-rows small{font-size:10px;color:var(--secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .list-search-results b{grid-column:3;grid-row:1/3;text-align:center;font-size:18px}.list-word-rows button{grid-column:3;grid-row:1/3;width:34px;height:34px;border:0;border-radius:50%;background:transparent;color:var(--error);font-size:20px}
 @media(max-width:560px){.bottom-nav button{font-size:9px}.bottom-nav button span{font-size:19px}.bottom-nav{gap:2px;padding-left:5px;padding-right:5px}}
+
+.home-top-actions{display:flex;justify-content:flex-end;margin-bottom:8px}
+.list-toolbar .icon-action svg{display:block}
