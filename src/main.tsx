@@ -5,6 +5,7 @@ import "./styles.css";
 import "./deleteControls.css";
 import "./removeLearnNav.css";
 import "./settingsOverrides.css";
+import "./settingsMobileFix.css";
 import "./exportBridge";
 import { installHanziFeatures } from "./lib/handwriting";
 import { installCanvasReadyFix } from "./lib/canvasReady";
@@ -12,6 +13,7 @@ import { installStrokeQuizPatch } from "./lib/strokeQuizPatch";
 import { installCustomDeleteControls } from "./lib/deleteControls";
 import { installCustomDailySourceToggle } from "./lib/customDailySource";
 import { installPracticeExit } from "./lib/practiceExit";
+import { installHanziSettingsUi } from "./lib/hanziSettingsUi";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -31,3 +33,4 @@ installStrokeQuizPatch();
 installCustomDeleteControls();
 installCustomDailySourceToggle();
 installPracticeExit();
+installHanziSettingsUi();
