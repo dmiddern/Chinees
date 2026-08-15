@@ -1,0 +1,66 @@
+name: Streamline practice session
+on:
+  push:
+    paths:
+      - '.github/workflows/streamline-practice-session.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply practice UX changes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('src/App.tsx')
+          s = p.read_text()
+
+          old = '''  function next() {\n    const rating = activeSession.ratings[exercise.skill];\n    if (rating === undefined) return;\n    onRate(activeWord.id, exercise.skill, rating);\n    onSessionChange({\n      ...activeSession,\n      index: activeSession.index + 1,\n      revealed: false,\n      promptMode: "character",\n      ratings: {},\n    });\n  }\n\n  const requiredRated = session.ratings[exercise.skill] !== undefined;\n'''
+          new = '''  function next() {\n    const rating = activeSession.ratings[exercise.skill];\n    if (rating !== undefined) onRate(activeWord.id, exercise.skill, rating);\n    onSessionChange({\n      ...activeSession,\n      index: activeSession.index + 1,\n      revealed: false,\n      promptMode: "character",\n      ratings: {},\n    });\n  }\n\n  function switchDirection(direction: Direction) {\n    if (direction === activeSession.direction) return;\n    onSessionChange(createLearningSession(\n      activeSession.date,\n      activeSession.wordIds,\n      activeSession.title,\n      direction,\n    ));\n  }\n\n  const requiredRated = session.ratings[exercise.skill] !== undefined;\n'''
+          if old not in s: raise SystemExit('next block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''      <div className="page-title-row">\n        <div>\n          <p className="eyebrow">Oefensessie · {session.title || "daglijst"}</p>\n          <h1>{session.index + 1} <span>van {session.queue.length}</span></h1>\n        </div>\n        <span className="level-chip">{levelLabel(word.level, word.custom)}</span>\n      </div>\n'''
+          new = '''      <div className="page-title-row learn-session-heading">\n        <div>\n          <p className="eyebrow">Oefensessie · {session.title || "daglijst"}</p>\n          <h1>{session.index + 1} <span>van {session.queue.length}</span></h1>\n        </div>\n        <div className="learn-session-actions">\n          <span className="level-chip">{levelLabel(word.level, word.custom)}</span>\n          <button className="learn-next-button" type="button" onClick={next} aria-label="Volgend woord" title="Volgend woord">›</button>\n        </div>\n      </div>\n'''
+          if old not in s: raise SystemExit('heading block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''      <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">\n        <span className={exercise.direction === "zh-nl" ? "active" : ""}>\n          Chinees → {meaningLanguageLabel}\n        </span>\n        <span className={exercise.direction === "nl-zh" ? "active" : ""}>\n          {meaningLanguageLabel} → Chinees\n        </span>\n      </div>\n      <p className="skill-focus">Focus: <strong>{skillLabels[exercise.skill]}</strong></p>\n'''
+          new = '''      <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">\n        <button type="button" className={exercise.direction === "zh-nl" ? "active" : ""} onClick={() => switchDirection("zh-nl")}>\n          Chinees → {meaningLanguageLabel}\n        </button>\n        <button type="button" className={exercise.direction === "nl-zh" ? "active" : ""} onClick={() => switchDirection("nl-zh")}>\n          {meaningLanguageLabel} → Chinees\n        </button>\n      </div>\n'''
+          if old not in s: raise SystemExit('direction block not found')
+          s = s.replace(old, new, 1)
+
+          old = '''        <p className="card-instruction">\n          {exercise.skill === "meaning"\n            ? "Wat betekent dit woord?"\n            : exercise.skill === "pronunciation"\n              ? "Spreek het Chinese woord hardop uit."\n              : "Schrijf het Chinese woord uit je hoofd."}\n        </p>\n'''
+          new = '''        {exercise.skill !== "writing" && (\n          <p className="card-instruction">\n            {exercise.skill === "meaning"\n              ? "Wat betekent dit woord?"\n              : "Spreek het Chinese woord hardop uit."}\n          </p>\n        )}\n'''
+          if old not in s: raise SystemExit('instruction block not found')
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+
+          css = Path('src/styles.css')
+          styles = css.read_text()
+          addition = '''\n/* Streamlined mobile practice session */\n.learn-session-actions{display:flex;align-items:center;gap:8px}\n.learn-next-button{width:44px;height:44px;border:1px solid var(--border);border-radius:50%;background:var(--surface);color:var(--primary);font-size:30px;line-height:1;display:grid;place-items:center;cursor:pointer}\n.direction-indicator button{border:0;background:transparent;color:inherit;font:inherit;cursor:pointer}\n.direction-indicator button.active{background:var(--background);color:var(--primary);font-weight:800}\n.learn-page .skill-focus{display:none!important}\n.learn-page .self-check{display:none!important}\n'''
+          if '/* Streamlined mobile practice session */' not in styles:
+              styles += addition
+          css.write_text(styles)
+          PY
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/App.tsx src/styles.css
+          git commit -m "Streamline practice session" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
