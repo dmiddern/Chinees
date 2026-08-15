@@ -395,9 +395,6 @@ function Home({
 
   return (
     <div className="page home-page">
-      <div className="home-top-actions">
-        <button className="icon-action primary" type="button" onClick={onGenerate} aria-label="Nieuwe daglijst" title="Nieuwe daglijst">＋</button>
-      </div>
       <section className="hero-card">
         <div>
           <p className="eyebrow">Jouw leermoment</p>
@@ -429,7 +426,12 @@ function Home({
             <strong>{percentage}%</strong>
           </div>
         </div>
-        {todayWords.length ? <PracticeDirectionButtons onChoose={onStart} /> : <p className="empty-list-copy">Nog geen daglijst</p>}
+        {todayWords.length ? <PracticeDirectionButtons onChoose={onStart} onGenerate={onGenerate} /> : (
+          <div className="practice-direction-heading empty">
+            <p>Nog geen daglijst</p>
+            <button className="icon-action primary daily-generate-button" type="button" onClick={onGenerate} aria-label="Nieuwe daglijst" title="Nieuwe daglijst">＋</button>
+          </div>
+        )}
         <button className="text-button" onClick={onWrite}>Of oefen eerst je schrijfwijze</button>
       </section>
 
@@ -512,13 +514,20 @@ function StatCard({ value, label, tone }: { value: number; label: string; tone: 
 function PracticeDirectionButtons({
   onChoose,
   compact = false,
+  onGenerate,
 }: {
   onChoose: (direction: Direction) => void;
   compact?: boolean;
+  onGenerate?: () => void;
 }) {
   return (
     <div className={`practice-direction-choice ${compact ? "compact" : ""}`}>
-      <p>Kies je oefenrichting</p>
+      <div className="practice-direction-heading">
+        <p>Kies je oefenrichting</p>
+        {onGenerate && (
+          <button className="icon-action primary daily-generate-button" type="button" onClick={onGenerate} aria-label="Nieuwe daglijst" title="Nieuwe daglijst">＋</button>
+        )}
+      </div>
       <div>
         <button className="button primary-button" onClick={() => onChoose("zh-nl")}>
           <strong>中文 → NL</strong>

@@ -164,13 +164,13 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .daily-practice-selection small { margin-top: 4px; color: var(--secondary); font-size: 10px; }
 .daily-practice-selection .button { flex: 0 0 auto; min-height: 44px; padding-inline: 14px; font-size: 12px; white-space: nowrap; }
 .practice-direction-choice { width: 100%; margin-top: 14px; }
-.practice-direction-choice > p { margin: 0 0 8px; color: var(--secondary); font-size: 11px; font-weight: 800; text-align: center; }
+.practice-direction-heading{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 0 8px;min-height:44px;position:relative}.practice-direction-heading p{margin:0;color:var(--secondary);font-size:11px;font-weight:800;text-align:center}.practice-direction-heading .daily-generate-button{position:absolute;right:0;top:0}.practice-direction-heading.empty{justify-content:flex-start;margin-top:14px}.practice-direction-heading.empty p{text-align:left}.practice-direction-heading.empty .daily-generate-button{position:static;margin-left:auto}
 .practice-direction-choice > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .practice-direction-choice .button { min-height: 58px; padding: 9px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; line-height: 1.2; }
 .practice-direction-choice .button strong { font-size: 13px; }
 .practice-direction-choice .button span { font-size: 9px; font-weight: 650; opacity: .78; }
 .practice-direction-choice.compact { width: min(100%, 310px); flex: 0 0 auto; margin-top: 0; }
-.practice-direction-choice.compact > p { text-align: left; }
+.practice-direction-choice.compact .practice-direction-heading{justify-content:flex-start;min-height:0}.practice-direction-choice.compact .practice-direction-heading p{text-align:left}
 .practice-direction-choice.compact .button { min-height: 48px; }
 
 .bottom-nav {
@@ -731,5 +731,4 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .list-search-results b{grid-column:3;grid-row:1/3;text-align:center;font-size:18px}.list-word-rows button{grid-column:3;grid-row:1/3;width:34px;height:34px;border:0;border-radius:50%;background:transparent;color:var(--error);font-size:20px}
 @media(max-width:560px){.bottom-nav button{font-size:9px}.bottom-nav button span{font-size:19px}.bottom-nav{gap:2px;padding-left:5px;padding-right:5px}}
 
-.home-top-actions{display:flex;justify-content:flex-end;margin-bottom:8px}
 .list-toolbar .icon-action svg{display:block}
