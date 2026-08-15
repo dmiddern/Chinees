@@ -2,6 +2,7 @@ import { wordsData } from "../data/words";
 import type { Word } from "../types";
 
 const STORAGE_KEY = "chinese-custom-words-v1";
+const CUSTOM_LISTS_STORAGE_KEY = "chinees.custom-lists.v1";
 
 export interface NewCustomWord {
   hanzi: string;
@@ -98,4 +99,30 @@ export function addCustomWords(inputs: NewCustomWord[]): BulkAddResult {
 
 export function addCustomWord(input: NewCustomWord) {
   return addCustomWords([input]).added === 1;
+}
+
+export function deleteCustomWord(wordId: number) {
+  const current = loadCustomWords();
+  if (!current.some((word) => word.id === wordId)) return false;
+
+  window.localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(current.filter((word) => word.id !== wordId)),
+  );
+
+  // Verwijder het woord ook uit alle eigen woordenlijsten waarin het zat.
+  try {
+    const lists = JSON.parse(window.localStorage.getItem(CUSTOM_LISTS_STORAGE_KEY) || "[]") as Array<{ wordIds?: number[] }>;
+    if (Array.isArray(lists)) {
+      const cleaned = lists.map((list) => ({
+        ...list,
+        wordIds: Array.isArray(list.wordIds) ? list.wordIds.filter((id) => id !== wordId) : [],
+      }));
+      window.localStorage.setItem(CUSTOM_LISTS_STORAGE_KEY, JSON.stringify(cleaned));
+    }
+  } catch {
+    // Het woord zelf is al verwijderd. Een beschadigde lijstopslag mag dit niet blokkeren.
+  }
+
+  return true;
 }
