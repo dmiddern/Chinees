@@ -3,6 +3,7 @@ import HanziWriter from "hanzi-writer";
 import radicalsData from "../data/radicals.json";
 import { radicalMeanings } from "../data/radicalMeanings";
 import { literalGlosses } from "../data/literalGlosses";
+import { loadHanziPracticeSettings } from "../lib/hanziPracticeSettings";
 
 interface Props {
   hanzi: string;
@@ -20,23 +21,31 @@ function radicalDescription(character: string) {
   return `Radicaal: ${info.radical} · ${meaning}`;
 }
 
-const writerOptions = (size: number) => ({
-  width: size,
-  height: size,
-  padding: Math.round(size * 0.06),
-  strokeColor: "#373534",
-  radicalColor: "#A66A57",
-  outlineColor: "#DDD8D2",
-  drawingColor: "#A66A57",
-  showOutline: true,
-  strokeAnimationSpeed: 1,
-  delayBetweenStrokes: 220,
-  charDataLoader: async (char: string) => {
-    const response = await fetch(`/hanzi-data/${encodeURIComponent(char)}.json`);
-    if (!response.ok) throw new Error(`Geen schrijfdata voor ${char}`);
-    return response.json();
-  },
-});
+const writerOptions = (size: number) => {
+  const settings = loadHanziPracticeSettings();
+  return {
+    width: size,
+    height: size,
+    padding: Math.round(size * 0.06),
+    strokeColor: "#373534",
+    radicalColor: "#A66A57",
+    outlineColor: "#DDD8D2",
+    drawingColor: "#A66A57",
+    showOutline: settings.showOutline,
+    showCharacter: settings.showCharacter,
+    strokeAnimationSpeed: settings.strokeAnimationSpeed,
+    strokeHighlightSpeed: settings.strokeHighlightSpeed,
+    strokeFadeDuration: settings.strokeFadeDuration,
+    delayBetweenStrokes: settings.delayBetweenStrokes,
+    delayBetweenLoops: settings.delayBetweenLoops,
+    drawingWidth: settings.drawingWidth,
+    charDataLoader: async (char: string) => {
+      const response = await fetch(`/hanzi-data/${encodeURIComponent(char)}.json`);
+      if (!response.ok) throw new Error(`Geen schrijfdata voor ${char}`);
+      return response.json();
+    },
+  };
+};
 
 export function StrokeOrderPreview({ hanzi }: { hanzi: string }) {
   const characters = useMemo(() => chineseCharacters(hanzi), [hanzi]);
@@ -81,7 +90,7 @@ export function StrokeOrderPreview({ hanzi }: { hanzi: string }) {
   );
 }
 
-export default function HanziPractice({ hanzi, precision = "normal", onComplete }: Props) {
+export default function HanziPractice({ hanzi, onComplete }: Props) {
   const characters = useMemo(() => chineseCharacters(hanzi), [hanzi]);
   const [characterIndex, setCharacterIndex] = useState(0);
   const [mode, setMode] = useState<"ready" | "animating" | "quiz" | "complete">("ready");
@@ -103,8 +112,6 @@ export default function HanziPractice({ hanzi, precision = "normal", onComplete 
 
     writerRef.current = HanziWriter.create(targetRef.current, character, {
       ...writerOptions(280),
-      showOutline: true,
-      showCharacter: true,
     });
   }, [character]);
 
@@ -118,14 +125,17 @@ export default function HanziPractice({ hanzi, precision = "normal", onComplete 
 
   function startQuiz() {
     if (!writerRef.current) return;
+    const settings = loadHanziPracticeSettings();
     let currentMistakes = 0;
     setMistakes(0);
     setMode("quiz");
-    const leniency = precision === "relaxed" ? 1.45 : precision === "precise" ? 0.65 : 1;
     writerRef.current.quiz({
-      leniency,
-      showHintAfterMisses: 2,
-      highlightOnComplete: true,
+      leniency: settings.leniency,
+      showHintAfterMisses: settings.showHintAfterMisses,
+      markStrokeCorrectAfterMisses: settings.markStrokeCorrectAfterMisses,
+      quizStartStrokeNum: settings.quizStartStrokeNum,
+      acceptBackwardsStrokes: settings.acceptBackwardsStrokes,
+      highlightOnComplete: settings.highlightOnComplete,
       onMistake: () => {
         currentMistakes += 1;
         setMistakes(currentMistakes);
