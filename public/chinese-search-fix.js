@@ -1,6 +1,6 @@
-function ensureAllFilterForActiveSearch(input) {
-  const value = input?.value?.trim() || "";
-  if (!value) return;
+function ensureAllFilterForSearch(input) {
+  const value = input?.value || "";
+  if (!value.trim()) return;
 
   const wordsPage = input.closest(".words-page");
   if (!wordsPage) return;
@@ -13,19 +13,41 @@ function ensureAllFilterForActiveSearch(input) {
   }
 }
 
-function installGlobalWordSearchFix() {
+function forceReactInput(input) {
+  const value = input.value;
+  if (!value) return;
+
+  // iOS Chinese handwriting/IME can update the visible input value at the end
+  // of composition without React seeing a normal onChange. Use the native value
+  // setter so React's value tracker notices the change, then emit a real input
+  // event. This makes the current Hanzi immediately become the React search query.
+  const descriptor = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
+  const nativeSetter = descriptor?.set;
+  if (!nativeSetter) return;
+
+  nativeSetter.call(input, "");
+  nativeSetter.call(input, value);
+  input.dispatchEvent(new Event("input", { bubbles: true, composed: true }));
+}
+
+function installChineseSearchFix() {
   const input = document.querySelector('.words-page .search-box input');
-  if (!input || input.dataset.globalWordSearchFix === "1") return;
+  if (!input || input.dataset.chineseSearchFix === "2") return;
 
-  input.dataset.globalWordSearchFix = "1";
+  input.dataset.chineseSearchFix = "2";
 
-  const handle = () => {
-    ensureAllFilterForActiveSearch(input);
-  };
+  input.addEventListener("input", () => {
+    ensureAllFilterForSearch(input);
+  }, true);
 
-  input.addEventListener("input", handle, true);
-  input.addEventListener("change", handle, true);
-  input.addEventListener("compositionend", handle, true);
+  input.addEventListener("change", () => {
+    ensureAllFilterForSearch(input);
+  }, true);
+
+  input.addEventListener("compositionend", () => {
+    ensureAllFilterForSearch(input);
+    queueMicrotask(() => forceReactInput(input));
+  }, true);
 }
 
 let scheduled = false;
@@ -34,7 +56,7 @@ function scheduleInstall() {
   scheduled = true;
   requestAnimationFrame(() => {
     scheduled = false;
-    installGlobalWordSearchFix();
+    installChineseSearchFix();
   });
 }
 
