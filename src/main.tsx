@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App";
+import BulkWordImport from "./components/BulkWordImport";
 import "./styles.css";
 import "./deleteControls.css";
 import "./removeLearnNav.css";
@@ -24,7 +25,10 @@ if ("serviceWorker" in navigator) {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <>
+      <App />
+      <BulkWordImport />
+    </>
   </StrictMode>,
 );
 
