@@ -1,0 +1,14 @@
+.settings-page .level-selector.left {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  max-width: 100%;
+}
+
+.settings-page .level-selector.left button {
+  flex: 0 0 auto;
+}
+
+.settings-page .about-card,
+.settings-page .danger-button {
+  display: none !important;
+}
