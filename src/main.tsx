@@ -9,6 +9,7 @@ import { installHanziFeatures } from "./lib/handwriting";
 import { installCanvasReadyFix } from "./lib/canvasReady";
 import { installStrokeQuizPatch } from "./lib/strokeQuizPatch";
 import { installCustomDeleteControls } from "./lib/deleteControls";
+import { installCustomDailySourceToggle } from "./lib/customDailySource";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -27,3 +28,4 @@ installHanziFeatures();
 installCanvasReadyFix();
 installStrokeQuizPatch();
 installCustomDeleteControls();
+installCustomDailySourceToggle();
