@@ -1,0 +1,82 @@
+name: Fix learn direction flow
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-learn-direction-flow.yml'
+permissions:
+  contents: write
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply UX fixes
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          p = Path('src/App.tsx')
+          s = p.read_text()
+
+          old = '''  function startToday(direction: Direction) {\n    if (!todaySet?.wordIds.length) return;\n'''
+          new = '''  function startToday(direction: Direction) {\n    if (!todaySet?.wordIds.length) return;\n    updateSettings({ direction });\n'''
+          if old not in s:
+              raise SystemExit('startToday target not found')
+          s = s.replace(old, new, 1)
+
+          old = '''              <small>{selectedWordCount} unieke woorden · kies één richting</small>\n            </span>\n            <PracticeDirectionButtons compact onChoose={(direction) => onPracticeDays(selectedSets, direction)} />\n'''
+          new = '''              <small>{selectedWordCount} unieke woorden</small>\n            </span>\n            <button\n              className="button primary-button daily-selection-play"\n              onClick={() => onPracticeDays(selectedSets, settings.direction)}\n              aria-label="Oefen geselecteerde lijsten"\n              title="Oefenen"\n            >▶</button>\n'''
+          if old not in s:
+              raise SystemExit('selected daily lists target not found')
+          s = s.replace(old, new, 1)
+
+          old = '''        <div className="daily-set-practice">\n          <PracticeDirectionButtons onChoose={onPractice} />\n        </div>\n'''
+          new = '''        <div className="daily-set-practice">\n          <button className="button primary-button full-button" onClick={() => onPractice(settings.direction)}>\n            Oefenen <span aria-hidden="true">▶</span>\n          </button>\n        </div>\n'''
+          if old not in s:
+              raise SystemExit('daily set sheet target not found')
+          s = s.replace(old, new, 1)
+
+          # DailySetSheet needs settings to know the already selected direction.
+          old = '''        <DailySetSheet\n          set={selectedDay}\n          onClose={() => setSelectedDay(null)}\n'''
+          new = '''        <DailySetSheet\n          set={selectedDay}\n          settings={settings}\n          onClose={() => setSelectedDay(null)}\n'''
+          if old not in s:
+              raise SystemExit('DailySetSheet call target not found')
+          s = s.replace(old, new, 1)
+
+          old = '''function DailySetSheet({\n  set,\n  onClose,\n  onPractice,\n  onSelect,\n}: {\n  set: DailySet;\n  onClose: () => void;\n'''
+          new = '''function DailySetSheet({\n  set,\n  settings,\n  onClose,\n  onPractice,\n  onSelect,\n}: {\n  set: DailySet;\n  settings: Settings;\n  onClose: () => void;\n'''
+          if old not in s:
+              raise SystemExit('DailySetSheet signature target not found')
+          s = s.replace(old, new, 1)
+
+          p.write_text(s)
+
+          p = Path('src/styles.css')
+          s = p.read_text()
+          old = '''.practice-direction-choice > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }'''
+          new = '''.practice-direction-choice > div:not(.practice-direction-heading) { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }'''
+          if old not in s:
+              raise SystemExit('direction grid CSS target not found')
+          s = s.replace(old, new, 1)
+          s += '''\n.daily-selection-play{width:48px;min-width:48px;padding:0;font-size:18px}\n'''
+          p.write_text(s)
+          PY
+      - name: Build
+        run: |
+          npm ci
+          npm run build
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/App.tsx src/styles.css
+          git commit -m "Fix learning direction flow" || exit 0
+          git pull --rebase origin main
+          git push origin HEAD:main
