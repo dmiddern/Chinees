@@ -1,0 +1,4 @@
+/* Toon massa-import alleen wanneer het paneel 'Woord toevoegen' open staat. */
+body:not(:has(.words-page .add-word-panel)) button[title="Lijst plakken"] {
+  display: none !important;
+}
