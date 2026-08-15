@@ -1,8 +1,6 @@
-const HANZI_RE = /[\u3400-\u9fff]/u;
-
-function ensureAllFilterForChineseSearch(input) {
-  const value = input?.value || "";
-  if (!HANZI_RE.test(value)) return;
+function ensureAllFilterForActiveSearch(input) {
+  const value = input?.value?.trim() || "";
+  if (!value) return;
 
   const wordsPage = input.closest(".words-page");
   if (!wordsPage) return;
@@ -15,14 +13,14 @@ function ensureAllFilterForChineseSearch(input) {
   }
 }
 
-function installChineseSearchFix() {
+function installGlobalWordSearchFix() {
   const input = document.querySelector('.words-page .search-box input');
-  if (!input || input.dataset.chineseSearchFix === "1") return;
+  if (!input || input.dataset.globalWordSearchFix === "1") return;
 
-  input.dataset.chineseSearchFix = "1";
+  input.dataset.globalWordSearchFix = "1";
 
   const handle = () => {
-    ensureAllFilterForChineseSearch(input);
+    ensureAllFilterForActiveSearch(input);
   };
 
   input.addEventListener("input", handle, true);
@@ -36,7 +34,7 @@ function scheduleInstall() {
   scheduled = true;
   requestAnimationFrame(() => {
     scheduled = false;
-    installChineseSearchFix();
+    installGlobalWordSearchFix();
   });
 }
 
