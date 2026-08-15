@@ -3,6 +3,7 @@ import { wordsData } from "./data/words";
 import { literalGlosses } from "./data/literalGlosses";
 import { articleKinds, articleLevels, articleSources, articles, type Article, type ArticleKind, type ArticleLevel } from "./data/articles";
 import HanziPractice, { StrokeOrderPreview } from "./components/HanziPractice";
+import ListManager from "./components/ListManager";
 import { loadArticleProgress, recordArticleQuiz, saveArticleProgress, updateArticleProgress, type ArticleProgressMap } from "./lib/articleProgress";
 import { createCustomList, loadCustomLists, saveCustomLists, toggleWordInList, type CustomWordList } from "./lib/customLists";
 import { exercisesForArticle, relatedWordsForArticle } from "./lib/course";
@@ -15,7 +16,7 @@ import { speakMandarin } from "./lib/speech";
 import { exampleForWord } from "./lib/wordExamples";
 import type { Direction, HskLevel, ProgressMap, Skill, Word } from "./types";
 
-type Tab = "home" | "learn" | "guide" | "words" | "write" | "settings";
+type Tab = "home" | "learn" | "guide" | "words" | "lists" | "write" | "settings";
 
 interface Settings {
   levels: HskLevel[];
@@ -49,6 +50,7 @@ const navItems: { id: Tab; label: string; icon: string }[] = [
   { id: "home", label: "Leren", icon: "学" },
   { id: "guide", label: "Theorie", icon: "文" },
   { id: "words", label: "Woorden", icon: "词" },
+  { id: "lists", label: "Lijsten", icon: "☷" },
   { id: "write", label: "Schrijven", icon: "写" },
   { id: "settings", label: "Instellingen", icon: "⚙" },
 ];
@@ -253,6 +255,17 @@ function App() {
             onAddWord={(input) => {
               if (addCustomWord(input)) window.location.reload();
             }}
+          />
+        )}
+        {tab === "lists" && (
+          <ListManager
+            lists={customLists}
+            words={words}
+            onCreate={(name) => setCustomLists((current) => createCustomList(current, name))}
+            onDelete={(listId) => setCustomLists((current) => current.filter((list) => list.id !== listId))}
+            onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
+            onReplaceWords={(listId, wordIds) => setCustomLists((current) => current.map((list) => list.id === listId ? { ...list, wordIds: [...new Set(wordIds)], updatedAt: Date.now() } : list))}
+            onPractice={(list) => startWordList(list.wordIds, list.name)}
           />
         )}
         {tab === "write" && (

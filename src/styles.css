@@ -705,3 +705,28 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .add-word-panel { display: grid; gap: 10px; margin: 0 0 18px; padding: 16px; border: 1px solid var(--line, #d9d4ca); border-radius: 16px; background: var(--card, #fff); }
 .add-word-panel input { width: 100%; box-sizing: border-box; border: 1px solid var(--line, #d9d4ca); border-radius: 12px; padding: 12px 14px; font: inherit; background: transparent; color: inherit; }
 .custom-word-mark { display: inline-grid; place-items: center; width: 18px; height: 18px; border: 1px solid currentColor; border-radius: 50%; font-size: 13px; font-weight: 500; line-height: 1; vertical-align: 1px; }
+
+/* Mobile-first split between dictionary and list management */
+.words-page .custom-lists,.words-page .row-list-toggle{display:none!important}
+.lists-page{padding-bottom:110px}
+.icon-action{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--border);border-radius:13px;background:var(--surface);color:var(--primary);font-size:21px;font-weight:800;cursor:pointer}
+.icon-action.primary{border-color:var(--primary);background:var(--primary);color:var(--background)}
+.icon-action.danger{color:var(--error)}
+.icon-action:disabled{opacity:.3}
+.list-create-row{display:grid;grid-template-columns:minmax(0,1fr) 44px;gap:8px;margin:12px 0}
+.list-create-row input{min-width:0;border:1px solid var(--border);border-radius:13px;background:var(--surface);padding:11px 13px;font-size:16px}
+.list-selector{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
+.list-selector::-webkit-scrollbar{display:none}
+.list-selector>button{flex:0 0 auto;border:1px solid var(--border);border-radius:999px;background:var(--surface);padding:8px 10px 8px 13px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.list-selector>button.active{border-color:var(--primary);background:var(--primary);color:var(--background)}
+.list-selector strong{font-size:12px}.list-selector span{min-width:21px;border-radius:999px;background:rgba(166,106,87,.16);padding:3px 5px;font-size:9px;text-align:center}
+.list-toolbar{display:flex;gap:8px;margin:4px 0 14px}
+.list-import-card{margin:0 0 14px;border:1px solid var(--border);border-radius:16px;background:var(--surface);padding:12px}
+.list-import-card textarea{width:100%;min-height:130px;box-sizing:border-box;border:1px solid var(--border);border-radius:12px;background:var(--background);padding:11px;font:inherit;resize:vertical}
+.import-summary{display:flex;align-items:center;gap:10px;margin-top:9px}.import-summary strong{font-size:12px}.import-summary span{color:var(--error);font-size:12px}.import-summary .icon-action{margin-left:auto}
+.compact-list-search{margin-top:8px}
+.list-search-results,.list-word-rows{margin-top:10px;border-top:1px solid var(--border)}
+.list-search-results>button,.list-word-rows>div{width:100%;min-height:62px;border:0;border-bottom:1px solid var(--border);background:transparent;display:grid;grid-template-columns:54px minmax(0,1fr) 36px;grid-template-rows:auto auto;align-items:center;column-gap:8px;padding:8px 0;text-align:left}
+.list-search-results strong,.list-word-rows strong{grid-row:1/3;font-family:"Noto Serif SC",serif;font-size:23px}.list-search-results span,.list-word-rows span{font-size:11px;color:var(--accent-hover)}.list-search-results small,.list-word-rows small{font-size:10px;color:var(--secondary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.list-search-results b{grid-column:3;grid-row:1/3;text-align:center;font-size:18px}.list-word-rows button{grid-column:3;grid-row:1/3;width:34px;height:34px;border:0;border-radius:50%;background:transparent;color:var(--error);font-size:20px}
+@media(max-width:560px){.bottom-nav button{font-size:9px}.bottom-nav button span{font-size:19px}.bottom-nav{gap:2px;padding-left:5px;padding-right:5px}}
