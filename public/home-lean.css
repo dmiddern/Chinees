@@ -1,0 +1,44 @@
+/* Lean homepage: alleen de oefenrichting blijft boven de daglijsten zichtbaar. */
+.home-page .hero-card,
+.home-page .level-selector,
+.home-page .stats-grid {
+  display: none !important;
+}
+
+/* Ook de HSK-subtitel in de header is op de homepage overbodig. */
+.app-shell:has(.home-page) .topbar .brand small {
+  display: none !important;
+}
+
+.home-page .today-card {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.home-page .today-card > .section-heading,
+.home-page .today-card > .text-button {
+  display: none !important;
+}
+
+.home-page .today-card .practice-direction-choice {
+  margin: 0;
+  padding: 0;
+}
+
+.home-page .today-card .practice-direction-choice > p {
+  margin-top: 0;
+}
+
+@media (max-width: 520px) {
+  .home-page {
+    padding-top: 18px;
+  }
+
+  .home-page .today-card .practice-direction-choice {
+    margin-bottom: 8px;
+  }
+}
