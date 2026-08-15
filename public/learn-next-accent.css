@@ -1,0 +1,24 @@
+.learn-page .learn-next-button,
+.learn-page .self-check .full-button {
+  background: var(--accent, #a66a57) !important;
+  color: #fff !important;
+  border-color: var(--accent, #a66a57) !important;
+  box-shadow: 0 8px 22px rgba(166, 106, 87, 0.24);
+}
+
+.learn-page .learn-next-button:hover,
+.learn-page .self-check .full-button:hover:not(:disabled) {
+  background: var(--accent-hover, #8c5848) !important;
+}
+
+.learn-page .learn-next-button:active,
+.learn-page .self-check .full-button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.learn-page .self-check .full-button:disabled {
+  background: var(--surface, #f0ece6) !important;
+  color: var(--secondary, #77716c) !important;
+  border-color: var(--border, #ddd8d2) !important;
+  box-shadow: none;
+}
