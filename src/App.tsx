@@ -598,8 +598,7 @@ function Learn({
 
   function next() {
     const rating = activeSession.ratings[exercise.skill];
-    if (rating === undefined) return;
-    onRate(activeWord.id, exercise.skill, rating);
+    if (rating !== undefined) onRate(activeWord.id, exercise.skill, rating);
     onSessionChange({
       ...activeSession,
       index: activeSession.index + 1,
@@ -607,6 +606,16 @@ function Learn({
       promptMode: "character",
       ratings: {},
     });
+  }
+
+  function switchDirection(direction: Direction) {
+    if (direction === activeSession.direction) return;
+    onSessionChange(createLearningSession(
+      activeSession.date,
+      activeSession.wordIds,
+      activeSession.title,
+      direction,
+    ));
   }
 
   const requiredRated = session.ratings[exercise.skill] !== undefined;
@@ -620,32 +629,34 @@ function Learn({
 
   return (
     <div className="page learn-page">
-      <div className="page-title-row">
+      <div className="page-title-row learn-session-heading">
         <div>
           <p className="eyebrow">Oefensessie · {session.title || "daglijst"}</p>
           <h1>{session.index + 1} <span>van {session.queue.length}</span></h1>
         </div>
-        <span className="level-chip">{levelLabel(word.level, word.custom)}</span>
+        <div className="learn-session-actions">
+          <span className="level-chip">{levelLabel(word.level, word.custom)}</span>
+          <button className="learn-next-button" type="button" onClick={next} aria-label="Volgend woord" title="Volgend woord">›</button>
+        </div>
       </div>
 
       <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">
-        <span className={exercise.direction === "zh-nl" ? "active" : ""}>
+        <button type="button" className={exercise.direction === "zh-nl" ? "active" : ""} onClick={() => switchDirection("zh-nl")}>
           Chinees → {meaningLanguageLabel}
-        </span>
-        <span className={exercise.direction === "nl-zh" ? "active" : ""}>
+        </button>
+        <button type="button" className={exercise.direction === "nl-zh" ? "active" : ""} onClick={() => switchDirection("nl-zh")}>
           {meaningLanguageLabel} → Chinees
-        </span>
+        </button>
       </div>
-      <p className="skill-focus">Focus: <strong>{skillLabels[exercise.skill]}</strong></p>
 
       <section className={`flashcard ${session.revealed ? "revealed" : ""}`}>
-        <p className="card-instruction">
-          {exercise.skill === "meaning"
-            ? "Wat betekent dit woord?"
-            : exercise.skill === "pronunciation"
-              ? "Spreek het Chinese woord hardop uit."
-              : "Schrijf het Chinese woord uit je hoofd."}
-        </p>
+        {exercise.skill !== "writing" && (
+          <p className="card-instruction">
+            {exercise.skill === "meaning"
+              ? "Wat betekent dit woord?"
+              : "Spreek het Chinese woord hardop uit."}
+          </p>
+        )}
         {exercise.direction === "zh-nl" ? (
           <>
             <div className="prompt-mode-toggle" aria-label="Weergave van het Chinese woord">
