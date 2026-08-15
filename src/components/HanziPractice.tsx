@@ -108,17 +108,28 @@ export default function HanziPractice({ hanzi, onComplete }: Props) {
   useEffect(() => {
     if (!targetRef.current) return;
     targetRef.current.innerHTML = "";
-    setMode("ready");
+    setMode("animating");
     setMistakes(0);
 
-    writerRef.current = HanziWriter.create(targetRef.current, character, {
+    const writer = HanziWriter.create(targetRef.current, character, {
       ...writerOptions(WRITER_SIZE),
     });
+    writerRef.current = writer;
+
+    const frame = window.requestAnimationFrame(() => {
+      writer.hideCharacter();
+      writer.animateCharacter({
+        onComplete: () => setMode("ready"),
+      });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
   }, [character]);
 
   function animate() {
     if (!writerRef.current) return;
     setMode("animating");
+    writerRef.current.hideCharacter();
     writerRef.current.animateCharacter({
       onComplete: () => setMode("ready"),
     });
