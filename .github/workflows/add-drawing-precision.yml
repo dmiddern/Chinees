@@ -1,0 +1,71 @@
+name: Add drawing precision
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/add-drawing-precision.yml
+permissions:
+  contents: write
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Add character drawing precision setting
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          app = Path('src/App.tsx')
+          s = app.read_text()
+
+          s = s.replace('''interface Settings {\n  levels: HskLevel[];\n  direction: Direction;\n  speechRate: number;\n}''', '''interface Settings {\n  levels: HskLevel[];\n  direction: Direction;\n  speechRate: number;\n  drawingPrecision: "relaxed" | "normal" | "precise";\n}''', 1)
+
+          s = s.replace('''const defaultSettings: Settings = {\n  levels: [1],\n  direction: "zh-nl",\n  speechRate: 0.72,\n};''', '''const defaultSettings: Settings = {\n  levels: [1],\n  direction: "zh-nl",\n  speechRate: 0.72,\n  drawingPrecision: "normal",\n};''', 1)
+
+          s = s.replace('''            rate={settings.speechRate}\n            onRate={(wordId, correct) => rate(wordId, "writing", correct)}''', '''            rate={settings.speechRate}\n            drawingPrecision={settings.drawingPrecision}\n            onRate={(wordId, correct) => rate(wordId, "writing", correct)}''', 1)
+
+          old_sig = '''function Writing({ words, initialWord, rate, onRate }: { words: Word[]; initialWord: Word | null; rate: number; onRate: (wordId: number, correct: boolean) => void }) {'''
+          new_sig = '''function Writing({ words, initialWord, rate, drawingPrecision, onRate }: { words: Word[]; initialWord: Word | null; rate: number; drawingPrecision: Settings["drawingPrecision"]; onRate: (wordId: number, correct: boolean) => void }) {'''
+          if old_sig not in s:
+              raise SystemExit('Writing signature not found')
+          s = s.replace(old_sig, new_sig, 1)
+
+          s = s.replace('''      <HanziPractice\n        hanzi={word.hanzi}\n        onComplete={(mistakes) => onRate(word.id, mistakes <= 1)}\n      />''', '''      <HanziPractice\n        hanzi={word.hanzi}\n        precision={drawingPrecision}\n        onComplete={(mistakes) => onRate(word.id, mistakes <= 1)}\n      />''', 1)
+
+          marker = '''      <section className="settings-card">\n        <label>\n          <span><strong>Uitspraaksnelheid</strong><small>{Math.round(settings.speechRate * 100)}%</small></span>\n          <input type="range" min="0.5" max="1" step="0.05" value={settings.speechRate} onChange={(event) => onChange({ speechRate: Number(event.target.value) })} />\n        </label>\n      </section>'''
+          addition = marker + '''\n      <section className="settings-card">\n        <h2>Tekennauwkeurigheid</h2>\n        <div className="precision-options" role="group" aria-label="Tekennauwkeurigheid">\n          {([\n            ["relaxed", "Soepel"],\n            ["normal", "Normaal"],\n            ["precise", "Precies"],\n          ] as const).map(([value, label]) => (\n            <button\n              key={value}\n              type="button"\n              className={settings.drawingPrecision === value ? "active" : ""}\n              onClick={() => onChange({ drawingPrecision: value })}\n            >\n              {label}\n            </button>\n          ))}\n        </div>\n      </section>'''
+          if marker not in s:
+              raise SystemExit('settings speech block not found')
+          s = s.replace(marker, addition, 1)
+          app.write_text(s)
+
+          hp = Path('src/components/HanziPractice.tsx')
+          h = hp.read_text()
+          h = h.replace('''interface Props {\n  hanzi: string;\n  onComplete?: (mistakes: number) => void;\n}''', '''interface Props {\n  hanzi: string;\n  precision?: "relaxed" | "normal" | "precise";\n  onComplete?: (mistakes: number) => void;\n}''', 1)
+          h = h.replace('''export default function HanziPractice({ hanzi, onComplete }: Props) {''', '''export default function HanziPractice({ hanzi, precision = "normal", onComplete }: Props) {''', 1)
+          h = h.replace('''    writerRef.current.quiz({\n      showHintAfterMisses: 2,''', '''    const leniency = precision === "relaxed" ? 1.45 : precision === "precise" ? 0.65 : 1;\n    writerRef.current.quiz({\n      leniency,\n      showHintAfterMisses: 2,''', 1)
+          hp.write_text(h)
+
+          css = Path('src/styles.css')
+          c = css.read_text()
+          if '.precision-options{' not in c:
+              c += '''\n.precision-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.precision-options button{min-width:0;border:1px solid var(--border);border-radius:13px;background:var(--surface);padding:11px 6px;font-size:12px;font-weight:800;cursor:pointer}.precision-options button.active{background:var(--primary);border-color:var(--primary);color:var(--background)}\n'''
+          css.write_text(c)
+          PY
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/App.tsx src/components/HanziPractice.tsx src/styles.css
+          git commit -m "Add drawing precision setting" || exit 0
+          git push
