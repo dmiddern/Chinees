@@ -1,9 +1,30 @@
 import { deleteCustomWord, loadCustomWords } from "./customWords";
 
 const CUSTOM_LISTS_STORAGE_KEY = "chinees.custom-lists.v1";
+const SCROLL_RESTORE_KEY = "chinees.delete-scroll-y";
 
 function normalized(value: string | null | undefined) {
   return (value || "").replace(/⊕/g, "").trim().toLocaleLowerCase();
+}
+
+function reloadKeepingScrollPosition() {
+  window.sessionStorage.setItem(SCROLL_RESTORE_KEY, String(window.scrollY));
+  window.location.reload();
+}
+
+function restoreScrollPosition() {
+  const stored = window.sessionStorage.getItem(SCROLL_RESTORE_KEY);
+  if (stored === null) return;
+  window.sessionStorage.removeItem(SCROLL_RESTORE_KEY);
+  const top = Number(stored);
+  if (!Number.isFinite(top)) return;
+
+  // Wacht tot React en de woordenlijst opnieuw gerenderd zijn voordat we
+  // terugscrollen. Een tweede frame voorkomt dat iOS Safari ons nadien weer
+  // naar boven trekt wanneer de layout nog aan het stabiliseren is.
+  window.requestAnimationFrame(() => {
+    window.requestAnimationFrame(() => window.scrollTo({ top, behavior: "auto" }));
+  });
 }
 
 function installWordDeleteButtons() {
@@ -27,7 +48,7 @@ function installWordDeleteButtons() {
       event.preventDefault();
       event.stopPropagation();
       if (!window.confirm(`Wil je het eigen woord “${word.hanzi}” verwijderen?`)) return;
-      if (deleteCustomWord(word.id)) window.location.reload();
+      if (deleteCustomWord(word.id)) reloadKeepingScrollPosition();
     });
     row.appendChild(button);
   });
@@ -62,7 +83,7 @@ function installListDeleteButtons() {
         if (!Array.isArray(lists) || !lists[index]) return;
         const next = lists.filter((_, itemIndex) => itemIndex !== index);
         window.localStorage.setItem(CUSTOM_LISTS_STORAGE_KEY, JSON.stringify(next));
-        window.location.reload();
+        reloadKeepingScrollPosition();
       } catch {
         return;
       }
@@ -88,6 +109,7 @@ function installAll() {
 }
 
 export function installCustomDeleteControls() {
+  restoreScrollPosition();
   installAll();
   const observer = new MutationObserver(() => installAll());
   observer.observe(document.body, { childList: true, subtree: true });
