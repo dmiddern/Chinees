@@ -1,7 +1,3 @@
 .bottom-nav {
-  grid-template-columns: repeat(5, 1fr) !important;
-}
-
-.bottom-nav > button:nth-child(2) {
-  display: none;
+  grid-template-columns: repeat(6, 1fr) !important;
 }
