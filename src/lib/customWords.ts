@@ -3,37 +3,6 @@ import type { Word } from "../types";
 
 const STORAGE_KEY = "chinese-custom-words-v1";
 const CUSTOM_LISTS_STORAGE_KEY = "chinees.custom-lists.v1";
-const CUSTOM_WORDS_RESET_KEY = "chinees.custom-words-reset.2026-08-16";
-
-function clearExistingCustomWordsOnce() {
-  try {
-    if (window.localStorage.getItem(CUSTOM_WORDS_RESET_KEY)) return;
-
-    const existingWords = JSON.parse(window.localStorage.getItem(STORAGE_KEY) || "[]") as Word[];
-    const customWordIds = new Set(
-      Array.isArray(existingWords)
-        ? existingWords.filter((word) => word?.custom || word?.source === "custom").map((word) => word.id)
-        : [],
-    );
-
-    window.localStorage.removeItem(STORAGE_KEY);
-
-    const lists = JSON.parse(window.localStorage.getItem(CUSTOM_LISTS_STORAGE_KEY) || "[]") as Array<{ wordIds?: number[] }>;
-    if (Array.isArray(lists) && customWordIds.size) {
-      const cleaned = lists.map((list) => ({
-        ...list,
-        wordIds: Array.isArray(list.wordIds) ? list.wordIds.filter((id) => !customWordIds.has(id)) : [],
-      }));
-      window.localStorage.setItem(CUSTOM_LISTS_STORAGE_KEY, JSON.stringify(cleaned));
-    }
-
-    window.localStorage.setItem(CUSTOM_WORDS_RESET_KEY, "1");
-  } catch {
-    // Een beschadigde lokale opslag mag het opstarten van de app niet blokkeren.
-  }
-}
-
-clearExistingCustomWordsOnce();
 
 export interface NewCustomWord {
   hanzi: string;
