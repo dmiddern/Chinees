@@ -1,0 +1,32 @@
+.settings-page > .settings-collapsible {
+  margin: 0 0 12px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--background);
+  overflow: hidden;
+}
+
+.settings-collapsible > summary {
+  min-height: 58px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  list-style: none;
+  font-weight: 800;
+}
+
+.settings-collapsible > summary::-webkit-details-marker { display: none; }
+.settings-collapsible > summary b { color: var(--secondary); font-size: 18px; transition: transform .18s ease; }
+.settings-collapsible[open] > summary b { transform: rotate(180deg); }
+
+.settings-collapsible > .settings-card,
+.settings-collapsible > .settings-export-panel {
+  margin: 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+}
