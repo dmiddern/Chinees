@@ -1,0 +1,38 @@
+/* Keep the primary navigation physically outside the scrolling area.
+   This avoids iOS/PWA viewport behaviour where position: fixed can move
+   together with the document while the user scrolls or rubber-bands. */
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  overflow: hidden;
+}
+
+.app-shell {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0 !important;
+  padding-bottom: 0 !important;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+}
+
+.app-shell > main {
+  width: min(100%, 820px);
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.bottom-nav {
+  position: relative !important;
+  inset: auto !important;
+  width: 100%;
+  flex: 0 0 auto;
+}
