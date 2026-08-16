@@ -34,6 +34,7 @@ function exportGroups() {
     label: `HSK ${level}`,
     detail: `${builtIn.filter((word) => String(word.level) === String(level)).length} woorden`,
     wordIds: builtIn.filter((word) => String(word.level) === String(level)).map((word) => word.id),
+    defaultSelected: false,
   })).filter((item) => item.wordIds.length);
 
   const days = Object.entries(dailySets || {}).map(([key, set]) => {
@@ -48,6 +49,7 @@ function exportGroups() {
       label: `${date}${time ? ` · ${time}` : ""}`,
       detail: `${set.wordIds.length} woorden`,
       wordIds: set.wordIds,
+      defaultSelected: true,
     };
   }).filter(Boolean).sort((a, b) => b.id.localeCompare(a.id));
 
@@ -56,6 +58,7 @@ function exportGroups() {
     label: list.name || "Naamloze lijst",
     detail: `${Array.isArray(list.wordIds) ? list.wordIds.length : 0} woorden`,
     wordIds: Array.isArray(list.wordIds) ? list.wordIds : [],
+    defaultSelected: true,
   })) : [];
 
   const ownWords = custom.length ? [{
@@ -63,6 +66,7 @@ function exportGroups() {
     label: "Eigen woorden (+)",
     detail: `${custom.length} woorden`,
     wordIds: custom.map((word) => word.id),
+    defaultSelected: true,
   }] : [];
 
   return [
@@ -77,25 +81,25 @@ function csvCell(value) {
   return `"${String(value ?? "").replaceAll('"', '""')}"`;
 }
 
-function selectedIds(page) {
+function selectedIds(panel) {
   const sources = new Map(exportGroups().flatMap((group) => group.items.map((item) => [item.id, item])));
-  const selected = [...page.querySelectorAll('input[type="checkbox"]:checked')]
+  const selected = [...panel.querySelectorAll('input[type="checkbox"]:checked')]
     .map((input) => sources.get(input.value))
     .filter(Boolean);
   return [...new Set(selected.flatMap((item) => item.wordIds))];
 }
 
-function updateSummary(page) {
-  const ids = selectedIds(page);
-  const checked = page.querySelectorAll('input[type="checkbox"]:checked').length;
-  const summary = page.querySelector(".standalone-export-summary");
-  const button = page.querySelector(".standalone-export-download");
+function updateSummary(panel) {
+  const ids = selectedIds(panel);
+  const checked = panel.querySelectorAll('input[type="checkbox"]:checked').length;
+  const summary = panel.querySelector(".standalone-export-summary");
+  const button = panel.querySelector(".standalone-export-download");
   if (summary) summary.textContent = checked ? `${checked} selecties · ${ids.length} unieke woorden` : "Nog niets geselecteerd";
   if (button) button.disabled = ids.length === 0;
 }
 
-function downloadSelection(page) {
-  const ids = selectedIds(page);
+function downloadSelection(panel) {
+  const ids = selectedIds(panel);
   const byId = new Map(allWords().map((word) => [word.id, word]));
   const rows = ids.map((id) => byId.get(id)).filter(Boolean);
   if (!rows.length) return;
@@ -119,25 +123,26 @@ function downloadSelection(page) {
 function sourceRow(item) {
   const label = document.createElement("label");
   label.className = "standalone-export-source";
-  label.innerHTML = `<input type="checkbox" value="${item.id}"><span><strong></strong><small></small></span>`;
+  const checked = item.defaultSelected ? " checked" : "";
+  label.innerHTML = `<input type="checkbox" value="${item.id}"${checked}><span><strong></strong><small></small></span>`;
   label.querySelector("strong").textContent = item.label;
   label.querySelector("small").textContent = item.detail;
   return label;
 }
 
-function renderExportPage() {
-  const main = document.querySelector("main");
-  if (!main) return null;
-  main.querySelector(".standalone-export-page")?.remove();
+function buildExportPanel() {
+  const panel = document.createElement("section");
+  panel.className = "settings-export-panel";
 
-  const page = document.createElement("div");
-  page.className = "page standalone-export-page";
+  const intro = document.createElement("div");
+  intro.className = "standalone-export-intro";
+  intro.innerHTML = `<p class="eyebrow">Gegevens</p><h2>Export</h2><p>Selecteer wat je wilt meenemen. Dubbele woorden worden automatisch samengevoegd.</p>`;
+  panel.append(intro);
 
-  const groups = exportGroups();
-  const sections = groups.map((group) => {
+  exportGroups().forEach((group) => {
     const section = document.createElement("section");
     section.className = "standalone-export-group";
-    const heading = document.createElement("h2");
+    const heading = document.createElement("h3");
     heading.textContent = group.title;
     section.append(heading);
     if (!group.items.length) {
@@ -148,83 +153,42 @@ function renderExportPage() {
     } else {
       group.items.forEach((item) => section.append(sourceRow(item)));
     }
-    return section;
+    panel.append(section);
   });
-
-  const intro = document.createElement("div");
-  intro.className = "standalone-export-intro";
-  intro.innerHTML = `<h1>Export</h1><p>Selecteer wat je wilt meenemen. Dubbele woorden worden automatisch samengevoegd.</p>`;
 
   const footer = document.createElement("div");
   footer.className = "standalone-export-footer";
-  footer.innerHTML = `<span class="standalone-export-summary">Nog niets geselecteerd</span><button class="button primary-button standalone-export-download" disabled>Exporteer CSV</button>`;
+  footer.innerHTML = `<span class="standalone-export-summary"></span><button class="button primary-button standalone-export-download">Exporteer CSV</button>`;
+  panel.append(footer);
 
-  page.append(intro, ...sections, footer);
-  page.addEventListener("change", () => updateSummary(page));
-  page.querySelector(".standalone-export-download").addEventListener("click", () => downloadSelection(page));
-  main.append(page);
-  return page;
+  panel.addEventListener("change", () => updateSummary(panel));
+  panel.querySelector(".standalone-export-download").addEventListener("click", () => downloadSelection(panel));
+  updateSummary(panel);
+  return panel;
 }
 
-function setExportHeader() {
-  const brand = document.querySelector(".topbar .brand");
-  if (!brand) return;
-  const mark = brand.querySelector(".brand-mark");
-  const strong = brand.querySelector("strong");
-  const small = brand.querySelector("small");
-  if (mark) mark.textContent = "出";
-  if (strong) strong.textContent = "Export";
-  if (small) small.style.display = "none";
-}
-
-function leaveExportMode() {
-  if (!document.body.classList.contains("export-tab-active")) return;
+function installExportInSettings() {
+  document.querySelector(".standalone-export-nav")?.remove();
   document.body.classList.remove("export-tab-active");
   document.querySelector(".standalone-export-page")?.remove();
-  document.querySelector(".standalone-export-nav")?.classList.remove("active");
+
+  const settingsPage = document.querySelector(".settings-page");
+  if (!settingsPage) return;
+  if (settingsPage.querySelector(".settings-export-panel")) return;
+  settingsPage.append(buildExportPanel());
 }
 
-function openExportMode() {
-  document.body.classList.add("export-tab-active");
-  renderExportPage();
-  document.querySelectorAll(".bottom-nav button").forEach((button) => button.classList.remove("active"));
-  document.querySelector(".standalone-export-nav")?.classList.add("active");
-  setExportHeader();
-  window.scrollTo({ top: 0, behavior: "instant" });
-}
-
-function installExportTab() {
-  const nav = document.querySelector(".bottom-nav");
-  if (!nav || nav.querySelector(".standalone-export-nav")) return;
-
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "standalone-export-nav";
-  button.innerHTML = `<span aria-hidden="true">⇩</span>Export`;
-  button.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    openExportMode();
-  });
-  nav.append(button);
-
-  [...nav.querySelectorAll("button:not(.standalone-export-nav)")].forEach((nativeButton) => {
-    nativeButton.addEventListener("click", leaveExportMode, true);
-  });
-}
-
-let exportTabScheduled = false;
-function scheduleExportTab() {
-  if (exportTabScheduled) return;
-  exportTabScheduled = true;
+let scheduled = false;
+function scheduleInstall() {
+  if (scheduled) return;
+  scheduled = true;
   requestAnimationFrame(() => {
-    exportTabScheduled = false;
-    installExportTab();
-    if (document.body.classList.contains("export-tab-active")) setExportHeader();
+    scheduled = false;
+    installExportInSettings();
   });
 }
 
-new MutationObserver(scheduleExportTab).observe(document.documentElement, { childList: true, subtree: true });
-window.addEventListener("chinees:words-ready", scheduleExportTab);
-document.addEventListener("DOMContentLoaded", scheduleExportTab);
-scheduleExportTab();
+new MutationObserver(scheduleInstall).observe(document.documentElement, { childList: true, subtree: true });
+window.addEventListener("chinees:words-ready", scheduleInstall);
+document.addEventListener("DOMContentLoaded", scheduleInstall);
+scheduleInstall();
