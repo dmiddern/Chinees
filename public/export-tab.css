@@ -1,13 +1,8 @@
-body.export-tab-active main > :not(.standalone-export-page) { display: none !important; }
-
-.bottom-nav .standalone-export-nav span { display: block; font-size: 19px; line-height: 1; margin-bottom: 3px; }
-.bottom-nav .standalone-export-nav.active { color: var(--accent-hover); }
-
-.standalone-export-page { display: grid; gap: 16px; }
-.standalone-export-intro h1 { margin-bottom: 8px; }
-.standalone-export-intro p { margin: 0; color: var(--secondary); font-size: 13px; line-height: 1.5; }
+.settings-export-panel { margin-top: 28px; display: grid; gap: 16px; }
+.standalone-export-intro h2 { margin-bottom: 8px; }
+.standalone-export-intro p:not(.eyebrow) { margin: 0; color: var(--secondary); font-size: 13px; line-height: 1.5; }
 .standalone-export-group { border: 1px solid var(--border); border-radius: 18px; background: var(--background); overflow: hidden; }
-.standalone-export-group h2 { margin: 0; padding: 15px 16px 11px; font-size: 16px; }
+.standalone-export-group h3 { margin: 0; padding: 15px 16px 11px; font-size: 15px; }
 .standalone-export-source { min-height: 58px; padding: 10px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; cursor: pointer; }
 .standalone-export-source input { width: 21px; height: 21px; flex: 0 0 auto; accent-color: var(--accent); }
 .standalone-export-source span { min-width: 0; }
@@ -19,5 +14,6 @@ body.export-tab-active main > :not(.standalone-export-page) { display: none !imp
 .standalone-export-summary { color: var(--secondary); font-size: 11px; line-height: 1.35; }
 .standalone-export-download { flex: 0 0 auto; min-height: 44px; }
 
-/* Export hoort voortaan alleen in het aparte tabblad. */
+/* Export hoort alleen onder Instellingen. */
+.bottom-nav .standalone-export-nav { display: none !important; }
 .lists-page .list-toolbar button[aria-label="Exporteren"] { display: none !important; }
