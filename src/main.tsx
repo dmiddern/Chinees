@@ -16,6 +16,7 @@ import { installCustomDeleteControls } from "./lib/deleteControls";
 import { installCustomDailySourceToggle } from "./lib/customDailySource";
 import { installPracticeExit } from "./lib/practiceExit";
 import { installHanziSettingsUi } from "./lib/hanziSettingsUi";
+import { installTheoryOrder } from "./lib/theoryOrder";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -39,3 +40,4 @@ installCustomDeleteControls();
 installCustomDailySourceToggle();
 installPracticeExit();
 installHanziSettingsUi();
+installTheoryOrder();
