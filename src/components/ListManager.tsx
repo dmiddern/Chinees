@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import type { CustomWordList } from "../lib/customLists";
+import { loadCustomLists, saveCustomLists } from "../lib/customLists";
+import { addCustomWords, loadCustomWords, type NewCustomWord } from "../lib/customWords";
 import { searchWords } from "../lib/search";
 import type { Word } from "../types";
 
@@ -30,17 +32,36 @@ function normalize(value: string) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLocaleLowerCase();
 }
 
-function idsFromText(text: string, words: Word[]) {
-  const byHanzi = new Map(words.map((word) => [word.hanzi, word.id]));
+function resolveRows(text: string, words: Word[]) {
+  const byHanzi = new Map(words.map((word) => [word.hanzi.trim(), word.id]));
   const byPinyin = new Map(words.map((word) => [normalize(word.pinyin), word.id]));
   const found = new Set<number>();
+  const newWords: NewCustomWord[] = [];
   let unmatched = 0;
+
   for (const cells of parseRows(text)) {
-    const hanzi = cells.find((cell) => /[\u3400-\u9fff]/u.test(cell));
-    const id = (hanzi && byHanzi.get(hanzi)) ?? cells.map((cell) => byPinyin.get(normalize(cell))).find(Boolean);
-    if (id) found.add(id); else unmatched += 1;
+    const hanzi = cells.find((cell) => /[\u3400-\u9fff]/u.test(cell))?.trim();
+    const existingId = (hanzi && byHanzi.get(hanzi)) ?? cells.map((cell) => byPinyin.get(normalize(cell))).find((id): id is number => typeof id === "number");
+    if (existingId !== undefined) {
+      found.add(existingId);
+      continue;
+    }
+
+    if (hanzi && cells.length >= 3) {
+      const hanziIndex = cells.indexOf(hanzi);
+      const pinyin = cells[hanziIndex + 1] || cells.find((cell) => cell !== hanzi && !/[\u3400-\u9fff]/u.test(cell)) || "";
+      const meaningCells = cells.filter((_, index) => index !== hanziIndex && cells[index] !== pinyin);
+      const meaningNl = meaningCells.join("; ").trim();
+      if (pinyin.trim() && meaningNl) {
+        newWords.push({ hanzi, pinyin: pinyin.trim(), meaningNl });
+        continue;
+      }
+    }
+
+    unmatched += 1;
   }
-  return { ids: [...found], unmatched };
+
+  return { ids: [...found], newWords, unmatched };
 }
 
 function ActionGlyph({ type }: { type: "play" | "import" | "export" | "trash" }) {
@@ -73,9 +94,10 @@ export default function ListManager({
   const [query, setQuery] = useState("");
   const [importOpen, setImportOpen] = useState(false);
   const [paste, setPaste] = useState("");
+  const [importMessage, setImportMessage] = useState("");
   const selected = lists.find((list) => list.id === selectedId) || lists[0];
   const results = useMemo(() => query ? searchWords(words, query).slice(0, 30) : [], [query, words]);
-  const parsed = useMemo(() => idsFromText(paste, words), [paste, words]);
+  const parsed = useMemo(() => resolveRows(paste, words), [paste, words]);
 
   function exportList() {
     if (!selected) return;
@@ -87,6 +109,28 @@ export default function ListManager({
     link.download = `${selected.name.replace(/[^a-z0-9-_]+/gi, "-") || "woordenlijst"}.csv`;
     link.click();
     URL.revokeObjectURL(url);
+  }
+
+  function importIntoSelectedList() {
+    if (!selected || (!parsed.ids.length && !parsed.newWords.length)) return;
+
+    const addedResult = parsed.newWords.length ? addCustomWords(parsed.newWords) : { added: 0, skipped: 0 };
+    const allWords = [...words.filter((word) => !word.custom), ...loadCustomWords()];
+    const resolvedAfterAdd = resolveRows(paste, allWords);
+    const mergedIds = [...new Set([...selected.wordIds, ...resolvedAfterAdd.ids])];
+
+    if (addedResult.added > 0) {
+      const storedLists = loadCustomLists();
+      saveCustomLists(storedLists.map((list) => list.id === selected.id ? { ...list, wordIds: mergedIds, updatedAt: Date.now() } : list));
+      setImportMessage(`${resolvedAfterAdd.ids.length} woorden aan de lijst toegevoegd, waarvan ${addedResult.added} nieuwe (+)-woorden.`);
+      window.setTimeout(() => window.location.reload(), 500);
+      return;
+    }
+
+    onReplaceWords(selected.id, mergedIds);
+    setImportMessage(`${resolvedAfterAdd.ids.length} woorden aan de lijst toegevoegd${addedResult.skipped ? `, ${addedResult.skipped} al aanwezig of HSK` : ""}.`);
+    setPaste("");
+    window.setTimeout(() => setImportOpen(false), 450);
   }
 
   return (
@@ -109,15 +153,23 @@ export default function ListManager({
         <>
           <div className="list-toolbar">
             <button className="icon-action" onClick={() => onPractice(selected)} disabled={!selected.wordIds.length} aria-label="Oefenen" title="Oefenen"><ActionGlyph type="play" /></button>
-            <button className="icon-action" onClick={() => setImportOpen((value) => !value)} aria-label="Lijst plakken" title="Lijst plakken"><ActionGlyph type="import" /></button>
+            <button className="icon-action" onClick={() => { setImportOpen((value) => !value); setImportMessage(""); }} aria-label="Mass import" title="Mass import"><ActionGlyph type="import" /></button>
             <button className="icon-action" onClick={exportList} disabled={!selected.wordIds.length} aria-label="Exporteren" title="Exporteren"><ActionGlyph type="export" /></button>
             <button className="icon-action danger" onClick={() => { if (window.confirm(`“${selected.name}” verwijderen?`)) onDelete(selected.id); }} aria-label="Verwijderen" title="Verwijderen"><ActionGlyph type="trash" /></button>
           </div>
 
           {importOpen && (
             <section className="list-import-card">
-              <textarea value={paste} onChange={(event) => setPaste(event.target.value)} placeholder={'中国; Zhōngguó; China\n美国; Měiguó; Amerika'} />
-              <div className="import-summary"><strong>{parsed.ids.length} ✓</strong>{parsed.unmatched > 0 && <span>{parsed.unmatched} ?</span>}<button className="icon-action primary" disabled={!parsed.ids.length} onClick={() => { onReplaceWords(selected.id, parsed.ids); setPaste(""); setImportOpen(false); }} aria-label="Importeren" title="Importeren">✓</button></div>
+              <p><strong>Mass import naar “{selected.name}”</strong></p>
+              <textarea value={paste} onChange={(event) => { setPaste(event.target.value); setImportMessage(""); }} placeholder={'中国; Zhōngguó; China\n美国; Měiguó; Amerika\n比利时; Bǐlìshí; België'} />
+              <small>Bestaande HSK-woorden worden aan de lijst gekoppeld. Nieuwe woorden worden als (+)-woord aangemaakt en meteen aan deze lijst toegevoegd.</small>
+              <div className="import-summary">
+                <strong>{parsed.ids.length} bestaand ✓</strong>
+                {parsed.newWords.length > 0 && <strong>{parsed.newWords.length} nieuw ＋</strong>}
+                {parsed.unmatched > 0 && <span>{parsed.unmatched} ?</span>}
+                <button className="icon-action primary" disabled={!parsed.ids.length && !parsed.newWords.length} onClick={importIntoSelectedList} aria-label="Importeren" title="Importeren">✓</button>
+              </div>
+              {importMessage && <p><strong>{importMessage}</strong></p>}
             </section>
           )}
 
