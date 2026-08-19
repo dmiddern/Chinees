@@ -41,7 +41,9 @@ function resolveRows(text: string, words: Word[]) {
 
   for (const cells of parseRows(text)) {
     const hanzi = cells.find((cell) => /[\u3400-\u9fff]/u.test(cell))?.trim();
-    const existingId = (hanzi && byHanzi.get(hanzi)) ?? cells.map((cell) => byPinyin.get(normalize(cell))).find((id): id is number => typeof id === "number");
+    const hanziId = hanzi ? byHanzi.get(hanzi) : undefined;
+    const pinyinId = cells.map((cell) => byPinyin.get(normalize(cell))).find((id): id is number => typeof id === "number");
+    const existingId = hanziId ?? pinyinId;
     if (existingId !== undefined) {
       found.add(existingId);
       continue;
