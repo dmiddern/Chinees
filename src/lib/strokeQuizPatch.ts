@@ -31,10 +31,10 @@ function addStyles() {
     .stroke-quiz-row{display:grid;grid-template-columns:1fr;gap:12px;min-width:0;width:100%}
     .stroke-quiz-row[data-count="2"]{grid-template-columns:repeat(2,minmax(0,1fr))}
     .stroke-quiz-row[data-count="3"],.stroke-quiz-row[data-count="4"]{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .stroke-quiz-box{display:grid;grid-template-rows:auto minmax(2.7em,auto);gap:7px;min-width:0;width:100%;align-content:start}
+    .stroke-quiz-box{display:grid;grid-template-rows:auto 2.7em;gap:7px;min-width:0;width:100%;align-content:start}
     .stroke-quiz-target{width:100%;max-width:100%;aspect-ratio:1;border:1.5px solid #cfc8c0;border-radius:15px;background:#fff;overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none;min-width:0}
     .stroke-quiz-target svg{touch-action:none;display:block;max-width:100%}
-    .stroke-quiz-status{text-align:center;color:#6d6863;min-height:2.7em;font-size:.88rem;line-height:1.25;min-width:0;max-width:100%;overflow-wrap:anywhere}
+    .stroke-quiz-status{text-align:center;color:#6d6863;height:2.7em;font-size:.88rem;line-height:1.25;min-width:0;max-width:100%;overflow:hidden;display:flex;align-items:center;justify-content:center;padding:0 .25em;box-sizing:border-box}
     .stroke-quiz-status.is-error{color:#a54438;font-weight:700}
     .stroke-quiz-status.is-complete{color:#39705d;font-weight:700}
   `;
@@ -110,12 +110,12 @@ function installQuiz(
       onCorrectStroke: (data) => {
         missesPerStroke.delete(data.strokeNum);
         status.className = "stroke-quiz-status";
-        status.textContent = `Juist — streek ${data.strokeNum + 1} blijft staan`;
+        status.textContent = `Juist — streek ${data.strokeNum + 1}`;
       },
       onComplete: (summary) => {
         status.className = "stroke-quiz-status is-complete";
         status.textContent = summary.totalMistakes === 0
-          ? "Perfect — volledig zonder fouten"
+          ? "Perfect — foutloos"
           : `Klaar — ${summary.totalMistakes} fout${summary.totalMistakes === 1 ? "" : "en"}`;
         onComplete(summary.totalMistakes);
       },
