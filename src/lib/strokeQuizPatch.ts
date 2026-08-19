@@ -104,7 +104,7 @@ function installQuiz(
         missesPerStroke.set(data.strokeNum, count);
         status.className = "stroke-quiz-status is-error";
         status.textContent = count >= 3
-          ? "3/3 — bekijk de juiste streek en probeer opnieuw"
+          ? "3/3 — hint getoond"
           : `Niet juist — poging ${count}/3`;
       },
       onCorrectStroke: (data) => {
