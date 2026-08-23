@@ -49,7 +49,7 @@ function exportGroups() {
       label: `${date}${time ? ` · ${time}` : ""}`,
       detail: `${set.wordIds.length} woorden`,
       wordIds: set.wordIds,
-      defaultSelected: true,
+      defaultSelected: false,
     };
   }).filter(Boolean).sort((a, b) => b.id.localeCompare(a.id));
 
@@ -58,7 +58,7 @@ function exportGroups() {
     label: list.name || "Naamloze lijst",
     detail: `${Array.isArray(list.wordIds) ? list.wordIds.length : 0} woorden`,
     wordIds: Array.isArray(list.wordIds) ? list.wordIds : [],
-    defaultSelected: true,
+    defaultSelected: false,
   })) : [];
 
   const ownWords = custom.length ? [{
@@ -66,7 +66,7 @@ function exportGroups() {
     label: "Eigen woorden (+)",
     detail: `${custom.length} woorden`,
     wordIds: custom.map((word) => word.id),
-    defaultSelected: true,
+    defaultSelected: false,
   }] : [];
 
   return [
@@ -136,7 +136,7 @@ function buildExportPanel() {
 
   const intro = document.createElement("div");
   intro.className = "standalone-export-intro";
-  intro.innerHTML = `<p class="eyebrow">Gegevens</p><h2>Export</h2><p>Selecteer wat je wilt meenemen. Dubbele woorden worden automatisch samengevoegd.</p>`;
+  intro.innerHTML = `<p class="eyebrow">Gegevens</p><h2>Export</h2><p>Selecteer wat je wilt meenemen. Alleen expliciet aangevinkte bronnen worden geëxporteerd. Dubbele woorden worden automatisch samengevoegd.</p>`;
   panel.append(intro);
 
   exportGroups().forEach((group) => {
