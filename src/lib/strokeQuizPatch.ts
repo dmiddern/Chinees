@@ -1,9 +1,10 @@
 import HanziWriter from "hanzi-writer";
 import { wordsData } from "../data/words";
+import { loadCustomWords } from "./customWords";
 import type { Word } from "../types";
 
 const HANZI = /[\u3400-\u9fff]/;
-const words = wordsData as Word[];
+const builtInWords = wordsData as Word[];
 
 declare global {
   interface Window {
@@ -16,7 +17,8 @@ function currentWord(): Word | null {
     const session = JSON.parse(localStorage.getItem("chinees.learning-session.v1") || "null");
     const exercise = session?.queue?.[session.index];
     if (session?.direction !== "nl-zh" || !exercise) return null;
-    return words.find((word) => word.id === exercise.wordId) || null;
+    const allWords = [...builtInWords, ...loadCustomWords()];
+    return allWords.find((word) => word.id === exercise.wordId) || null;
   } catch {
     return null;
   }
