@@ -1,8 +1,8 @@
+import { wordsData } from "../data/words";
 import type { HskLevel, ProgressMap, Word } from "../types";
-import { loadCustomWords } from "./customWords";
 
 const STORAGE_KEY = "chinees.daily-sets.v1";
-const SETTINGS_KEY = "chinees.settings.v1";
+const builtInWordsById = new Map<number, Word>((wordsData as Word[]).map((word) => [word.id, word]));
 
 export interface DailySet {
   date: string;
@@ -20,29 +20,45 @@ export function localDateKey(date = new Date()) {
   return `${year}-${month}-${day}`;
 }
 
+function sanitizeDailySets(sets: DailySetMap): DailySetMap {
+  let changed = false;
+  const cleaned: DailySetMap = {};
+
+  Object.entries(sets).forEach(([key, set]) => {
+    if (!set || !Array.isArray(set.wordIds) || !Array.isArray(set.levels)) {
+      changed = true;
+      return;
+    }
+
+    const wordIds = set.wordIds.filter((id) => {
+      const word = builtInWordsById.get(id);
+      return Boolean(word && !word.custom && set.levels.includes(word.level));
+    });
+
+    if (wordIds.length !== set.wordIds.length) changed = true;
+    cleaned[key] = { ...set, wordIds };
+  });
+
+  if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
+  return cleaned;
+}
+
 export function loadDailySets(): DailySetMap {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") as DailySetMap;
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}") as DailySetMap;
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) return {};
+    return sanitizeDailySets(parsed);
   } catch {
     return {};
   }
 }
 
 export function saveDailySets(sets: DailySetMap) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(sets));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitizeDailySets(sets)));
 }
 
 export function clearDailySets() {
   localStorage.removeItem(STORAGE_KEY);
-}
-
-function customWordsEnabled() {
-  try {
-    const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") as { includeCustomDailyWords?: boolean };
-    return settings.includeCustomDailyWords === true;
-  } catch {
-    return false;
-  }
 }
 
 const shuffled = <T,>(items: T[]) => [...items].sort(() => Math.random() - 0.5);
@@ -55,8 +71,12 @@ export function createDailySet(
   progress: ProgressMap,
 ): DailySetMap {
   const date = localDateKey();
-  const customWords = customWordsEnabled() ? loadCustomWords() : [];
-  const pool = [...availableWords, ...customWords]
+
+  // De daglijst wordt altijd opnieuw begrensd op de gekozen HSK-niveaus.
+  // Eigen (+)-woorden en woorden uit andere HSK-niveaus mogen hier nooit in komen,
+  // ook niet wanneer een toekomstige caller per ongeluk een te brede pool doorgeeft.
+  const pool = availableWords
+    .filter((word) => !word.custom && levels.includes(word.level))
     .filter((word, index, all) => all.findIndex((item) => item.id === word.id) === index);
 
   if (!pool.length) return current;
