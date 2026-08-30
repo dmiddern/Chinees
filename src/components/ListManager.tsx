@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { CustomWordList } from "../lib/customLists";
 import { loadCustomLists, saveCustomLists } from "../lib/customLists";
-import { addCustomWords, loadCustomWords, type NewCustomWord } from "../lib/customWords";
+import { addCustomWords, cleanImportedField, loadCustomWords, type NewCustomWord } from "../lib/customWords";
 import { searchWords } from "../lib/search";
 import type { Word } from "../types";
 
@@ -23,8 +23,8 @@ function splitDelimited(line: string, delimiter: string) {
 function parseRows(text: string) {
   return text.split(/\r?\n/).map((raw) => raw.trim()).filter(Boolean).map((line) => {
     const delimiter = line.includes("\t") ? "\t" : line.includes(";") ? ";" : line.includes("|") ? "|" : line.includes(",") ? "," : "";
-    if (!delimiter) return [line];
-    return splitDelimited(line, delimiter).filter(Boolean);
+    if (!delimiter) return [cleanImportedField(line)].filter(Boolean);
+    return splitDelimited(line, delimiter).map(cleanImportedField).filter(Boolean);
   }).filter((cells) => !/chinees|hanzi|karakter|pinyin|betekenis|vertaling|nederlands/i.test(cells.join(" ")));
 }
 
