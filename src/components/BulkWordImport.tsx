@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { addCustomWords, type NewCustomWord } from "../lib/customWords";
+import { addCustomWords, cleanImportedField, type NewCustomWord } from "../lib/customWords";
 
 function splitDelimited(line: string, delimiter: string) {
   const cells: string[] = [];
@@ -63,7 +63,7 @@ function parseWords(text: string) {
       return;
     }
 
-    const cells = splitDelimited(line, delimiter).map((cell) => cell.trim()).filter(Boolean);
+    const cells = splitDelimited(line, delimiter).map(cleanImportedField).filter(Boolean);
     if (isHeader(cells)) return;
     if (cells.length < 3) {
       invalid.push(rawLine);
@@ -195,7 +195,7 @@ export default function BulkWordImport() {
             />
 
             <p style={{ margin: "8px 0 0", fontSize: 13, opacity: .62 }}>
-              Werkt met tabbladen, puntkomma’s, verticale strepen of komma’s. Een kopregel zoals “Chinees; Pinyin; Vertaling” wordt automatisch genegeerd.
+              Werkt met tabbladen, puntkomma’s, verticale strepen of komma’s. Rechte en typografische aanhalingstekens rond velden worden automatisch verwijderd.
             </p>
 
             {parsed.valid.length > 0 && (
