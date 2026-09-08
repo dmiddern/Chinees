@@ -28,7 +28,12 @@ function toneOfSyllable(syllable: string): Tone {
 }
 
 function cleanPinyin(value: string) {
-  return value.replace(/^[^A-Za-zÀ-žüÜ1-5]+|[^A-Za-zÀ-žüÜ1-5]+$/g, "");
+  // Use Unicode letter/mark classes instead of the old À-ž range.
+  // Tone-3 vowels such as ǎ/ǐ/ǒ/ǔ/ǚ live outside that range and were
+  // previously stripped, which made e.g. dǎ look like a neutral tone.
+  return value
+    .normalize("NFC")
+    .replace(/^[^\p{L}\p{M}1-5]+|[^\p{L}\p{M}1-5]+$/gu, "");
 }
 
 function pinyinSyllables(pinyin: string, expected: number): string[] {
@@ -92,14 +97,28 @@ function paint(element: HTMLElement | null, hanzi: string, pinyin: string) {
   if (!tones) return;
 
   const signature = `${hanzi}|${pinyin}|${tones.join("")}`;
-  const existing = element.querySelectorAll(":scope > span[data-tone-char]");
-  if (element.dataset.tonePaint === signature && existing.length === [...hanzi].length) return;
+  const characters = [...hanzi];
+  const existing = [...element.querySelectorAll<HTMLElement>(":scope > span[data-tone-char]")];
+
+  // Do not trust the signature alone. Earlier builds could leave a correctly
+  // signed element with one or more characters carrying the wrong colour.
+  if (element.dataset.tonePaint === signature && existing.length === characters.length) {
+    let toneIndex = 0;
+    const spansAreCorrect = existing.every((span, index) => {
+      const character = characters[index];
+      if (!HANZI.test(character)) return true;
+      const expectedTone = tones[toneIndex] || 5;
+      toneIndex += 1;
+      return span.dataset.tone === String(expectedTone);
+    });
+    if (spansAreCorrect) return;
+  }
 
   resetOldToneStyling(element);
   element.replaceChildren();
 
   let toneIndex = 0;
-  [...hanzi].forEach((character) => {
+  characters.forEach((character) => {
     const span = document.createElement("span");
     span.dataset.toneChar = "";
     span.textContent = character;
@@ -108,6 +127,7 @@ function paint(element: HTMLElement | null, hanzi: string, pinyin: string) {
     if (HANZI.test(character)) {
       const tone = tones[toneIndex] || 5;
       toneIndex += 1;
+      span.dataset.tone = String(tone);
       if (tone !== 5) {
         const color = COLORS[tone];
         span.style.setProperty("color", color, "important");
