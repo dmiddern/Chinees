@@ -15,6 +15,7 @@ type ToneEntry = { hanzi: string; tones: Tone[] };
 type ToneIndex = {
   byFirstCharacter: Map<string, ToneEntry[]>;
   fallbackByCharacter: Map<string, Tone>;
+  exactWords: Map<string, ToneEntry[]>;
 };
 
 const TONE_NAMES: Record<1 | 2 | 3 | 4, string> = {
@@ -31,7 +32,7 @@ const TONE_COLORS: Record<1 | 2 | 3 | 4, string> = {
   4: "#BC4E49",
 };
 
-const EXCLUDED_SELECTOR = ".brand, .bottom-nav, .stroke-order-preview, .hanzi-practice, .hanzi-quiz, .hanzi-writer, canvas, svg, script, style, textarea, input";
+const EXCLUDED_SELECTOR = ".brand, .bottom-nav, .stroke-order-preview, .hanzi-writer, canvas, svg, script, style, textarea, input";
 const HANZI_RUN = /[\u3400-\u9fff]+/g;
 const HANZI_CHAR = /[\u3400-\u9fff]/;
 const PURE_HANZI = /^[\u3400-\u9fff]+$/;
@@ -63,17 +64,23 @@ function pinyinSyllables(pinyin: string, expectedCount: number) {
   if (separated.length === expectedCount) return separated;
 
   const compact = pinyin.replace(/[\s'’·-]+/g, "");
+  PINYIN_SYLLABLE.lastIndex = 0;
   const parsed = compact.match(PINYIN_SYLLABLE)?.map(cleanPinyinPart).filter(Boolean) || [];
+  PINYIN_SYLLABLE.lastIndex = 0;
   if (parsed.length === expectedCount) return parsed;
 
   return separated;
 }
 
-function wordTonePattern(word: Word): Tone[] | null {
-  const characters = [...word.hanzi].filter((character) => HANZI_CHAR.test(character));
-  const syllables = pinyinSyllables(word.pinyin, characters.length);
+function tonesFromHanziAndPinyin(hanzi: string, pinyin: string): Tone[] | null {
+  const characters = [...hanzi].filter((character) => HANZI_CHAR.test(character));
+  const syllables = pinyinSyllables(pinyin, characters.length);
   if (!characters.length || characters.length !== syllables.length) return null;
   return syllables.map(toneOfSyllable);
+}
+
+function wordTonePattern(word: Word): Tone[] | null {
+  return tonesFromHanziAndPinyin(word.hanzi, word.pinyin);
 }
 
 function addToneStyles() {
@@ -88,6 +95,7 @@ function addToneStyles() {
 
     .mandarin-tone-solid {
       color: var(--mandarin-tone-solid-color) !important;
+      -webkit-text-fill-color: var(--mandarin-tone-solid-color) !important;
     }
 
     .mandarin-tone-gradient {
@@ -106,6 +114,7 @@ function addToneStyles() {
 function buildIndex(): ToneIndex {
   const allWords = [...(wordsData as Word[]), ...loadCustomWords()];
   const byFirstCharacter = new Map<string, ToneEntry[]>();
+  const exactWords = new Map<string, ToneEntry[]>();
   const characterToneCounts = new Map<string, Map<Tone, number>>();
   const exactSingleCharacterTone = new Map<string, Tone>();
 
@@ -120,6 +129,12 @@ function buildIndex(): ToneIndex {
       bucket.push({ hanzi, tones });
       bucket.sort((a, b) => b.hanzi.length - a.hanzi.length);
       byFirstCharacter.set(first, bucket);
+    }
+
+    const exactBucket = exactWords.get(hanzi) || [];
+    if (!exactBucket.some((entry) => entry.tones.join("") === tones.join(""))) {
+      exactBucket.push({ hanzi, tones });
+      exactWords.set(hanzi, exactBucket);
     }
 
     [...hanzi].forEach((character, index) => {
@@ -145,10 +160,13 @@ function buildIndex(): ToneIndex {
     }
   });
 
-  return { byFirstCharacter, fallbackByCharacter };
+  return { byFirstCharacter, fallbackByCharacter, exactWords };
 }
 
 function tonesForRun(run: string, index: ToneIndex) {
+  const exact = index.exactWords.get(run);
+  if (exact?.length === 1) return exact[0].tones;
+
   const tones: Tone[] = [];
   let offset = 0;
 
@@ -275,6 +293,61 @@ function applySafariFallback(root: HTMLElement, index: ToneIndex) {
   });
 }
 
+function currentLearningWord(): Word | null {
+  try {
+    const session = JSON.parse(localStorage.getItem("chinees.learning-session.v1") || "null");
+    const exercise = session?.queue?.[session.index];
+    if (!exercise) return null;
+    const allWords = [...(wordsData as Word[]), ...loadCustomWords()];
+    return allWords.find((word) => word.id === exercise.wordId) || null;
+  } catch {
+    return null;
+  }
+}
+
+function applyExactWordStyle(element: HTMLElement | null, hanzi: string, pinyin: string, index: ToneIndex) {
+  if (!element || !PURE_HANZI.test(hanzi)) return;
+  const tones = tonesFromHanziAndPinyin(hanzi, pinyin)
+    || index.exactWords.get(hanzi)?.[0]?.tones
+    || tonesForRun(hanzi, index);
+  applyFallbackStyle(element, tones);
+}
+
+function applyContextualStyles(root: HTMLElement, index: ToneIndex) {
+  const learningWord = currentLearningWord();
+  if (learningWord) {
+    root.querySelectorAll<HTMLElement>(".flashcard .prompt-hanzi, .flashcard .answer-hanzi").forEach((element) => {
+      if (element.textContent?.trim() === learningWord.hanzi) {
+        applyExactWordStyle(element, learningWord.hanzi, learningWord.pinyin, index);
+      }
+    });
+  }
+
+  root.querySelectorAll<HTMLElement>(".word-row").forEach((row) => {
+    const hanziElement = row.querySelector<HTMLElement>(".word-hanzi");
+    const pinyinElement = row.querySelector<HTMLElement>(".word-info strong");
+    const hanzi = hanziElement?.textContent?.trim() || "";
+    const pinyin = pinyinElement?.textContent?.replace("⊕", "").trim() || "";
+    if (hanzi && pinyin) applyExactWordStyle(hanziElement, hanzi, pinyin, index);
+  });
+
+  root.querySelectorAll<HTMLElement>(".word-sheet").forEach((sheet) => {
+    const hanziElement = sheet.querySelector<HTMLElement>(".sheet-hanzi");
+    const pinyinElement = sheet.querySelector<HTMLElement>(".sheet-pinyin");
+    const hanzi = hanziElement?.textContent?.trim() || "";
+    const pinyin = pinyinElement?.textContent?.trim() || "";
+    if (hanzi && pinyin) applyExactWordStyle(hanziElement, hanzi, pinyin, index);
+  });
+
+  root.querySelectorAll<HTMLElement>(".answer-block").forEach((answer) => {
+    const hanziElement = answer.querySelector<HTMLElement>(".answer-hanzi");
+    const pinyinElement = answer.querySelector<HTMLElement>(".answer-pinyin");
+    const hanzi = hanziElement?.textContent?.trim() || "";
+    const pinyin = pinyinElement?.textContent?.trim() || "";
+    if (hanzi && pinyin) applyExactWordStyle(hanziElement, hanzi, pinyin, index);
+  });
+}
+
 export function installToneColors() {
   const registry = (CSS as unknown as { highlights?: HighlightRegistry }).highlights;
   const HighlightClass = (globalThis as unknown as { Highlight?: HighlightConstructor }).Highlight;
@@ -288,11 +361,8 @@ export function installToneColors() {
   const refresh = () => {
     cancelAnimationFrame(frame);
     frame = requestAnimationFrame(() => {
-      // Safari/iOS does not reliably render the CSS Custom Highlight colors in
-      // an installed PWA. Apply a non-DOM-mutating text fallback to every
-      // standalone Hanzi label so word lists, cards, sheets and practice views
-      // still receive the correct tone colors.
       applySafariFallback(root, index);
+      applyContextualStyles(root, index);
 
       if (registry && HighlightClass) {
         const ranges = rangesForTone(root, index);
