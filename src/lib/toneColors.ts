@@ -32,7 +32,7 @@ const TONE_COLORS: Record<1 | 2 | 3 | 4, string> = {
   4: "#BC4E49",
 };
 
-const EXCLUDED_SELECTOR = ".brand, .bottom-nav, .stroke-order-preview, .hanzi-writer, canvas, svg, script, style, textarea, input";
+const EXCLUDED_SELECTOR = ".brand, .bottom-nav, .stroke-order-preview, .hanzi-writer, .mandarin-tone-char, canvas, svg, script, style, textarea, input";
 const HANZI_RUN = /[\u3400-\u9fff]+/g;
 const HANZI_CHAR = /[\u3400-\u9fff]/;
 const PURE_HANZI = /^[\u3400-\u9fff]+$/;
@@ -106,6 +106,10 @@ function addToneStyles() {
       background-clip: text !important;
       color: transparent !important;
       -webkit-text-fill-color: transparent !important;
+    }
+
+    .mandarin-tone-char {
+      display: inline;
     }
   `;
   document.head.append(style);
@@ -313,6 +317,43 @@ function applyExactWordStyle(element: HTMLElement | null, hanzi: string, pinyin:
   applyFallbackStyle(element, tones);
 }
 
+function renderExactToneSpans(element: HTMLElement | null, hanzi: string, pinyin: string, index: ToneIndex) {
+  if (!element || !hanzi) return;
+
+  const tones = tonesFromHanziAndPinyin(hanzi, pinyin)
+    || index.exactWords.get(hanzi)?.[0]?.tones
+    || tonesForRun(hanzi, index);
+  const characters = [...hanzi];
+  const signature = `${hanzi}|${pinyin}|${tones.join("")}`;
+  const existingChars = element.querySelectorAll(":scope > .mandarin-tone-char");
+
+  if (element.dataset.mandarinToneSignature === signature && existingChars.length === characters.length) return;
+
+  element.textContent = "";
+  let toneIndex = 0;
+
+  characters.forEach((character) => {
+    const span = document.createElement("span");
+    span.className = "mandarin-tone-char";
+    span.textContent = character;
+
+    if (HANZI_CHAR.test(character)) {
+      const tone = tones[toneIndex] || 5;
+      toneIndex += 1;
+      if (tone !== 5) {
+        const color = TONE_COLORS[tone];
+        span.style.color = color;
+        span.style.setProperty("-webkit-text-fill-color", color);
+      }
+    }
+
+    element.append(span);
+  });
+
+  element.dataset.mandarinToneSignature = signature;
+  clearFallbackStyle(element);
+}
+
 function applyContextualStyles(root: HTMLElement, index: ToneIndex) {
   const learningWord = currentLearningWord();
   if (learningWord) {
@@ -328,7 +369,7 @@ function applyContextualStyles(root: HTMLElement, index: ToneIndex) {
     const pinyinElement = row.querySelector<HTMLElement>(".word-info strong");
     const hanzi = hanziElement?.textContent?.trim() || "";
     const pinyin = pinyinElement?.textContent?.replace("⊕", "").trim() || "";
-    if (hanzi && pinyin) applyExactWordStyle(hanziElement, hanzi, pinyin, index);
+    if (hanzi && pinyin) renderExactToneSpans(hanziElement, hanzi, pinyin, index);
   });
 
   root.querySelectorAll<HTMLElement>(".word-sheet").forEach((sheet) => {
