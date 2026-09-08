@@ -69,6 +69,13 @@ function currentLearningWord(words: Word[]): Word | null {
   }
 }
 
+function uniqueWordForHanzi(words: Word[], hanzi: string): Word | null {
+  const candidates = words.filter((word) => word.hanzi === hanzi);
+  if (!candidates.length) return null;
+  const pronunciations = new Set(candidates.map((word) => word.pinyin.trim().toLocaleLowerCase()));
+  return pronunciations.size === 1 ? candidates[0] : null;
+}
+
 function resetOldToneStyling(element: HTMLElement) {
   element.classList.remove("mandarin-tone-solid", "mandarin-tone-gradient");
   element.style.removeProperty("--mandarin-tone-solid-color");
@@ -142,10 +149,59 @@ function paintWordSheet() {
 }
 
 function paintLearning(words: Word[]) {
-  const word = currentLearningWord(words);
-  if (!word) return;
+  const storedWord = currentLearningWord(words);
+
   document.querySelectorAll<HTMLElement>(".flashcard .prompt-hanzi, .flashcard .answer-hanzi").forEach((element) => {
-    if (element.textContent?.trim() === word.hanzi) paint(element, word.hanzi, word.pinyin);
+    const hanzi = element.textContent?.trim() || "";
+    if (!hanzi || !PURE_HANZI.test(hanzi)) return;
+
+    const visiblePinyin = element.closest(".answer-block")?.querySelector<HTMLElement>(".answer-pinyin")?.textContent?.trim() || "";
+    if (visiblePinyin) {
+      paint(element, hanzi, visiblePinyin);
+      return;
+    }
+
+    if (storedWord?.hanzi === hanzi) {
+      paint(element, storedWord.hanzi, storedWord.pinyin);
+      return;
+    }
+
+    const exactWord = uniqueWordForHanzi(words, hanzi);
+    if (exactWord) paint(element, exactWord.hanzi, exactWord.pinyin);
+  });
+}
+
+function paintDailyHistory(words: Word[]) {
+  document.querySelectorAll<HTMLElement>(".daily-word-preview").forEach((preview) => {
+    const raw = preview.textContent?.trim() || "";
+    if (!raw) return;
+
+    const items = raw.split(/\s*·\s*/).map((item) => item.trim()).filter(Boolean);
+    const signature = items.join("|");
+    if (preview.dataset.tonePreview === signature && preview.querySelector("[data-daily-tone-word]")) return;
+
+    preview.replaceChildren();
+    items.forEach((hanzi, index) => {
+      if (index > 0) preview.append(document.createTextNode(" · "));
+      const span = document.createElement("span");
+      span.dataset.dailyToneWord = "";
+      span.textContent = hanzi;
+      preview.append(span);
+
+      const word = uniqueWordForHanzi(words, hanzi);
+      if (word) paint(span, word.hanzi, word.pinyin);
+    });
+    preview.dataset.tonePreview = signature;
+  });
+}
+
+function paintListManager(words: Word[]) {
+  document.querySelectorAll<HTMLElement>(".list-search-results button, .list-word-rows > div").forEach((row) => {
+    const hanziElement = row.querySelector<HTMLElement>("strong");
+    const pinyinElement = row.querySelector<HTMLElement>("span");
+    const hanzi = hanziElement?.textContent?.trim() || "";
+    const pinyin = pinyinElement?.textContent?.trim() || "";
+    if (hanzi && pinyin) paint(hanziElement, hanzi, pinyin);
   });
 }
 
@@ -198,6 +254,8 @@ export function installToneColorDom() {
     paintWordsTab();
     paintWordSheet();
     paintLearning(words);
+    paintDailyHistory(words);
+    paintListManager(words);
     paintWriting();
     paintUniqueStandalone(words);
   };
