@@ -11,6 +11,12 @@ type HighlightRegistry = {
 
 type HighlightConstructor = new (...ranges: Range[]) => unknown;
 
+type ToneEntry = { hanzi: string; tones: Tone[] };
+type ToneIndex = {
+  byFirstCharacter: Map<string, ToneEntry[]>;
+  fallbackByCharacter: Map<string, Tone>;
+};
+
 const TONE_NAMES: Record<1 | 2 | 3 | 4, string> = {
   1: "mandarin-tone-1",
   2: "mandarin-tone-2",
@@ -27,6 +33,7 @@ const TONE_COLORS: Record<1 | 2 | 3 | 4, string> = {
 
 const HANZI_RUN = /[\u3400-\u9fff]+/g;
 const HANZI_CHAR = /[\u3400-\u9fff]/;
+const PINYIN_SYLLABLE = /(?:zh|ch|sh|[bpmfdtnlgkhjqxrzcsyw])?(?:[aāáǎàeēéěèiīíǐìoōóǒòuūúǔùüǖǘǚǜv]+)(?:ng|n|r)?[1-5]?/gi;
 
 function toneOfSyllable(syllable: string): Tone {
   const numericTone = syllable.match(/([1-5])$/)?.[1];
@@ -40,17 +47,31 @@ function toneOfSyllable(syllable: string): Tone {
   return 5;
 }
 
-function pinyinSyllables(pinyin: string) {
-  return pinyin
+function cleanPinyinPart(part: string) {
+  return part.replace(/^[^A-Za-zÀ-žüÜ1-5]+|[^A-Za-zÀ-žüÜ1-5]+$/g, "");
+}
+
+function pinyinSyllables(pinyin: string, expectedCount: number) {
+  const separated = pinyin
     .trim()
     .split(/[\s'’·-]+/)
-    .map((part) => part.replace(/^[^A-Za-zÀ-žüÜ]+|[^A-Za-zÀ-žüÜ1-5]+$/g, ""))
+    .map(cleanPinyinPart)
     .filter(Boolean);
+
+  if (separated.length === expectedCount) return separated;
+
+  // A large part of the word data stores multi-syllable pinyin without spaces,
+  // e.g. 爸爸 = "bàba". Parse those into real syllables before assigning tones.
+  const compact = pinyin.replace(/[\s'’·-]+/g, "");
+  const parsed = compact.match(PINYIN_SYLLABLE)?.map(cleanPinyinPart).filter(Boolean) || [];
+  if (parsed.length === expectedCount) return parsed;
+
+  return separated;
 }
 
 function wordTonePattern(word: Word): Tone[] | null {
   const characters = [...word.hanzi].filter((character) => HANZI_CHAR.test(character));
-  const syllables = pinyinSyllables(word.pinyin);
+  const syllables = pinyinSyllables(word.pinyin, characters.length);
   if (!characters.length || characters.length !== syllables.length) return null;
   return syllables.map(toneOfSyllable);
 }
@@ -68,9 +89,11 @@ function addToneStyles() {
   document.head.append(style);
 }
 
-function buildIndex() {
+function buildIndex(): ToneIndex {
   const allWords = [...(wordsData as Word[]), ...loadCustomWords()];
-  const byFirstCharacter = new Map<string, Array<{ hanzi: string; tones: Tone[] }>>();
+  const byFirstCharacter = new Map<string, ToneEntry[]>();
+  const characterToneCounts = new Map<string, Map<Tone, number>>();
+  const exactSingleCharacterTone = new Map<string, Tone>();
 
   for (const word of allWords) {
     const hanzi = [...word.hanzi].filter((character) => HANZI_CHAR.test(character)).join("");
@@ -84,19 +107,49 @@ function buildIndex() {
       bucket.sort((a, b) => b.hanzi.length - a.hanzi.length);
       byFirstCharacter.set(first, bucket);
     }
+
+    [...hanzi].forEach((character, index) => {
+      const tone = tones[index];
+      const counts = characterToneCounts.get(character) || new Map<Tone, number>();
+      counts.set(tone, (counts.get(tone) || 0) + 1);
+      characterToneCounts.set(character, counts);
+    });
+
+    if ([...hanzi].length === 1) exactSingleCharacterTone.set(hanzi, tones[0]);
   }
 
-  return byFirstCharacter;
+  const fallbackByCharacter = new Map<string, Tone>();
+  characterToneCounts.forEach((counts, character) => {
+    if (exactSingleCharacterTone.has(character)) {
+      fallbackByCharacter.set(character, exactSingleCharacterTone.get(character)!);
+      return;
+    }
+
+    const ranked = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+    if (ranked.length === 1 || ranked[0][1] > ranked[1][1]) {
+      fallbackByCharacter.set(character, ranked[0][0]);
+    }
+  });
+
+  return { byFirstCharacter, fallbackByCharacter };
 }
 
 function isExcluded(node: Text) {
   const parent = node.parentElement;
   return !parent || Boolean(parent.closest(
-    ".brand, .bottom-nav, .stroke-order-preview, .hanzi-practice, .hanzi-quiz, script, style, textarea, input",
+    ".brand, .bottom-nav, .stroke-order-preview, .hanzi-practice, .hanzi-quiz, .hanzi-writer, canvas, svg, script, style, textarea, input",
   ));
 }
 
-function rangesForTone(root: HTMLElement, index: ReturnType<typeof buildIndex>) {
+function addRange(result: Record<1 | 2 | 3 | 4, Range[]>, node: Text, start: number, tone: Tone) {
+  if (tone === 5) return;
+  const range = document.createRange();
+  range.setStart(node, start);
+  range.setEnd(node, start + 1);
+  result[tone].push(range);
+}
+
+function rangesForTone(root: HTMLElement, index: ToneIndex) {
   const result: Record<1 | 2 | 3 | 4, Range[]> = { 1: [], 2: [], 3: [], 4: [] };
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
 
@@ -104,7 +157,8 @@ function rangesForTone(root: HTMLElement, index: ReturnType<typeof buildIndex>) 
   while (current) {
     const node = current as Text;
     const text = node.data;
-    if (!isExcluded(node) && HANZI_RUN.test(text)) {
+
+    if (!isExcluded(node)) {
       HANZI_RUN.lastIndex = 0;
       let runMatch: RegExpExecArray | null;
       while ((runMatch = HANZI_RUN.exec(text))) {
@@ -113,26 +167,25 @@ function rangesForTone(root: HTMLElement, index: ReturnType<typeof buildIndex>) 
         let offset = 0;
 
         while (offset < run.length) {
-          const candidates = index.get(run[offset]) || [];
+          const candidates = index.byFirstCharacter.get(run[offset]) || [];
           const match = candidates.find((candidate) => run.startsWith(candidate.hanzi, offset));
-          if (!match) {
-            offset += 1;
+
+          if (match) {
+            match.tones.forEach((tone, characterIndex) => {
+              addRange(result, node, runStart + offset + characterIndex, tone);
+            });
+            offset += match.hanzi.length;
             continue;
           }
 
-          match.tones.forEach((tone, characterIndex) => {
-            if (tone === 5) return;
-            const range = document.createRange();
-            const start = runStart + offset + characterIndex;
-            range.setStart(node, start);
-            range.setEnd(node, start + 1);
-            result[tone].push(range);
-          });
-          offset += match.hanzi.length;
+          const fallbackTone = index.fallbackByCharacter.get(run[offset]);
+          if (fallbackTone) addRange(result, node, runStart + offset, fallbackTone);
+          offset += 1;
         }
       }
+      HANZI_RUN.lastIndex = 0;
     }
-    HANZI_RUN.lastIndex = 0;
+
     current = walker.nextNode();
   }
 
@@ -142,11 +195,11 @@ function rangesForTone(root: HTMLElement, index: ReturnType<typeof buildIndex>) 
 export function installToneColors() {
   const registry = (CSS as unknown as { highlights?: HighlightRegistry }).highlights;
   const HighlightClass = (globalThis as unknown as { Highlight?: HighlightConstructor }).Highlight;
-  const root = document.getElementById("root");
+  const root = document.body;
   if (!registry || !HighlightClass || !root) return;
 
   addToneStyles();
-  const index = buildIndex();
+  let index = buildIndex();
   let frame = 0;
 
   const refresh = () => {
@@ -161,6 +214,12 @@ export function installToneColors() {
   };
 
   refresh();
+
   const observer = new MutationObserver(refresh);
   observer.observe(root, { childList: true, subtree: true, characterData: true });
+
+  window.addEventListener("storage", () => {
+    index = buildIndex();
+    refresh();
+  });
 }
