@@ -16,7 +16,7 @@ import { installCustomDeleteControls } from "./lib/deleteControls";
 import { installPracticeExit } from "./lib/practiceExit";
 import { installHanziSettingsUi } from "./lib/hanziSettingsUi";
 import { installTheoryOrder } from "./lib/theoryOrder";
-import { installToneColors } from "./lib/toneColors";
+import { installToneColorDom } from "./lib/toneColorDom";
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -40,4 +40,4 @@ installCustomDeleteControls();
 installPracticeExit();
 installHanziSettingsUi();
 installTheoryOrder();
-installToneColors();
+installToneColorDom();
