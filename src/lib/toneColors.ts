@@ -31,8 +31,10 @@ const TONE_COLORS: Record<1 | 2 | 3 | 4, string> = {
   4: "#BC4E49",
 };
 
+const EXCLUDED_SELECTOR = ".brand, .bottom-nav, .stroke-order-preview, .hanzi-practice, .hanzi-quiz, .hanzi-writer, canvas, svg, script, style, textarea, input";
 const HANZI_RUN = /[\u3400-\u9fff]+/g;
 const HANZI_CHAR = /[\u3400-\u9fff]/;
+const PURE_HANZI = /^[\u3400-\u9fff]+$/;
 const PINYIN_SYLLABLE = /(?:zh|ch|sh|[bpmfdtnlgkhjqxrzcsyw])?(?:[aāáǎàeēéěèiīíǐìoōóǒòuūúǔùüǖǘǚǜv]+)(?:ng|n|r)?[1-5]?/gi;
 
 function toneOfSyllable(syllable: string): Tone {
@@ -60,8 +62,6 @@ function pinyinSyllables(pinyin: string, expectedCount: number) {
 
   if (separated.length === expectedCount) return separated;
 
-  // A large part of the word data stores multi-syllable pinyin without spaces,
-  // e.g. 爸爸 = "bàba". Parse those into real syllables before assigning tones.
   const compact = pinyin.replace(/[\s'’·-]+/g, "");
   const parsed = compact.match(PINYIN_SYLLABLE)?.map(cleanPinyinPart).filter(Boolean) || [];
   if (parsed.length === expectedCount) return parsed;
@@ -85,6 +85,20 @@ function addToneStyles() {
     ::highlight(${TONE_NAMES[2]}) { color: ${TONE_COLORS[2]}; }
     ::highlight(${TONE_NAMES[3]}) { color: ${TONE_COLORS[3]}; }
     ::highlight(${TONE_NAMES[4]}) { color: ${TONE_COLORS[4]}; }
+
+    .mandarin-tone-solid {
+      color: var(--mandarin-tone-solid-color) !important;
+    }
+
+    .mandarin-tone-gradient {
+      background-image: var(--mandarin-tone-gradient) !important;
+      background-repeat: no-repeat !important;
+      background-size: 100% 100% !important;
+      -webkit-background-clip: text !important;
+      background-clip: text !important;
+      color: transparent !important;
+      -webkit-text-fill-color: transparent !important;
+    }
   `;
   document.head.append(style);
 }
@@ -134,11 +148,30 @@ function buildIndex(): ToneIndex {
   return { byFirstCharacter, fallbackByCharacter };
 }
 
+function tonesForRun(run: string, index: ToneIndex) {
+  const tones: Tone[] = [];
+  let offset = 0;
+
+  while (offset < run.length) {
+    const candidates = index.byFirstCharacter.get(run[offset]) || [];
+    const match = candidates.find((candidate) => run.startsWith(candidate.hanzi, offset));
+
+    if (match) {
+      tones.push(...match.tones);
+      offset += match.hanzi.length;
+      continue;
+    }
+
+    tones.push(index.fallbackByCharacter.get(run[offset]) || 5);
+    offset += 1;
+  }
+
+  return tones;
+}
+
 function isExcluded(node: Text) {
   const parent = node.parentElement;
-  return !parent || Boolean(parent.closest(
-    ".brand, .bottom-nav, .stroke-order-preview, .hanzi-practice, .hanzi-quiz, .hanzi-writer, canvas, svg, script, style, textarea, input",
-  ));
+  return !parent || Boolean(parent.closest(EXCLUDED_SELECTOR));
 }
 
 function addRange(result: Record<1 | 2 | 3 | 4, Range[]>, node: Text, start: number, tone: Tone) {
@@ -164,24 +197,10 @@ function rangesForTone(root: HTMLElement, index: ToneIndex) {
       while ((runMatch = HANZI_RUN.exec(text))) {
         const run = runMatch[0];
         const runStart = runMatch.index;
-        let offset = 0;
-
-        while (offset < run.length) {
-          const candidates = index.byFirstCharacter.get(run[offset]) || [];
-          const match = candidates.find((candidate) => run.startsWith(candidate.hanzi, offset));
-
-          if (match) {
-            match.tones.forEach((tone, characterIndex) => {
-              addRange(result, node, runStart + offset + characterIndex, tone);
-            });
-            offset += match.hanzi.length;
-            continue;
-          }
-
-          const fallbackTone = index.fallbackByCharacter.get(run[offset]);
-          if (fallbackTone) addRange(result, node, runStart + offset, fallbackTone);
-          offset += 1;
-        }
+        const tones = tonesForRun(run, index);
+        tones.forEach((tone, characterIndex) => {
+          addRange(result, node, runStart + characterIndex, tone);
+        });
       }
       HANZI_RUN.lastIndex = 0;
     }
@@ -192,11 +211,75 @@ function rangesForTone(root: HTMLElement, index: ToneIndex) {
   return result;
 }
 
+function clearFallbackStyle(element: HTMLElement) {
+  element.classList.remove("mandarin-tone-solid", "mandarin-tone-gradient");
+  element.style.removeProperty("--mandarin-tone-solid-color");
+  element.style.removeProperty("--mandarin-tone-gradient");
+}
+
+function applyFallbackStyle(element: HTMLElement, tones: Tone[]) {
+  clearFallbackStyle(element);
+  if (!tones.some((tone) => tone !== 5)) return;
+
+  const neutralColor = getComputedStyle(element).color || "rgb(47, 49, 53)";
+  const colors = tones.map((tone) => tone === 5 ? neutralColor : TONE_COLORS[tone]);
+  const uniqueColors = [...new Set(colors)];
+
+  if (uniqueColors.length === 1) {
+    element.style.setProperty("--mandarin-tone-solid-color", uniqueColors[0]);
+    element.classList.add("mandarin-tone-solid");
+    return;
+  }
+
+  const stops: string[] = [];
+  colors.forEach((color, index) => {
+    const start = (index / colors.length) * 100;
+    const end = ((index + 1) / colors.length) * 100;
+    stops.push(`${color} ${start}%`, `${color} ${end}%`);
+  });
+
+  element.style.setProperty("--mandarin-tone-gradient", `linear-gradient(90deg, ${stops.join(", ")})`);
+  element.classList.add("mandarin-tone-gradient");
+}
+
+function applySafariFallback(root: HTMLElement, index: ToneIndex) {
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const elements = new Set<HTMLElement>();
+
+  let current = walker.nextNode();
+  while (current) {
+    const node = current as Text;
+    const parent = node.parentElement;
+    const text = node.data.trim();
+
+    if (
+      parent
+      && !isExcluded(node)
+      && parent.childNodes.length === 1
+      && PURE_HANZI.test(text)
+    ) {
+      elements.add(parent);
+    }
+
+    current = walker.nextNode();
+  }
+
+  root.querySelectorAll<HTMLElement>(".mandarin-tone-solid, .mandarin-tone-gradient").forEach((element) => {
+    if (!elements.has(element)) clearFallbackStyle(element);
+  });
+
+  elements.forEach((element) => {
+    const hanzi = element.textContent?.trim() || "";
+    if (!hanzi) return;
+    applyFallbackStyle(element, tonesForRun(hanzi, index));
+  });
+}
+
 export function installToneColors() {
   const registry = (CSS as unknown as { highlights?: HighlightRegistry }).highlights;
   const HighlightClass = (globalThis as unknown as { Highlight?: HighlightConstructor }).Highlight;
   const root = document.body;
-  if (!registry || !HighlightClass || !root) return;
+  if (!root) return;
 
   addToneStyles();
   let index = buildIndex();
@@ -205,11 +288,19 @@ export function installToneColors() {
   const refresh = () => {
     cancelAnimationFrame(frame);
     frame = requestAnimationFrame(() => {
-      const ranges = rangesForTone(root, index);
-      ([1, 2, 3, 4] as const).forEach((tone) => {
-        registry.delete(TONE_NAMES[tone]);
-        if (ranges[tone].length) registry.set(TONE_NAMES[tone], new HighlightClass(...ranges[tone]));
-      });
+      // Safari/iOS does not reliably render the CSS Custom Highlight colors in
+      // an installed PWA. Apply a non-DOM-mutating text fallback to every
+      // standalone Hanzi label so word lists, cards, sheets and practice views
+      // still receive the correct tone colors.
+      applySafariFallback(root, index);
+
+      if (registry && HighlightClass) {
+        const ranges = rangesForTone(root, index);
+        ([1, 2, 3, 4] as const).forEach((tone) => {
+          registry.delete(TONE_NAMES[tone]);
+          if (ranges[tone].length) registry.set(TONE_NAMES[tone], new HighlightClass(...ranges[tone]));
+        });
+      }
     });
   };
 
