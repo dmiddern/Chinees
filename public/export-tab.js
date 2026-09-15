@@ -83,19 +83,33 @@ function csvCell(value) {
 
 function selectedIds(panel) {
   const sources = new Map(exportGroups().flatMap((group) => group.items.map((item) => [item.id, item])));
-  const selected = [...panel.querySelectorAll('input[type="checkbox"]:checked')]
+  const selected = [...panel.querySelectorAll('.standalone-export-source input[type="checkbox"]:checked')]
     .map((input) => sources.get(input.value))
     .filter(Boolean);
   return [...new Set(selected.flatMap((item) => item.wordIds))];
 }
 
+function updateGroupCheckbox(section) {
+  const groupCheckbox = section.querySelector(".standalone-export-group-checkbox");
+  if (!groupCheckbox) return;
+  const itemCheckboxes = [...section.querySelectorAll('.standalone-export-source input[type="checkbox"]')];
+  const checkedCount = itemCheckboxes.filter((input) => input.checked).length;
+  groupCheckbox.checked = itemCheckboxes.length > 0 && checkedCount === itemCheckboxes.length;
+  groupCheckbox.indeterminate = checkedCount > 0 && checkedCount < itemCheckboxes.length;
+}
+
+function updateAllGroupCheckboxes(panel) {
+  panel.querySelectorAll(".standalone-export-group").forEach(updateGroupCheckbox);
+}
+
 function updateSummary(panel) {
   const ids = selectedIds(panel);
-  const checked = panel.querySelectorAll('input[type="checkbox"]:checked').length;
+  const checked = panel.querySelectorAll('.standalone-export-source input[type="checkbox"]:checked').length;
   const summary = panel.querySelector(".standalone-export-summary");
   const button = panel.querySelector(".standalone-export-download");
   if (summary) summary.textContent = checked ? `${checked} selecties · ${ids.length} unieke woorden` : "Nog niets geselecteerd";
   if (button) button.disabled = ids.length === 0;
+  updateAllGroupCheckboxes(panel);
 }
 
 function downloadSelection(panel) {
@@ -130,6 +144,32 @@ function sourceRow(item) {
   return label;
 }
 
+function buildGroupHeading(group, section) {
+  const heading = document.createElement("div");
+  heading.className = "standalone-export-group-heading";
+
+  const title = document.createElement("h3");
+  title.textContent = group.title;
+  heading.append(title);
+
+  if (group.items.length) {
+    const selectAll = document.createElement("label");
+    selectAll.className = "standalone-export-select-all";
+    selectAll.setAttribute("aria-label", `Selecteer alles in ${group.title}`);
+    selectAll.innerHTML = '<input class="standalone-export-group-checkbox" type="checkbox"><span>Alles</span>';
+    heading.append(selectAll);
+
+    const checkbox = selectAll.querySelector("input");
+    checkbox.addEventListener("change", () => {
+      section.querySelectorAll('.standalone-export-source input[type="checkbox"]').forEach((input) => {
+        input.checked = checkbox.checked;
+      });
+    });
+  }
+
+  return heading;
+}
+
 function buildExportPanel() {
   const panel = document.createElement("section");
   panel.className = "settings-export-panel";
@@ -142,9 +182,7 @@ function buildExportPanel() {
   exportGroups().forEach((group) => {
     const section = document.createElement("section");
     section.className = "standalone-export-group";
-    const heading = document.createElement("h3");
-    heading.textContent = group.title;
-    section.append(heading);
+    section.append(buildGroupHeading(group, section));
     if (!group.items.length) {
       const empty = document.createElement("p");
       empty.className = "standalone-export-empty";
