@@ -2,7 +2,10 @@
 .standalone-export-intro h2 { margin-bottom: 8px; }
 .standalone-export-intro p:not(.eyebrow) { margin: 0; color: var(--secondary); font-size: 13px; line-height: 1.5; }
 .standalone-export-group { border: 1px solid var(--border); border-radius: 18px; background: var(--background); overflow: hidden; }
-.standalone-export-group h3 { margin: 0; padding: 15px 16px 11px; font-size: 15px; }
+.standalone-export-group-heading { min-height: 58px; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.standalone-export-group h3 { margin: 0; padding: 15px 0 11px; font-size: 15px; }
+.standalone-export-select-all { display: inline-flex; align-items: center; gap: 7px; cursor: pointer; color: var(--secondary); font-size: 11px; font-weight: 600; white-space: nowrap; }
+.standalone-export-select-all input { width: 21px; height: 21px; flex: 0 0 auto; accent-color: var(--accent); }
 .standalone-export-source { min-height: 58px; padding: 10px 16px; border-top: 1px solid var(--border); display: flex; align-items: center; gap: 12px; cursor: pointer; }
 .standalone-export-source input { width: 21px; height: 21px; flex: 0 0 auto; accent-color: var(--accent); }
 .standalone-export-source span { min-width: 0; }
