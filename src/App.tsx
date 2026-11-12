@@ -431,9 +431,19 @@ function Home({
             <strong>{percentage}%</strong>
           </div>
         </div>
-        {todayWords.length ? <PracticeDirectionButtons onChoose={onStart} onGenerate={onGenerate} /> : (
+        {todayWords.length ? (
+          <PracticeDirectionButtons
+            onChoose={onStart}
+            onGenerate={onGenerate}
+            onPracticeSelected={selectedSets.length > 0 ? () => onPracticeDays(selectedSets, settings.direction) : undefined}
+            selectedWordCount={selectedWordCount}
+          />
+        ) : (
           <div className="practice-direction-heading empty">
             <p>Nog geen daglijst</p>
+            {selectedSets.length > 0 && (
+              <button className="icon-action daily-selected-play" type="button" onClick={() => onPracticeDays(selectedSets, settings.direction)} aria-label={`Oefen ${selectedWordCount} geselecteerde woorden`} title={`Oefen ${selectedWordCount} geselecteerde woorden`}>▶</button>
+            )}
             <button className="icon-action primary daily-generate-button" type="button" onClick={onGenerate} aria-label="Nieuwe daglijst" title="Nieuwe daglijst">＋</button>
           </div>
         )}
@@ -450,24 +460,12 @@ function Home({
         <div className="section-heading">
           <div><p className="eyebrow">Daglijsten</p><h2>Terugkijken</h2></div>
           {history.length > 0 && (
-            <div className="daily-history-actions">
-              <button
-                className="daily-select-all"
-                onClick={() => setSelectedSetKeys(allSelected ? [] : history.map(setKey))}
-              >
-                {allSelected ? "Wis selectie" : "Selecteer alles"}
-              </button>
-              {selectedSets.length > 0 && (
-                <button
-                  className="button primary-button daily-selection-start"
-                  onClick={() => onPracticeDays(selectedSets, settings.direction)}
-                  aria-label={`Start oefenen met ${selectedWordCount} unieke woorden uit ${selectedSets.length} daglijsten`}
-                  title="Oefen geselecteerde daglijsten"
-                >
-                  <span aria-hidden="true">▶</span> Oefen ({selectedWordCount})
-                </button>
-              )}
-            </div>
+            <button
+              className="daily-select-all"
+              onClick={() => setSelectedSetKeys(allSelected ? [] : history.map(setKey))}
+            >
+              {allSelected ? "Wis selectie" : "Selecteer alles"}
+            </button>
           )}
         </div>
         <div className="daily-history-list">
@@ -523,15 +521,22 @@ function PracticeDirectionButtons({
   onChoose,
   compact = false,
   onGenerate,
+  onPracticeSelected,
+  selectedWordCount = 0,
 }: {
   onChoose: (direction: Direction) => void;
   compact?: boolean;
   onGenerate?: () => void;
+  onPracticeSelected?: () => void;
+  selectedWordCount?: number;
 }) {
   return (
     <div className={`practice-direction-choice ${compact ? "compact" : ""}`}>
       <div className="practice-direction-heading">
         <p>Kies je oefenrichting</p>
+        {onPracticeSelected && (
+          <button className="icon-action daily-selected-play" type="button" onClick={onPracticeSelected} aria-label={`Oefen ${selectedWordCount} geselecteerde woorden`} title={`Oefen ${selectedWordCount} geselecteerde woorden`}>▶</button>
+        )}
         {onGenerate && (
           <button className="icon-action primary daily-generate-button" type="button" onClick={onGenerate} aria-label="Nieuwe daglijst" title="Nieuwe daglijst">＋</button>
         )}
