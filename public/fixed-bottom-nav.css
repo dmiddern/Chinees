@@ -36,3 +36,18 @@ body {
   width: 100%;
   flex: 0 0 auto;
 }
+
+/* Screens with their own compact header have no .topbar.
+   Give the scrolling main the flexible row and pin the tab bar to the last row. */
+.app-shell:not(:has(> .topbar)) {
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+.app-shell:not(:has(> .topbar)) > main {
+  grid-row: 1;
+}
+.app-shell:not(:has(> .topbar)) > .bottom-nav {
+  grid-row: 2;
+}
+.app-shell:has(.learn-page) {
+  grid-template-rows: minmax(0, 1fr);
+}
