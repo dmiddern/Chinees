@@ -37,7 +37,10 @@ function addResultLinks() {
     if (row.querySelector(".row-wiktionary")) return;
     const hanzi = row.querySelector(".word-hanzi")?.textContent?.trim();
     if (!hanzi) return;
-    row.append(createLink(hanzi, "row-wiktionary", hanzi));
+    const link = createLink(hanzi, "row-wiktionary", hanzi);
+    const audioButton = row.querySelector(".row-audio");
+    if (audioButton) row.insertBefore(link, audioButton);
+    else row.append(link);
   });
 }
 
@@ -335,17 +338,29 @@ function applyStyles() {
   style.textContent = `
     .row-wiktionary {
       align-self: center;
-      flex: 0 0 auto;
-      margin-right: 0.35rem;
-      padding: 0.45rem 0.6rem;
-      border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 700;
+      justify-self: center;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      min-width: 44px;
+      height: 44px;
+      min-height: 44px;
+      margin: 0;
+      padding: 0;
+      border-radius: 50%;
+      font-size: 0;
+      font-weight: 800;
       line-height: 1;
       text-decoration: none;
-      color: inherit;
-      background: rgba(0, 0, 0, 0.055);
+      color: var(--primary, #373534);
+      background: var(--surface, #f0ece6);
       white-space: nowrap;
+    }
+    .row-wiktionary::after {
+      content: "W";
+      font-family: inherit;
+      font-size: 16px;
+      color: var(--primary, #373534);
     }
     .row-wiktionary:active { transform: scale(0.97); }
     .sheet-wiktionary {
@@ -426,24 +441,7 @@ function applyStyles() {
     .export-footer small { color: var(--secondary, #756b65); font-size: 10px; }
     .export-footer .button { min-height: 40px; padding: 0 14px; }
     @media (max-width: 520px) {
-      .row-wiktionary {
-        width: 2.3rem;
-        height: 2.3rem;
-        padding: 0;
-        overflow: hidden;
-        color: transparent;
-        position: relative;
-      }
-      .row-wiktionary::after {
-        content: "W";
-        color: #3f352f;
-        position: absolute;
-        inset: 0;
-        display: grid;
-        place-items: center;
-        font-size: 0.82rem;
-        font-weight: 800;
-      }
+
       .export-footer { align-items: stretch; flex-direction: column; }
       .export-footer .button { width: 100%; }
     }
