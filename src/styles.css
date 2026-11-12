@@ -749,3 +749,6 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .practice-direction-heading .daily-selected-play { position: absolute; right: 54px; top: 0; min-width: 44px; min-height: 44px; border: 1px solid var(--border); border-radius: 13px; background: var(--surface); color: var(--primary); font-size: 18px; display: grid; place-items: center; }
 .practice-direction-heading.empty .daily-selected-play { position: static; margin-left: auto; }
 .practice-direction-heading.empty .daily-selected-play + .daily-generate-button { margin-left: 0; }
+
+/* Previous and next exercises; disabled previous on the first item. */
+.learn-next-button:disabled{opacity:.3;cursor:default}
