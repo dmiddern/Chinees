@@ -450,12 +450,24 @@ function Home({
         <div className="section-heading">
           <div><p className="eyebrow">Daglijsten</p><h2>Terugkijken</h2></div>
           {history.length > 0 && (
-            <button
-              className="daily-select-all"
-              onClick={() => setSelectedSetKeys(allSelected ? [] : history.map(setKey))}
-            >
-              {allSelected ? "Wis selectie" : "Selecteer alles"}
-            </button>
+            <div className="daily-history-actions">
+              <button
+                className="daily-select-all"
+                onClick={() => setSelectedSetKeys(allSelected ? [] : history.map(setKey))}
+              >
+                {allSelected ? "Wis selectie" : "Selecteer alles"}
+              </button>
+              {selectedSets.length > 0 && (
+                <button
+                  className="button primary-button daily-selection-start"
+                  onClick={() => onPracticeDays(selectedSets, settings.direction)}
+                  aria-label={`Start oefenen met ${selectedWordCount} unieke woorden uit ${selectedSets.length} daglijsten`}
+                  title="Oefen geselecteerde daglijsten"
+                >
+                  <span aria-hidden="true">▶</span> Oefen ({selectedWordCount})
+                </button>
+              )}
+            </div>
           )}
         </div>
         <div className="daily-history-list">
@@ -484,20 +496,6 @@ function Home({
             );
           })}
         </div>
-        {selectedSets.length > 0 && (
-          <div className="daily-practice-selection">
-            <span>
-              <strong>{selectedSets.length} {selectedSets.length === 1 ? "dag" : "dagen"} geselecteerd</strong>
-              <small>{selectedWordCount} unieke woorden</small>
-            </span>
-            <button
-              className="button primary-button daily-selection-play"
-              onClick={() => onPracticeDays(selectedSets, settings.direction)}
-              aria-label="Oefen geselecteerde lijsten"
-              title="Oefenen"
-            >▶</button>
-          </div>
-        )}
       </section>
     </div>
   );
