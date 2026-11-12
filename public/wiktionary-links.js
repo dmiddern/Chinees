@@ -38,6 +38,7 @@ function addResultLinks() {
     const hanzi = row.querySelector(".word-hanzi")?.textContent?.trim();
     if (!hanzi) return;
     const link = createLink(hanzi, "row-wiktionary", hanzi);
+    link.textContent = "W";
     const audioButton = row.querySelector(".row-audio");
     if (audioButton) row.insertBefore(link, audioButton);
     else row.append(link);
@@ -336,31 +337,32 @@ function applyStyles() {
   const style = document.createElement("style");
   style.id = "wiktionary-link-styles";
   style.textContent = `
-    .row-wiktionary {
-      align-self: center;
-      justify-self: center;
+    .words-page .word-row .row-wiktionary {
       display: grid;
       place-items: center;
+      align-self: center;
+      justify-self: center;
       width: 44px;
       min-width: 44px;
       height: 44px;
       min-height: 44px;
       margin: 0;
       padding: 0;
-      border-radius: 50%;
-      font-size: 0;
-      font-weight: 800;
+      border: 0;
+      border-radius: 10px;
+      background: transparent;
+      color: var(--secondary, #77716c);
+      font: inherit;
+      font-size: 15px;
+      font-weight: 700;
       line-height: 1;
       text-decoration: none;
-      color: var(--primary, #373534);
-      background: var(--surface, #f0ece6);
       white-space: nowrap;
     }
-    .row-wiktionary::after {
-      content: "W";
-      font-family: inherit;
-      font-size: 16px;
-      color: var(--primary, #373534);
+    .words-page .word-row .row-wiktionary::after { content: none; }
+    .words-page .word-row .row-wiktionary:focus-visible {
+      outline: 3px solid var(--accent-hover, #8c5848);
+      outline-offset: 2px;
     }
     .row-wiktionary:active { transform: scale(0.97); }
     .sheet-wiktionary {
