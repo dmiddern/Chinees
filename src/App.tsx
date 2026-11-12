@@ -599,6 +599,17 @@ function Learn({
     });
   }
 
+  function previous() {
+    if (activeSession.index === 0) return;
+    onSessionChange({
+      ...activeSession,
+      index: activeSession.index - 1,
+      revealed: false,
+      promptMode: "character",
+      ratings: {},
+    });
+  }
+
   function next() {
     const rating = activeSession.ratings[exercise.skill];
     if (rating !== undefined) onRate(activeWord.id, exercise.skill, rating);
@@ -639,6 +650,7 @@ function Learn({
         </div>
         <div className="learn-session-actions">
           <span className="level-chip">{levelLabel(word.level, word.custom)}</span>
+          <button className="learn-next-button" type="button" onClick={previous} disabled={session.index === 0} aria-label="Vorig woord" title="Vorig woord">‹</button>
           <button className="learn-next-button" type="button" onClick={next} aria-label="Volgend woord" title="Volgend woord">›</button>
         </div>
       </div>
