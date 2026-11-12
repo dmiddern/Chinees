@@ -12,12 +12,11 @@ function ensureStyles() {
   style.id = STYLE_ID;
   style.textContent = `
 .practice-exit-button{
-  position:sticky;
-  top:calc(env(safe-area-inset-top, 0px) + 8px);
-  z-index:20;
+  position:static;
+  flex:0 0 40px;
   width:42px;
   height:42px;
-  margin:0 0 10px;
+  margin:0;
   border:1px solid var(--line,#ddd8d2);
   border-radius:50%;
   background:var(--paper,#fffdfa);
@@ -42,7 +41,8 @@ function goBackToLearning() {
 
 function enhancePracticeExit() {
   const page = document.querySelector<HTMLElement>(".learn-page");
-  if (!page || page.querySelector(".practice-exit-button")) return;
+  const heading = page?.querySelector<HTMLElement>(".learn-session-heading");
+  if (!heading || heading.querySelector(".practice-exit-button")) return;
 
   const button = document.createElement("button");
   button.type = "button";
@@ -51,7 +51,7 @@ function enhancePracticeExit() {
   button.setAttribute("aria-label", "Oefensessie verlaten");
   button.title = "Terug";
   button.addEventListener("click", goBackToLearning);
-  page.prepend(button);
+  heading.prepend(button);
 }
 
 export function installPracticeExit() {
