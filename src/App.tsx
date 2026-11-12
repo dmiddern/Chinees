@@ -644,16 +644,17 @@ function Learn({
   return (
     <div className="page learn-page">
       <div className="page-title-row learn-session-heading">
-        <div>
-          <p className="eyebrow">Oefensessie · {session.title || "daglijst"}</p>
-          <h1>{session.index + 1} <span>van {session.queue.length}</span></h1>
+        <div className="learn-session-summary">
+          <p className="eyebrow" title={session.title || "daglijst"}>Oefensessie · {session.title || "daglijst"}</p>
+          <div className="learn-session-progress">
+            <h1>{session.index + 1} <span>van {session.queue.length}</span></h1>
+            <span className="level-chip">{levelLabel(word.level, word.custom)}</span>
+          </div>
         </div>
-        <span className="level-chip">{levelLabel(word.level, word.custom)}</span>
-      </div>
-
-      <div className="learn-session-navigation" aria-label="Navigatie tussen woorden">
-        <button className="learn-next-button learn-previous-button" type="button" onClick={previous} disabled={session.index === 0} aria-label="Vorig woord" title="Vorig woord">‹</button>
-        <button className="learn-next-button" type="button" onClick={next} aria-label="Volgend woord" title="Volgend woord">›</button>
+        <div className="learn-session-navigation" aria-label="Navigatie tussen woorden">
+          <button className="learn-next-button learn-previous-button" type="button" onClick={previous} disabled={session.index === 0} aria-label="Vorig woord" title="Vorig woord">‹</button>
+          <button className="learn-next-button" type="button" onClick={next} aria-label="Volgend woord" title="Volgend woord">›</button>
+        </div>
       </div>
 
       <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">
