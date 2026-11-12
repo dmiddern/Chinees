@@ -905,11 +905,5 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .learn-page .session-shuffle-button:disabled{opacity:.4;cursor:default}
 .learn-page .self-check{margin-bottom:16px}
 .learn-page button:focus-visible{outline:3px solid var(--session-accent);outline-offset:2px}
-@media (prefers-color-scheme:dark){
-  .learn-page{--session-bg:#201e1c;--session-surface:#302b27;--session-ink:#f1ebe5;--session-muted:#c0b3a9;--session-border:#514740;--session-accent:#c58f76;
-    --background:var(--session-bg);--surface:var(--session-surface);--primary:var(--session-ink);
-    --secondary:var(--session-muted);--border:var(--session-border);--accent-hover:var(--session-accent)}
-  body:has(.learn-page){background:#201e1c}
-  .learn-page .flashcard{box-shadow:0 8px 24px rgba(0,0,0,.2)}
-  .learn-page .session-nav-button:not(.session-nav-prev){background:#a76e56}
-}
+/* Keep the original warm light palette, independent of the device appearance. */
+.learn-page{color-scheme:light}
