@@ -770,3 +770,9 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .learn-page .learn-session-navigation .learn-next-button{position:static!important;inset:auto!important;transform:none!important;flex:0 0 44px!important;width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;margin:0;box-shadow:none;display:grid;place-items:center;font-size:30px}
 .learn-page .learn-session-navigation .learn-previous-button{background:var(--surface);color:var(--primary);border-color:var(--border)}
 .learn-page .direction-indicator{clear:both;position:relative;z-index:0}
+
+/* Exercise navigation: previous at the far left, next at the far right. */
+.learn-page .learn-session-navigation{justify-content:space-between!important;width:100%!important}
+.learn-page .learn-session-navigation .learn-previous-button{margin-right:auto!important}
+.learn-page .learn-session-navigation .learn-next-button:last-child{margin-left:auto!important}
+.learn-page .learn-session-navigation .learn-previous-button:disabled{opacity:.45}
