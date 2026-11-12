@@ -744,3 +744,15 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .direction-indicator button.active{background:var(--background);color:var(--primary);font-weight:800}
 .learn-page .skill-focus{display:none!important}
 .learn-page .self-check{display:none!important}
+
+/* Keep the selected-day practice action visible above the history without a second panel. */
+.daily-history .section-heading { gap: 10px; }
+.daily-history-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+.daily-selection-start { min-height: 48px; padding: 10px 16px; border-radius: 13px; font-size: 14px; font-weight: 800; white-space: nowrap; }
+.daily-selection-start span { font-size: 15px; margin-right: 4px; }
+@media (max-width: 420px) {
+  .daily-history .section-heading { align-items: center; }
+  .daily-history-actions { gap: 5px; }
+  .daily-select-all { font-size: 11px; }
+  .daily-selection-start { min-height: 44px; padding: 8px 10px; font-size: 12px; }
+}
