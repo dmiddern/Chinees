@@ -48,13 +48,30 @@ const defaultSettings: Settings = {
   drawingPrecision: "normal",
 };
 
-const navItems: { id: Tab; label: string; icon: string }[] = [
-  { id: "home", label: "Leren", icon: "学" },
-  { id: "guide", label: "Theorie", icon: "文" },
-  { id: "words", label: "Woorden", icon: "词" },
-  { id: "lists", label: "Lijsten", icon: "☷" },
-  { id: "write", label: "Schrijven", icon: "写" },
-  { id: "settings", label: "Instellingen", icon: "⚙" },
+type IconName = "learn" | "theory" | "words" | "lists" | "write" | "settings" | "plus" | "speaker" | "info" | "search" | "pencil";
+function MonoIcon({ name, size = 22 }: { name: IconName; size?: number }) {
+  const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true as const };
+  return <svg {...common}>
+    {name === "learn" && <><path d="M4 5.5h7a3 3 0 0 1 3 3V20a3 3 0 0 0-3-3H4z"/><path d="M20 5.5h-4a3 3 0 0 0-3 3M16 17h4V5.5"/></>}
+    {name === "theory" && <><path d="M8 3h9l4 4v14H8z"/><path d="M17 3v5h4M11 12h7M11 16h7M4 7v14"/></>}
+    {name === "words" && <><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M7 9h10M7 13h6M7 17h9"/></>}
+    {name === "lists" && <><path d="M9 6h12M9 12h12M9 18h12"/><path d="m3 6 1.5 1.5L7 4m-4 8 1.5 1.5L7 10m-4 8 1.5 1.5L7 16"/></>}
+    {name === "write" && <><path d="M4 20h16M5 16l-.5 3.5L8 19l11-11-3-3z"/><path d="m14 7 3 3"/></>}
+    {name === "settings" && <><circle cx="12" cy="12" r="3"/><path d="m19 13 2 1-1.5 3-2.1-.5c-.5.5-1 .8-1.6 1L15 20h-3l-.6-2.5c-.6-.2-1.2-.5-1.7-1l-2.1.5L6 14l2-1a7 7 0 0 1 0-2l-2-1 1.6-3 2.1.5c.5-.5 1.1-.8 1.7-1L12 4h3l.8 2.5c.6.2 1.1.5 1.6 1l2.1-.5L21 10l-2 1a8 8 0 0 1 0 2Z" transform="translate(-1.5)"/></>}
+    {name === "plus" && <path d="M12 5v14M5 12h14"/>}
+    {name === "speaker" && <><path d="M4 9h4l5-4v14l-5-4H4zM17 9a4 4 0 0 1 0 6M19.5 6a8 8 0 0 1 0 12"/></>}
+    {name === "info" && <><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></>}
+    {name === "search" && <><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></>}
+    {name === "pencil" && <><path d="m4 20 4-.8L20 7.2l-3.2-3.2L4.8 16zM15 6l3.2 3.2"/></>}
+  </svg>;
+}
+
+const navItems: { id: Tab; label: string; icon: IconName }[] = [
+  { id: "home", label: "Leren", icon: "learn" },
+  { id: "guide", label: "Theorie", icon: "theory" },
+  { id: "words", label: "Woorden", icon: "words" },
+  { id: "lists", label: "Lijsten", icon: "lists" },
+  { id: "write", label: "Schrijven", icon: "write" },
 ];
 
 function levelLabel(level: HskLevel, custom = false) {
@@ -63,6 +80,10 @@ function levelLabel(level: HskLevel, custom = false) {
 
 function App() {
   const [tab, setTab] = useState<Tab>("home");
+  const [lastMainTab, setLastMainTab] = useState<Tab>("home");
+  const [theme, setTheme] = useState<"light" | "dark">(() => localStorage.getItem("chinees.theme") === "dark" ? "dark" : "light");
+  const openSettings = () => { if (tab !== "settings") setLastMainTab(tab); setTab("settings"); };
+  useEffect(() => { localStorage.setItem("chinees.theme", theme); document.documentElement.dataset.appTheme = theme; }, [theme]);
   const [progress, setProgress] = useState<ProgressMap>(() => loadProgress());
   const [settings, setSettings] = useState<Settings>(() => loadSettings(defaultSettings));
   const [dailySets, setDailySets] = useState<DailySetMap>(() => loadDailySets());
@@ -202,8 +223,8 @@ function App() {
   }
 
   return (
-    <div className="app-shell">
-      {tab !== "learn" && <header className="topbar">
+    <div className="app-shell" data-app-theme={theme}>
+      {tab !== "learn" && tab !== "words" && <header className="topbar">
         <button className="brand" onClick={() => setTab("home")} aria-label="Ga naar vandaag">
           <span className="brand-mark">中</span>
           <span>
@@ -211,7 +232,14 @@ function App() {
             <small>HSK 1 · 2 · 3 · 4 · 5 · 6 · 7-9</small>
           </span>
         </button>
-        {installPrompt && <button className="install-button" onClick={installApp}>Installeer</button>}
+        <div className="topbar-actions">
+          {installPrompt && <button className="install-button" onClick={installApp}>Installeer</button>}
+          {tab === "settings" ? (
+            <button className="global-settings-button" type="button" aria-label="Terug naar vorig scherm" onClick={() => setTab(lastMainTab)}>✕</button>
+          ) : (
+            <button className="global-settings-button" type="button" aria-label="Instellingen" onClick={openSettings}><MonoIcon name="settings" /></button>
+          )}
+        </div>
       </header>}
 
       <main>
@@ -254,14 +282,9 @@ function App() {
         )}
         {tab === "words" && (
           <WordList
-            progress={progress}
-            lists={customLists}
             onSelect={setSelectedWord}
             onSpeak={(word) => speakMandarin(word.hanzi, settings.speechRate)}
-            onCreateList={(name) => setCustomLists((current) => createCustomList(current, name))}
-            onDeleteList={(listId) => setCustomLists((current) => current.filter((list) => list.id !== listId))}
-            onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
-            onPracticeList={(list) => startWordList(list.wordIds, list.name)}
+            onOpenSettings={openSettings}
             onAddWord={(input) => {
               if (addCustomWord(input)) window.location.reload();
             }}
@@ -290,6 +313,8 @@ function App() {
         {tab === "settings" && (
           <SettingsView
             settings={settings}
+            theme={theme}
+            onThemeChange={setTheme}
             onChange={updateSettings}
             onToggleLevel={toggleLevel}
             onReset={() => {
@@ -313,7 +338,7 @@ function App() {
             onClick={() => setTab(item.id)}
             aria-current={tab === item.id ? "page" : undefined}
           >
-            <span aria-hidden="true">{item.icon}</span>
+            <span aria-hidden="true"><MonoIcon name={item.icon} size={21} /></span>
             {item.label}
           </button>
         ))}
@@ -324,6 +349,8 @@ function App() {
           word={selectedWord}
           progress={progress[selectedWord.id] || emptyWordProgress()}
           speechRate={settings.speechRate}
+          lists={customLists}
+          onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
           onClose={() => setSelectedWord(null)}
           onWrite={() => {
             setWritingWord(selectedWord);
@@ -1283,162 +1310,104 @@ function ArticleGuide({
 }
 
 function WordList({
-  progress,
-  lists,
   onSelect,
   onSpeak,
-  onCreateList,
-  onDeleteList,
-  onToggleWord,
-  onPracticeList,
+  onOpenSettings,
   onAddWord,
 }: {
-  progress: ProgressMap;
-  lists: CustomWordList[];
   onSelect: (word: Word) => void;
   onSpeak: (word: Word) => void;
-  onCreateList: (name: string) => void;
-  onDeleteList: (listId: string) => void;
-  onToggleWord: (listId: string, wordId: number) => void;
-  onPracticeList: (list: CustomWordList) => void;
+  onOpenSettings: () => void;
   onAddWord: (input: NewCustomWord) => void;
 }) {
   const [query, setQuery] = useState("");
   const [level, setLevel] = useState<"all" | HskLevel | "custom">("all");
   const [showAddWord, setShowAddWord] = useState(false);
+  const [legendOpen, setLegendOpen] = useState(false);
   const [newHanzi, setNewHanzi] = useState("");
   const [newPinyin, setNewPinyin] = useState("");
   const [newMeaning, setNewMeaning] = useState("");
-  const [newListName, setNewListName] = useState("");
-  const [selectedListId, setSelectedListId] = useState("");
-  const [onlySelectedList, setOnlySelectedList] = useState(false);
-  const selectedList = lists.find((list) => list.id === selectedListId);
-  const filtered = useMemo(
-    () => searchWords(words.filter((word) => (
-      (level === "all" || (level === "custom" ? word.custom : !word.custom && word.level === level))
-      && (!onlySelectedList || !selectedList || selectedList.wordIds.includes(word.id))
-    )), query),
-    [query, level, onlySelectedList, selectedList],
-  );
 
+  const filtered = useMemo(() => searchWords(words.filter((word) => (
+    level === "all" || (level === "custom" ? word.custom : !word.custom && word.level === level)
+  )), query), [query, level]);
+  const formatter = new Intl.NumberFormat("nl-BE");
+  const isFiltered = query.trim().length > 0 || level !== "all";
+  const number = formatter.format(filtered.length);
   return (
     <div className="page words-page">
-      <div className="page-title-row">
-        <div><p className="eyebrow">Naslagwerk</p><h1>{words.length.toLocaleString("nl-BE")} woorden</h1></div>
-        <button className="add-word-button" onClick={() => setShowAddWord((current) => !current)} aria-label="Voeg een eigen woord toe" title="Voeg een eigen woord toe">+</button>
-      </div>
+      <header className="words-compact-header">
+        <div className="words-header-title"><span className="words-header-mark" aria-hidden="true">词</span><h1>Woorden</h1></div>
+        <div className="words-header-actions">
+          <button className="words-icon-button" type="button" aria-label="Instellingen" title="Instellingen" onClick={onOpenSettings}><MonoIcon name="settings" /></button>
+          <button className="words-icon-button words-add-button" type="button" aria-label="Eigen woord toevoegen" title="Eigen woord toevoegen" onClick={() => setShowAddWord((value) => !value)}><MonoIcon name="plus" /></button>
+        </div>
+      </header>
       {showAddWord && (
         <form className="add-word-panel" onSubmit={(event) => {
           event.preventDefault();
           if (!newHanzi.trim() || !newPinyin.trim() || !newMeaning.trim()) return;
           onAddWord({ hanzi: newHanzi, pinyin: newPinyin, meaningNl: newMeaning });
         }}>
-          <div className="section-heading"><div><p className="eyebrow">⊕</p><h2>Woord toevoegen</h2></div></div>
+          <h2>Eigen woord toevoegen</h2>
           <input value={newHanzi} onChange={(event) => setNewHanzi(event.target.value)} placeholder="Chinees, bv. 美国" autoComplete="off" />
           <input value={newPinyin} onChange={(event) => setNewPinyin(event.target.value)} placeholder="Pinyin, bv. Měiguó" autoComplete="off" />
-          <input value={newMeaning} onChange={(event) => setNewMeaning(event.target.value)} placeholder="Nederlandse betekenis, bv. Amerika" autoComplete="off" />
+          <input value={newMeaning} onChange={(event) => setNewMeaning(event.target.value)} placeholder="Betekenis, bv. Amerika" autoComplete="off" />
           <button type="submit" className="button primary-button">Toevoegen</button>
         </form>
       )}
-      <section className="custom-lists">
-        <div className="section-heading">
-          <div><p className="eyebrow">Eigen selectie</p><h2>Mijn woordenlijsten</h2></div>
-          {selectedList?.wordIds.length ? (
-            <button className="button primary-button" onClick={() => onPracticeList(selectedList)}>Oefen lijst</button>
-          ) : null}
-        </div>
-        <form
-          className="new-list-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            if (!newListName.trim()) return;
-            onCreateList(newListName);
-            setNewListName("");
-          }}
-        >
-          <input value={newListName} onChange={(event) => setNewListName(event.target.value)} placeholder="Naam van je nieuwe lijst" />
-          <button type="submit">Maak lijst</button>
-        </form>
-        {lists.length ? (
-          <div className="custom-list-chips">
-            {lists.map((list) => (
-              <button
-                key={list.id}
-                className={selectedListId === list.id ? "active" : ""}
-                onClick={() => {
-                  setSelectedListId(list.id);
-                  setOnlySelectedList(false);
-                }}
-              >
-                <strong>{list.name}</strong>
-                <span>{list.wordIds.length}</span>
-              </button>
-            ))}
-          </div>
-        ) : <p className="empty-list-copy">Maak een lijst en voeg daarna woorden toe met de plusknop.</p>}
-        {selectedList && (
-          <div className="selected-list-actions">
-            <label>
-              <input type="checkbox" checked={onlySelectedList} onChange={(event) => setOnlySelectedList(event.target.checked)} />
-              Toon alleen woorden uit deze lijst
-            </label>
-            <button
-              onClick={() => {
-                if (!window.confirm(`Wil je de lijst “${selectedList.name}” verwijderen?`)) return;
-                onDeleteList(selectedList.id);
-                setSelectedListId("");
-                setOnlySelectedList(false);
-              }}
-            >
-              Verwijder lijst
-            </button>
-          </div>
-        )}
-      </section>
-      <label className="search-box">
-        <span aria-hidden="true">⌕</span>
-        <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Zoek Chinees, pinyin of betekenis" />
-      </label>
-      <div className="filter-chips">
+      <div className="search-box words-search-box">
+        <MonoIcon name="search" size={20} />
+        <input aria-label="Zoek Chinees, pinyin of betekenis" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Zoek Chinees, pinyin of betekenis" />
+      </div>
+      <div className="filter-chips words-filters" role="group" aria-label="HSK-filter">
         {(["all", ...hskLevels, "custom"] as const).map((item) => (
-          <button className={level === item ? "active" : ""} key={item} onClick={() => setLevel(item)} title={item === "custom" ? "Eigen woorden" : undefined}>
-            {item === "all" ? "Alles" : item === "custom" ? "⊕" : `HSK ${item}`}
+          <button type="button" aria-pressed={level === item} className={level === item ? "active" : ""} key={item} onClick={() => setLevel(item)}>
+            {item === "all" ? "Alles" : item === "custom" ? "Eigen woorden" : `HSK ${item}`}
           </button>
         ))}
       </div>
-      <p className="result-count">{filtered.length} woorden</p>
+      <div className="words-result-summary">
+        <p aria-live="polite" className="result-count">{number} {isFiltered ? (filtered.length === 1 ? "resultaat" : "resultaten") : "woorden"}</p>
+        <button type="button" className="words-info-button" aria-label="Uitleg toonkleuren" title="Uitleg toonkleuren" onClick={() => setLegendOpen(true)}><MonoIcon name="info" size={20} /></button>
+      </div>
       <div className="word-list">
         {filtered.map((word) => {
-          const item = progress[word.id];
-          const status = item?.meaning.status === "known" && item?.pronunciation.status === "known"
-            ? "known"
-            : item ? "learning" : "new";
+          const literal = literalMeaning(word);
+          const showLiteral = [...word.hanzi].length > 1 && literal.trim().toLocaleLowerCase("nl-BE") !== word.meaningNl.trim().toLocaleLowerCase("nl-BE");
           return (
             <article className="word-row" key={word.id}>
-              <button className="word-main" onClick={() => onSelect(word)}>
+              <button className="word-main" type="button" onClick={() => onSelect(word)}>
                 <span className="word-hanzi">{word.hanzi}</span>
                 <span className="word-info">
-                  <strong>{word.pinyin} {word.custom ? <span className="custom-word-mark" title="Eigen woord">⊕</span> : null}</strong>
+                  <strong>{word.pinyin}{word.custom ? <span className="custom-word-mark" title="Eigen woord"> ⊕</span> : null}</strong>
                   <small>{word.meaningNl}</small>
-                  <small className="literal-preview">Letterlijk: {literalMeaning(word)}</small>
+                  {showLiteral && <small className="literal-preview">Letterlijk: {literal}</small>}
                 </span>
-                <span className={`status-dot ${status}`} aria-label={status} />
               </button>
-              <button className="row-audio" onClick={() => onSpeak(word)} aria-label={`Luister naar ${word.hanzi}`}>◖))</button>
-              {selectedList && (
-                <button
-                  className={`row-list-toggle ${selectedList.wordIds.includes(word.id) ? "added" : ""}`}
-                  onClick={() => onToggleWord(selectedList.id, word.id)}
-                  aria-label={`${word.hanzi} ${selectedList.wordIds.includes(word.id) ? "uit" : "aan"} ${selectedList.name}`}
-                  title={selectedList.wordIds.includes(word.id) ? "Verwijder uit lijst" : "Voeg toe aan lijst"}
-                >
-                  {selectedList.wordIds.includes(word.id) ? "✓" : "+"}
-                </button>
-              )}
+              <button className="row-audio" type="button" onClick={() => onSpeak(word)} aria-label={`Uitspraak afspelen: ${word.hanzi}`} title="Uitspraak afspelen"><MonoIcon name="speaker" size={21} /></button>
             </article>
           );
         })}
       </div>
+      {legendOpen && (
+        <div className="words-sheet-backdrop" onClick={() => setLegendOpen(false)}>
+          <section className="words-legend-sheet" role="dialog" aria-modal="true" aria-labelledby="words-legend-title" onClick={(event) => event.stopPropagation()}>
+            <div className="words-sheet-handle" aria-hidden="true" />
+            <div className="words-sheet-heading"><h2 id="words-legend-title">Toonkleuren</h2><button className="words-icon-button" type="button" onClick={() => setLegendOpen(false)} aria-label="Sluiten">✕</button></div>
+            <p>De kleuren tonen de uitspraaktoon van elk karakter.</p>
+            {([
+              ["1", "Eerste toon", "mā", "mandarin-tone-one"],
+              ["2", "Tweede toon", "má", "mandarin-tone-two"],
+              ["3", "Derde toon", "mǎ", "mandarin-tone-three"],
+              ["4", "Vierde toon", "mà", "mandarin-tone-four"],
+              ["5", "Neutrale toon", "ma", "mandarin-tone-neutral"],
+            ] as const).map(([tone, name, example, color]) => (
+              <div className="words-tone-row" key={tone}><span className={`words-tone-swatch ${color}`} /><strong>{name}</strong><span>{example}</span></div>
+            ))}
+          </section>
+        </div>
+      )}
     </div>
   );
 }
@@ -1491,11 +1460,15 @@ function Writing({ words, initialWord, rate, drawingPrecision, onRate }: { words
 
 function SettingsView({
   settings,
+  theme,
+  onThemeChange,
   onChange,
   onToggleLevel,
   onReset,
 }: {
   settings: Settings;
+  theme: "light" | "dark";
+  onThemeChange: (theme: "light" | "dark") => void;
   onChange: (patch: Partial<Settings>) => void;
   onToggleLevel: (level: HskLevel) => void;
   onReset: () => void;
@@ -1503,6 +1476,7 @@ function SettingsView({
   return (
     <div className="page settings-page">
       <div className="page-title-row"><div><p className="eyebrow">Persoonlijk</p><h1>Instellingen</h1></div></div>
+      <section className="settings-card"><h2>Weergave</h2><div className="appearance-choices"><button type="button" className={theme === "light" ? "active" : ""} onClick={() => onThemeChange("light")}>Licht</button><button type="button" className={theme === "dark" ? "active" : ""} onClick={() => onThemeChange("dark")}>Donker</button></div></section>
       <section className="settings-card">
         <h2>Actieve niveaus</h2>
         <div className="level-selector left">
@@ -1556,6 +1530,8 @@ function WordSheet({
   word,
   progress,
   speechRate,
+  lists,
+  onToggleWord,
   onClose,
   onWrite,
   onNotesChange,
@@ -1563,6 +1539,8 @@ function WordSheet({
   word: Word;
   progress: ReturnType<typeof emptyWordProgress>;
   speechRate: number;
+  lists: CustomWordList[];
+  onToggleWord: (listId: string, wordId: number) => void;
   onClose: () => void;
   onWrite: () => void;
   onNotesChange: (notes: string) => void;
@@ -1580,6 +1558,14 @@ function WordSheet({
         <p className="word-type">{word.wordType}</p>
         <button className="audio-button" onClick={() => speakMandarin(word.hanzi, speechRate)}>◖)) Luister</button>
         <WordExampleCard word={word} speechRate={speechRate} />
+        {lists.length > 0 && (
+          <details className="word-sheet-lists">
+            <summary>Toevoegen aan mijn lijsten</summary>
+            {lists.map((list) => (
+              <label key={list.id}><input type="checkbox" checked={list.wordIds.includes(word.id)} onChange={() => onToggleWord(list.id, word.id)} /> {list.name}</label>
+            ))}
+          </details>
+        )}
         <div className="skill-summary">
           <SkillSummary label="Betekenis" status={progress.meaning.status} />
           <SkillSummary label="Uitspraak" status={progress.pronunciation.status} />
