@@ -203,7 +203,7 @@ function App() {
 
   return (
     <div className="app-shell">
-      <header className="topbar">
+      {tab !== "learn" && <header className="topbar">
         <button className="brand" onClick={() => setTab("home")} aria-label="Ga naar vandaag">
           <span className="brand-mark">中</span>
           <span>
@@ -212,7 +212,7 @@ function App() {
           </span>
         </button>
         {installPrompt && <button className="install-button" onClick={installApp}>Installeer</button>}
-      </header>
+      </header>}
 
       <main>
         {tab === "home" && (
@@ -236,6 +236,7 @@ function App() {
             settings={settings}
             onSessionChange={setLearningSession}
             onRate={rate}
+            onExit={() => setTab("home")}
           />
         )}
         {tab === "guide" && (
@@ -304,7 +305,7 @@ function App() {
         )}
       </main>
 
-      <nav className="bottom-nav" aria-label="Hoofdnavigatie">
+      {tab !== "learn" && <nav className="bottom-nav" aria-label="Hoofdnavigatie">
         {navItems.map((item) => (
           <button
             key={item.id}
@@ -316,7 +317,7 @@ function App() {
             {item.label}
           </button>
         ))}
-      </nav>
+      </nav>}
 
       {selectedWord && (
         <WordSheet
@@ -560,12 +561,24 @@ function Learn({
   settings,
   onSessionChange,
   onRate,
+  onExit,
 }: {
   session: LearningSession | null;
   settings: Settings;
   onSessionChange: (session: LearningSession) => void;
   onRate: (id: number, skill: Skill, correct: boolean) => void;
+  onExit: () => void;
 }) {
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const swipeStart = useRef<{ x: number; y: number } | null>(null);
+
+  function exitSession() {
+    if (session && session.index < session.queue.length &&
+        !window.confirm("Oefensessie verlaten? Je voortgang blijft bewaard.")) return;
+    setSettingsOpen(false);
+    onExit();
+  }
+
   function restart() {
     if (!session) return;
     onSessionChange(createLearningSession(session.date, session.wordIds, session.title, session.direction));
@@ -584,6 +597,7 @@ function Learn({
           {session.direction === "zh-nl" ? "Chinees naar Nederlands" : "Nederlands naar Chinees"}.
         </p>
         <button className="button primary-button" onClick={restart}>Oefen deze lijst opnieuw</button>
+        <button className="button secondary-button" onClick={onExit}>Terug naar Leren</button>
       </div>
     );
   }
@@ -624,13 +638,53 @@ function Learn({
 
   function switchDirection(direction: Direction) {
     if (direction === activeSession.direction) return;
+    if (activeSession.index > 0 && !window.confirm("De richting wijzigen start de oefensessie opnieuw. Doorgaan?")) return;
     onSessionChange(createLearningSession(
       activeSession.date,
       activeSession.wordIds,
       activeSession.title,
       direction,
     ));
+    setSettingsOpen(false);
   }
+
+  function shuffleRemaining() {
+    const queue = [...activeSession.queue];
+    const rest = queue.slice(activeSession.index + 1);
+    for (let i = rest.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [rest[i], rest[j]] = [rest[j], rest[i]];
+    }
+    queue.splice(activeSession.index + 1, rest.length, ...rest);
+    onSessionChange({ ...activeSession, queue });
+    setSettingsOpen(false);
+  }
+
+  function handleCardTouchStart(event: React.TouchEvent<HTMLElement>) {
+    const target = event.target;
+    if (target instanceof Element && target.closest("button, input, textarea, select, canvas, .stroke-preview, .stroke-preview-characters, [data-no-swipe]")) {
+      swipeStart.current = null;
+      return;
+    }
+    const touch = event.touches[0];
+    swipeStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+  }
+
+  function handleCardTouchEnd(event: React.TouchEvent<HTMLElement>) {
+    const start = swipeStart.current;
+    swipeStart.current = null;
+    const end = event.changedTouches[0];
+    if (!start || !end) return;
+    const dx = end.clientX - start.x;
+    const dy = end.clientY - start.y;
+    if (Math.abs(dx) < 60 || Math.abs(dx) <= Math.abs(dy) * 1.35) return;
+    if (dx < 0) next();
+    else previous();
+  }
+
+  const selectedListCount = activeSession.date.startsWith("review:")
+    ? activeSession.date.slice("review:".length).split(",").filter(Boolean).length
+    : null;
 
   const requiredRated = session.ratings[exercise.skill] !== undefined;
   const skillLabels: Record<Skill, string> = {
@@ -643,30 +697,19 @@ function Learn({
 
   return (
     <div className="page learn-page">
-      <div className="page-title-row learn-session-heading">
-        <div className="learn-session-summary">
-          <p className="eyebrow" title={session.title || "daglijst"}>Oefensessie · {session.title || "daglijst"}</p>
-          <div className="learn-session-progress">
-            <h1>{session.index + 1} <span>van {session.queue.length}</span></h1>
-            <span className="level-chip">{levelLabel(word.level, word.custom)}</span>
-          </div>
+      <header className="session-toolbar">
+        <button className="session-icon-button session-exit-button" type="button" aria-label="Sessie verlaten" title="Sessie verlaten" onClick={exitSession}>✕</button>
+        <div className="session-progress" role="progressbar" aria-label="Voortgang oefensessie" aria-valuemin={0} aria-valuemax={session.queue.length} aria-valuenow={session.index + 1}>
+          <div className="session-progress-track"><div className="session-progress-fill" style={{ width: `${(session.index + 1) / session.queue.length * 100}%` }} /></div>
+          <span>{session.index + 1} / {session.queue.length}</span>
         </div>
-        <div className="learn-session-navigation" aria-label="Navigatie tussen woorden">
-          <button className="learn-next-button learn-previous-button" type="button" onClick={previous} disabled={session.index === 0} aria-label="Vorig woord" title="Vorig woord">‹</button>
-          <button className="learn-next-button" type="button" onClick={next} aria-label="Volgend woord" title="Volgend woord">›</button>
-        </div>
-      </div>
-
-      <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">
-        <button type="button" className={exercise.direction === "zh-nl" ? "active" : ""} onClick={() => switchDirection("zh-nl")}>
-          Chinees → {meaningLanguageLabel}
+        <button className="session-icon-button session-settings-button" type="button" aria-label="Instellingen" title="Sessie-instellingen" onClick={() => setSettingsOpen(true)}>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" width="23" height="23"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z" /><path d="m19.4 15 .1.1 1.4 1.1-1.5 2.6-1.7-.5a8.6 8.6 0 0 1-1.8 1l-.4 1.7h-3l-.4-1.7a8.4 8.4 0 0 1-1.8-1l-1.7.5-1.5-2.6 1.4-1.1a8 8 0 0 1 0-2.1l-1.4-1.1 1.5-2.6 1.7.5a8.5 8.5 0 0 1 1.8-1L12.5 7h3l.4 1.8a8.4 8.4 0 0 1 1.8 1l1.7-.5 1.5 2.6-1.4 1.1a8 8 0 0 1-.1 2Z" transform="translate(-2.1 -2)" /></svg>
         </button>
-        <button type="button" className={exercise.direction === "nl-zh" ? "active" : ""} onClick={() => switchDirection("nl-zh")}>
-          {meaningLanguageLabel} → Chinees
-        </button>
-      </div>
+      </header>
 
-      <section className={`flashcard ${session.revealed ? "revealed" : ""}`}>
+      <section className={`flashcard ${session.revealed ? "revealed" : ""}`} onTouchStart={handleCardTouchStart} onTouchEnd={handleCardTouchEnd}>
+        <span className="flashcard-hsk-tag">{levelLabel(word.level, word.custom)}</span>
         {exercise.skill !== "writing" && (
           <p className="card-instruction">
             {exercise.skill === "meaning"
@@ -739,10 +782,35 @@ function Learn({
         <section className="self-check">
           <p>Hoe ging deze oefening?</p>
           <SkillRating label={skillLabels[exercise.skill]} value={session.ratings[exercise.skill]} onRate={answer} />
-          <button className="button primary-button full-button" disabled={!requiredRated} onClick={next}>
-            Volgende oefening <span aria-hidden="true">→</span>
-          </button>
         </section>
+      )}
+
+      <nav className="session-bottom-nav" aria-label="Kaartnavigatie">
+        <button className="session-nav-button session-nav-prev" type="button" onClick={previous} disabled={session.index === 0} aria-label="Vorige kaart" title="Vorige kaart">‹</button>
+        <span className="session-bottom-counter">{session.index + 1} / {session.queue.length}</span>
+        <button className="session-nav-button session-nav-next" type="button" onClick={next} aria-label="Volgende kaart" title="Volgende kaart">›</button>
+      </nav>
+
+      {settingsOpen && (
+        <div className="session-sheet-backdrop" onClick={() => setSettingsOpen(false)}>
+          <section className="session-sheet" role="dialog" aria-modal="true" aria-labelledby="session-sheet-title" onClick={(event) => event.stopPropagation()}>
+            <div className="session-sheet-handle" aria-hidden="true" />
+            <div className="session-sheet-heading">
+              <h2 id="session-sheet-title">Sessie-instellingen</h2>
+              <button className="session-icon-button" type="button" aria-label="Sluit instellingen" onClick={() => setSettingsOpen(false)}>✕</button>
+            </div>
+            <p className="session-sheet-label">Oefenrichting</p>
+            <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">
+              <button type="button" className={exercise.direction === "zh-nl" ? "active" : ""} onClick={() => switchDirection("zh-nl")}>Chinees → {meaningLanguageLabel}</button>
+              <button type="button" className={exercise.direction === "nl-zh" ? "active" : ""} onClick={() => switchDirection("nl-zh")}>{meaningLanguageLabel} → Chinees</button>
+            </div>
+            <div className="session-sheet-info">
+              <span>{selectedListCount !== null ? "Geselecteerde daglijsten" : "Reeks"}</span>
+              <strong>{selectedListCount !== null ? selectedListCount : (session.title || "Daglijst")}</strong>
+            </div>
+            <button type="button" className="session-shuffle-button" onClick={shuffleRemaining} disabled={session.index >= session.queue.length - 2}>Schud resterende woorden</button>
+          </section>
+        </div>
       )}
     </div>
   );
