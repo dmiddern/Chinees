@@ -129,7 +129,7 @@ function paint(element: HTMLElement | null, hanzi: string, pinyin: string) {
       toneIndex += 1;
       span.dataset.tone = String(tone);
       if (tone !== 5) {
-        const color = COLORS[tone];
+        const color = `var(--tone-${tone}, ${COLORS[tone]})`;
         span.style.setProperty("color", color, "important");
         span.style.setProperty("-webkit-text-fill-color", color, "important");
       }
