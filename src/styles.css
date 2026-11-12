@@ -745,14 +745,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .learn-page .skill-focus{display:none!important}
 .learn-page .self-check{display:none!important}
 
-/* Keep the selected-day practice action visible above the history without a second panel. */
-.daily-history .section-heading { gap: 10px; }
-.daily-history-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
-.daily-selection-start { min-height: 48px; padding: 10px 16px; border-radius: 13px; font-size: 14px; font-weight: 800; white-space: nowrap; }
-.daily-selection-start span { font-size: 15px; margin-right: 4px; }
-@media (max-width: 420px) {
-  .daily-history .section-heading { align-items: center; }
-  .daily-history-actions { gap: 5px; }
-  .daily-select-all { font-size: 11px; }
-  .daily-selection-start { min-height: 44px; padding: 8px 10px; font-size: 12px; }
-}
+/* Selected history practice: subtle icon immediately left of the existing plus. */
+.practice-direction-heading .daily-selected-play { position: absolute; right: 54px; top: 0; min-width: 44px; min-height: 44px; border: 1px solid var(--border); border-radius: 13px; background: var(--surface); color: var(--primary); font-size: 18px; display: grid; place-items: center; }
+.practice-direction-heading.empty .daily-selected-play { position: static; margin-left: auto; }
+.practice-direction-heading.empty .daily-selected-play + .daily-generate-button { margin-left: 0; }
