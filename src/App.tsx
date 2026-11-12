@@ -649,9 +649,11 @@ function Learn({
           <h1>{session.index + 1} <span>van {session.queue.length}</span></h1>
         </div>
         <div className="learn-session-actions">
+          <div className="learn-session-navigation" aria-label="Navigatie tussen woorden">
+            <button className="learn-next-button learn-previous-button" type="button" onClick={previous} disabled={session.index === 0} aria-label="Vorig woord" title="Vorig woord">‹</button>
+            <button className="learn-next-button" type="button" onClick={next} aria-label="Volgend woord" title="Volgend woord">›</button>
+          </div>
           <span className="level-chip">{levelLabel(word.level, word.custom)}</span>
-          <button className="learn-next-button" type="button" onClick={previous} disabled={session.index === 0} aria-label="Vorig woord" title="Vorig woord">‹</button>
-          <button className="learn-next-button" type="button" onClick={next} aria-label="Volgend woord" title="Volgend woord">›</button>
         </div>
       </div>
 
