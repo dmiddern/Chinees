@@ -959,7 +959,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .words-result-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 3px}
 .words-result-summary .result-count{margin:0;font-size:12px;color:var(--secondary);font-variant-numeric:tabular-nums}
 .words-info-button{border:0;background:transparent;color:var(--secondary);border-radius:50%}
-.words-page .word-row{display:grid;grid-template-columns:minmax(0,1fr) 48px;align-items:center;min-height:76px}
+.words-page .word-row{display:grid;grid-template-columns:minmax(0,1fr) 44px 48px;align-items:center;min-height:76px;column-gap:4px}
 .words-page .word-main{min-width:0;grid-template-columns:65px minmax(0,1fr);gap:10px;padding:11px 4px;min-height:72px}
 .words-page .word-hanzi{font-size:29px;line-height:1.18;overflow-wrap:anywhere}
 .words-page .word-info{min-width:0}
