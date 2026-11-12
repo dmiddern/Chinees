@@ -752,3 +752,12 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 
 /* Previous and next exercises; disabled previous on the first item. */
 .learn-next-button:disabled{opacity:.3;cursor:default}
+
+/* Word navigation: two visible arrows in one stable row; level badge below. */
+.learn-page .learn-session-heading{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:12px}
+.learn-page .learn-session-actions{display:flex;flex-direction:column;align-items:center;gap:8px;flex:none;min-width:0}
+.learn-page .learn-session-navigation{display:flex;flex-direction:row;align-items:center;justify-content:center;gap:10px;flex-wrap:nowrap}
+.learn-page .learn-session-navigation .learn-next-button{flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;display:grid;place-items:center;font-size:30px;line-height:1}
+.learn-page .learn-session-navigation .learn-previous-button{background:var(--surface);color:var(--primary);border-color:var(--border)}
+.learn-page .learn-session-actions .level-chip{align-self:center}
+@media(max-width:380px){.learn-page .learn-session-heading{gap:6px}.learn-page .learn-session-navigation{gap:5px}}
