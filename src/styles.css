@@ -909,6 +909,8 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .learn-page{color-scheme:light}
 
 
+/* Tone palette tuned for readable contrast on the default warm background. */
+:root{--tone-1:#24796f;--tone-2:#4459aa;--tone-3:#95602f;--tone-4:#a43c39}
 /* Words reference: compact mobile-first layout, with the existing warm palette. */
 :root[data-app-theme="dark"]{
   color-scheme:dark;
