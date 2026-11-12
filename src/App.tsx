@@ -570,7 +570,6 @@ function Learn({
   onExit: () => void;
 }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const swipeStart = useRef<{ x: number; y: number } | null>(null);
 
   function exitSession() {
     if (session && session.index < session.queue.length &&
@@ -660,28 +659,6 @@ function Learn({
     setSettingsOpen(false);
   }
 
-  function handleCardTouchStart(event: React.TouchEvent<HTMLElement>) {
-    const target = event.target;
-    if (target instanceof Element && target.closest("button, input, textarea, select, canvas, .stroke-preview, .stroke-preview-characters, [data-no-swipe]")) {
-      swipeStart.current = null;
-      return;
-    }
-    const touch = event.touches[0];
-    swipeStart.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
-  }
-
-  function handleCardTouchEnd(event: React.TouchEvent<HTMLElement>) {
-    const start = swipeStart.current;
-    swipeStart.current = null;
-    const end = event.changedTouches[0];
-    if (!start || !end) return;
-    const dx = end.clientX - start.x;
-    const dy = end.clientY - start.y;
-    if (Math.abs(dx) < 60 || Math.abs(dx) <= Math.abs(dy) * 1.35) return;
-    if (dx < 0) next();
-    else previous();
-  }
-
   const selectedListCount = activeSession.date.startsWith("review:")
     ? activeSession.date.slice("review:".length).split(",").filter(Boolean).length
     : null;
@@ -708,7 +685,7 @@ function Learn({
         </button>
       </header>
 
-      <section className={`flashcard ${session.revealed ? "revealed" : ""}`} onTouchStart={handleCardTouchStart} onTouchEnd={handleCardTouchEnd}>
+      <section className={`flashcard ${session.revealed ? "revealed" : ""}`}>
         <span className="flashcard-hsk-tag">{levelLabel(word.level, word.custom)}</span>
         {exercise.skill !== "writing" && (
           <p className="card-instruction">
