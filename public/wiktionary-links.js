@@ -460,7 +460,7 @@ function enhanceWords() {
     applyStyles();
     addResultLinks();
     addSheetLink();
-    addPracticeListAdder();
+    // The practice save controls are rendered by React inside the learning layout.
     addExportPanel();
     protectExternalListChanges();
     restoreWordsTabAfterReload();
