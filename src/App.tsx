@@ -1033,7 +1033,7 @@ function WordExampleCard({ word, speechRate, compact = false }: { word: Word; sp
                       {[...example.chinese].map((char, i) => /[\u3400-\u9fff]/.test(char)
                         ? <button type="button" className="examples-character" key={i}
                             onClick={() => setWritingCharacter(char)} aria-label={`Bekijk schrijfvolgorde van ${char}`}
-                            style={{ color: (() => { const tone = example.toneNumbers?.[[...example.chinese.slice(0, i)].filter((c) => /[\\u3400-\\u9fff]/.test(c)).length]; return tone && tone < 5 ? `var(--tone-${tone})` : undefined; })() }}>{char}</button>
+                            style={{ color: (() => { const tone = example.toneNumbers?.[[...example.chinese.slice(0, i)].filter((c) => /[\u3400-\u9fff]/.test(c)).length]; return tone && tone < 5 ? `var(--tone-${tone})` : undefined; })() }}>{char}</button>
                         : <span key={i}>{char}</span>)}
                     </div>
                     <button type="button" className="examples-modal-speaker" onClick={() => speakMandarin(example.chinese, speechRate)}
