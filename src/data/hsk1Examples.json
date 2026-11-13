@@ -121,7 +121,7 @@
   "包子": [
     {
       "chinese": "早上我吃两个包子。",
-      "pinyin": "zǎoshang wǒ chī liǎngge bāozi.",
+      "pinyin": "zǎoshang wǒ chī liǎng ge bāozi.",
       "dutch": "Ik eet 's ochtends twee gestoomde gevulde broodjes.",
       "grammar": "包子 is een gestoomd, gevuld broodje en wordt vaak met 个 geteld.",
       "toneNumbers": [
@@ -1067,7 +1067,7 @@
   "个": [
     {
       "chinese": "我有三个中国朋友。",
-      "pinyin": "wǒ yǒu sānge zhōngguó péngyou.",
+      "pinyin": "wǒ yǒu sān ge zhōngguó péngyou.",
       "dutch": "Ik heb drie Chinese vrienden.",
       "grammar": "个 is het algemene maatwoord, onder andere voor personen: 三个朋友.",
       "toneNumbers": [
@@ -1183,7 +1183,7 @@
   "国": [
     {
       "chinese": "中国是一个大国。",
-      "pinyin": "zhōngguó shì yíge dà guó.",
+      "pinyin": "zhōngguó shì yí ge dà guó.",
       "dutch": "China is een groot land.",
       "grammar": "国 is land of staat en komt voor in 中国, 美国 en 法国.",
       "toneNumbers": [
@@ -1229,7 +1229,7 @@
   "孩子": [
     {
       "chinese": "那两个孩子是我的学生。",
-      "pinyin": "nà liǎngge háizi shì wǒ de xuéshēng.",
+      "pinyin": "nà liǎng ge háizi shì wǒ de xuéshēng.",
       "dutch": "Die twee kinderen zijn mijn leerlingen.",
       "grammar": "孩子 kan een kind in het algemeen of iemands eigen kind betekenen.",
       "toneNumbers": [
@@ -1524,7 +1524,7 @@
   "鸡蛋": [
     {
       "chinese": "早饭我吃一个鸡蛋。",
-      "pinyin": "zǎofàn wǒ chī yíge jīdàn.",
+      "pinyin": "zǎofàn wǒ chī yí ge jīdàn.",
       "dutch": "Bij het ontbijt eet ik een ei.",
       "grammar": "鸡 betekent kip, 蛋 is ei; 鸡蛋 is dus een kippenei.",
       "toneNumbers": [
@@ -1705,7 +1705,7 @@
   "九": [
     {
       "chinese": "我有九个苹果。",
-      "pinyin": "wǒ yǒu jiǔge píngguǒ.",
+      "pinyin": "wǒ yǒu jiǔ ge píngguǒ.",
       "dutch": "Ik heb negen appels.",
       "grammar": "九 is negen met een derde toon: jiǔ.",
       "toneNumbers": [
@@ -1997,7 +1997,7 @@
     },
     {
       "chinese": "我买了两个苹果。",
-      "pinyin": "wǒ mǎi le liǎngge píngguǒ.",
+      "pinyin": "wǒ mǎi le liǎng ge píngguǒ.",
       "dutch": "Ik heb twee appels gekocht.",
       "grammar": "了 achter een werkwoord kan een voltooide gebeurtenis markeren; Chinees heeft geen verplicht verleden tijdsvorm op het werkwoord.",
       "toneNumbers": [
@@ -2131,7 +2131,7 @@
   "买": [
     {
       "chinese": "我想买一个新手机。",
-      "pinyin": "wǒ xiǎng mǎi yíge xīn shǒujī.",
+      "pinyin": "wǒ xiǎng mǎi yí ge xīn shǒujī.",
       "dutch": "Ik wil een nieuwe telefoon kopen.",
       "grammar": "买 (mǎi, derde toon) betekent kopen; tegenover 卖 (mài, vierde toon).",
       "toneNumbers": [
@@ -3131,7 +3131,7 @@
   "三": [
     {
       "chinese": "我们三个人一起去。",
-      "pinyin": "wǒmen sānge rén yìqǐ qù.",
+      "pinyin": "wǒmen sān ge rén yìqǐ qù.",
       "dutch": "We gaan met z'n drieën.",
       "grammar": "三个人 betekent drie personen; 一起 betekent samen.",
       "toneNumbers": [
@@ -3352,7 +3352,7 @@
   "十": [
     {
       "chinese": "我有十个同学。",
-      "pinyin": "wǒ yǒu shíge tóngxué.",
+      "pinyin": "wǒ yǒu shí ge tóngxué.",
       "dutch": "Ik heb tien klasgenoten.",
       "grammar": "十 is tien; bij tientallen komt een cijfer ervoor: 二十.",
       "toneNumbers": [
@@ -3963,7 +3963,7 @@
   "问": [
     {
       "chinese": "我想问老师一个问题。",
-      "pinyin": "wǒ xiǎng wèn lǎoshī yíge wèntí.",
+      "pinyin": "wǒ xiǎng wèn lǎoshī yí ge wèntí.",
       "dutch": "Ik wil de leraar een vraag stellen.",
       "grammar": "问 kan rechtstreeks gevolgd worden door de persoon aan wie je iets vraagt: 问老师.",
       "toneNumbers": [
@@ -4279,7 +4279,7 @@
   "小时": [
     {
       "chinese": "坐火车要两个小时。",
-      "pinyin": "zuò huǒchē yào liǎngge xiǎoshí.",
+      "pinyin": "zuò huǒchē yào liǎng ge xiǎoshí.",
       "dutch": "De treinreis duurt twee uur.",
       "grammar": "小时 is uur als tijdsduur; 要 betekent hier 'duren' of 'nodig hebben', niet 'willen'.",
       "toneNumbers": [
@@ -4401,7 +4401,7 @@
   "星期": [
     {
       "chinese": "一个星期有七天。",
-      "pinyin": "yíge xīngqī yǒu qī tiān.",
+      "pinyin": "yí ge xīngqī yǒu qī tiān.",
       "dutch": "Een week telt zeven dagen.",
       "grammar": "星期 betekent week; weekdagen zijn 星期一 tot 星期六 en 星期日 of 星期天 voor zondag.",
       "toneNumbers": [
@@ -4610,7 +4610,7 @@
   "一": [
     {
       "chinese": "我只有一个问题。",
-      "pinyin": "wǒ zhǐyǒu yíge wèntí.",
+      "pinyin": "wǒ zhǐyǒu yí ge wèntí.",
       "dutch": "Ik heb maar één vraag.",
       "grammar": "一 betekent één; de uitspraak verandert met de volgende toon: yī, yí of yì.",
       "toneNumbers": [
@@ -4780,7 +4780,7 @@
     },
     {
       "chinese": "我有一个女儿。",
-      "pinyin": "wǒ yǒu yíge nǚ'ér.",
+      "pinyin": "wǒ yǒu yí ge nǚ'ér.",
       "dutch": "Ik heb een dochter.",
       "grammar": "有 kan ook bezit of een persoonlijke relatie aanduiden: 我有 = ik heb.",
       "toneNumbers": [
