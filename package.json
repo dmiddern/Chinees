@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run prepare:hanzi && tsc -b && vite build",
+    "build": "npm run check:hsk1 && npm run prepare:hanzi && tsc -b && vite build",
     "preview": "vite preview",
-    "prepare:hanzi": "node scripts/prepare-hanzi-data.mjs"
+    "prepare:hanzi": "node scripts/prepare-hanzi-data.mjs",
+    "check:hsk1": "node scripts/check-hsk1-examples.mjs"
   },
   "dependencies": {
     "hanzi-writer": "3.7.3",

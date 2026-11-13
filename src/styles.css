@@ -1249,3 +1249,39 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   width:21px;
   height:21px;
 }
+
+
+/* Contextual word examples: only the trigger occupies space in the word card. */
+.examples-trigger { display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border: 1px solid var(--border, #ddd); border-radius: 12px; background: transparent; color: inherit; cursor: pointer; font: inherit; font-weight: 650; text-align: left; }
+.examples-trigger.compact { padding: 10px 12px; }
+.examples-trigger span { font-size: 24px; line-height: 1; }
+.examples-modal-backdrop { position: fixed; inset: 0; z-index: 10000; background: rgba(0,0,0,.52); display: flex; justify-content: center; align-items: center; padding: 12px; }
+.examples-modal { width: min(100%, 620px); max-height: min(92dvh, 920px); overflow: hidden; display: flex; flex-direction: column; position: relative; background: var(--surface, #fff); color: var(--text, #242424); border-radius: 22px; box-shadow: 0 18px 60px #0005; }
+.examples-modal-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 22px 22px 16px; border-bottom: 1px solid var(--border, #e5e5e5); }
+.examples-modal-header h2 { font-size: 20px; margin: 0 0 4px; }
+.examples-modal-header span { color: var(--secondary, #777); font-size: 13px; line-height: 1.35; }
+.examples-modal-header button, .examples-writing-close { border: 0; background: transparent; color: inherit; font-size: 28px; cursor: pointer; line-height: 1; padding: 0 4px; }
+.examples-modal-body { overflow-y: auto; overscroll-behavior: contain; padding: 0 22px 22px; }
+.examples-modal-item { padding: 20px 0; }
+.examples-modal-item + .examples-modal-item { border-top: 1px solid var(--border, #e5e5e5); }
+.examples-modal-number { color: var(--secondary, #777); font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+.examples-modal-sentence { display: flex; align-items: flex-start; gap: 14px; }
+.examples-modal-hanzi { flex: 1; font-size: clamp(21px, 5vw, 28px); font-weight: 650; line-height: 1.6; overflow-wrap: anywhere; }
+.examples-character { font: inherit; color: inherit; border: 0; padding: 0; background: none; cursor: pointer; border-radius: 3px; }
+.examples-character:focus-visible { outline: 2px solid currentColor; }
+.examples-modal-speaker { flex: 0 0 42px; height: 42px; border: 1px solid var(--border, #ddd); border-radius: 50%; display: grid; place-items: center; background: transparent; color: inherit; cursor: pointer; }
+.examples-modal-pinyin { color: var(--secondary, #777); font-style: italic; font-size: 14px; margin: 4px 0 8px; }
+.examples-modal-translation { margin: 0 0 14px; line-height: 1.5; }
+.examples-modal-grammar { background: var(--background, #f5f5f5); border-radius: 12px; padding: 12px 14px; font-size: 14px; line-height: 1.55; }
+.examples-modal-grammar strong { font-size: 12px; }
+.examples-modal-grammar p { margin: 4px 0 0; }
+.examples-writing-overlay { position: absolute; inset: 0; background: rgba(0,0,0,.55); display: flex; justify-content: center; align-items: center; padding: 12px; }
+.examples-writing-panel { position: relative; background: var(--surface, #fff); color: var(--text, #222); width: min(100%, 400px); max-height: 100%; overflow: auto; padding: 18px; border-radius: 16px; }
+.examples-writing-panel h3 { margin: 0 28px 14px 0; font-size: 17px; }
+.examples-writing-close { position: absolute; right: 14px; top: 12px; }
+@media (max-width: 600px) {
+  .examples-modal-backdrop { padding: 0; align-items: flex-end; }
+  .examples-modal { width: 100%; max-height: 94dvh; border-radius: 22px 22px 0 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
+  .examples-modal-header { padding: 18px 18px 14px; }
+  .examples-modal-body { padding: 0 18px 18px; }
+}
