@@ -1324,3 +1324,8 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .sentence-practice-finished { text-align: center; padding: 24px 0; }
 .sentence-practice-finished p { margin: 14px 0 24px; }
 @media(max-width:440px) { .sentence-practice-page { padding: 12px 12px 105px; } .sentence-practice-panel { padding: 16px; } .sentence-practice-fieldset { gap: 11px; } .sentence-practice-fieldset label { font-size: 14px; } }
+
+/* Six independent destinations, including sentence practice. */
+.bottom-nav { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.bottom-nav button { min-width: 0; }
+@media(max-width: 370px) { .bottom-nav button { font-size: 9px; } .bottom-nav button span svg { width: 19px; height: 19px; } }
