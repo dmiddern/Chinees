@@ -1041,6 +1041,7 @@ function WordExampleCard({ word, speechRate, compact = false }: { word: Word; sp
                   </div>
                   <p className="examples-modal-pinyin">{example.pinyin}</p>
                   <p className="examples-modal-translation">{example.dutch}</p>
+                  {example.gloss && <p className="examples-modal-gloss">{example.gloss}</p>}
                   {example.grammar && <div className="examples-modal-grammar"><strong>Grammatica en gebruik</strong><p>{example.grammar}</p></div>}
                 </section>
               ))}
