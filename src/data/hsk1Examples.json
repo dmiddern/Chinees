@@ -89,16 +89,16 @@
   ],
   "病": [
     {
-      "chinese": "他的病好了吗？",
-      "pinyin": "tā de bìng hǎo le ma?",
-      "dutch": "Is hij van zijn ziekte hersteld?",
-      "grammar": "病 is een zelfstandig naamwoord; 好了 drukt herstel uit."
+      "chinese": "他生病了，今天不能上班。",
+      "pinyin": "tā shēngbìng le, jīntiān bù néng shàngbān.",
+      "dutch": "Hij is ziek geworden en kan vandaag niet werken.",
+      "grammar": "生病了 drukt uit dat iemand ziek is geworden."
     },
     {
-      "chinese": "他今天有病，不能上班。",
-      "pinyin": "tā jīntiān yǒu bìng, bù néng shàngbān.",
-      "dutch": "Hij is vandaag ziek en kan niet werken.",
-      "grammar": "有病 drukt ziekte uit; in andere contexten kan het onbeleefd klinken."
+      "chinese": "他的病好了。",
+      "pinyin": "tā de bìng hǎo le.",
+      "dutch": "Hij is hersteld van zijn ziekte.",
+      "grammar": "病 kan ook als zelfstandig naamwoord 'ziekte' betekenen."
     }
   ],
   "不": [
@@ -944,7 +944,7 @@
   "冷": [
     {
       "chinese": "外边很冷，穿上衣服吧。",
-      "pinyin": "wàibian hěn lěng, chuān shàngyī [服] ba.",
+      "pinyin": "wàibian hěn lěng, chuān shàng yīfu ba.",
       "dutch": "Het is koud buiten, trek iets aan.",
       "grammar": "很冷 beschrijft het weer."
     }
