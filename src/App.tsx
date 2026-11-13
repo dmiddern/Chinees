@@ -48,7 +48,7 @@ const defaultSettings: Settings = {
   drawingPrecision: "normal",
 };
 
-type IconName = "learn" | "theory" | "words" | "lists" | "write" | "settings" | "plus" | "speaker" | "info" | "search" | "pencil";
+type IconName = "learn" | "theory" | "words" | "lists" | "write" | "settings" | "plus" | "speaker" | "info" | "search" | "pencil" | "bookmark" | "bookmark-filled";
 function MonoIcon({ name, size = 22 }: { name: IconName; size?: number }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true as const };
   return <svg {...common}>
@@ -59,6 +59,7 @@ function MonoIcon({ name, size = 22 }: { name: IconName; size?: number }) {
     {name === "write" && <><path d="M4 20h16M5 16l-.5 3.5L8 19l11-11-3-3z"/><path d="m14 7 3 3"/></>}
     {name === "settings" && <><circle cx="12" cy="12" r="3"/><path d="m19 13 2 1-1.5 3-2.1-.5c-.5.5-1 .8-1.6 1L15 20h-3l-.6-2.5c-.6-.2-1.2-.5-1.7-1l-2.1.5L6 14l2-1a7 7 0 0 1 0-2l-2-1 1.6-3 2.1.5c.5-.5 1.1-.8 1.7-1L12 4h3l.8 2.5c.6.2 1.1.5 1.6 1l2.1-.5L21 10l-2 1a8 8 0 0 1 0 2Z" transform="translate(-1.5)"/></>}
     {name === "plus" && <path d="M12 5v14M5 12h14"/>}
+    {(name === "bookmark" || name === "bookmark-filled") && <path d="M6 4.5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2V21l-6-4-6 4z" fill={name === "bookmark-filled" ? "currentColor" : "none"}/>} 
     {name === "speaker" && <><path d="M4 9h4l5-4v14l-5-4H4zM17 9a4 4 0 0 1 0 6M19.5 6a8 8 0 0 1 0 12"/></>}
     {name === "info" && <><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></>}
     {name === "search" && <><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></>}
@@ -264,6 +265,14 @@ function App() {
             settings={settings}
             onSessionChange={setLearningSession}
             onRate={rate}
+            lists={customLists}
+            onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
+            onCreateListForWord={(name, wordId) => setCustomLists((current) => {
+              const updated = createCustomList(current, name);
+              if (updated.length === current.length) return current;
+              const created = updated[updated.length - 1];
+              return toggleWordInList(updated, created.id, wordId);
+            })}
             onExit={() => setTab("home")}
           />
         )}
@@ -588,15 +597,24 @@ function Learn({
   settings,
   onSessionChange,
   onRate,
+  lists,
+  onToggleWord,
+  onCreateListForWord,
   onExit,
 }: {
   session: LearningSession | null;
   settings: Settings;
   onSessionChange: (session: LearningSession) => void;
   onRate: (id: number, skill: Skill, correct: boolean) => void;
+  lists: CustomWordList[];
+  onToggleWord: (listId: string, wordId: number) => void;
+  onCreateListForWord: (name: string, wordId: number) => void;
   onExit: () => void;
 }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [bookmarkOpen, setBookmarkOpen] = useState(false);
+  const [newListName, setNewListName] = useState("");
+  const [saveListId, setSaveListId] = useState("");
 
   function exitSession() {
     if (session && session.index < session.queue.length &&
@@ -632,10 +650,20 @@ function Learn({
   const activeSession: LearningSession = session;
   const activeWord: Word = word;
 
-  function answer(correct: boolean) {
+  function answerAndAdvance(correct: boolean) {
+    onRate(activeWord.id, exercise.skill, correct);
+    const queue = [...activeSession.queue];
+    if (!correct) {
+      // Space a missed word among later cards instead of repeating it immediately.
+      queue.splice(Math.min(queue.length, activeSession.index + 4), 0, { ...exercise });
+    }
     onSessionChange({
       ...activeSession,
-      ratings: { [exercise.skill]: correct },
+      queue,
+      index: activeSession.index + 1,
+      revealed: false,
+      promptMode: "character",
+      ratings: {},
     });
   }
 
@@ -690,14 +718,13 @@ function Learn({
     ? activeSession.date.slice("review:".length).split(",").filter(Boolean).length
     : null;
 
-  const requiredRated = session.ratings[exercise.skill] !== undefined;
-  const skillLabels: Record<Skill, string> = {
-    meaning: "Betekenis",
-    pronunciation: "Uitspraak",
-    writing: "Schrijfwijze",
-  };
   const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
   const meaningLanguageLabel = word.meaningLanguage === "en" ? "Engels" : "Nederlands";
+  const literal = literalMeaning(word);
+  const showLiteral = [...word.hanzi].length > 1 &&
+    literal.trim().toLocaleLowerCase("nl-BE") !== word.meaningNl.trim().toLocaleLowerCase("nl-BE");
+  const storedInLists = lists.some((list) => list.wordIds.includes(word.id));
+  const selectedSaveList = lists.find((list) => list.id === saveListId) || lists[0];
 
   return (
     <div className="page learn-page">
@@ -713,80 +740,70 @@ function Learn({
       </header>
 
       <section className={`flashcard ${session.revealed ? "revealed" : ""}`}>
-        <span className="flashcard-hsk-tag">{levelLabel(word.level, word.custom)}</span>
-        {exercise.skill !== "writing" && (
-          <p className="card-instruction">
-            {exercise.skill === "meaning"
-              ? "Wat betekent dit woord?"
-              : "Spreek het Chinese woord hardop uit."}
-          </p>
-        )}
-        {exercise.direction === "zh-nl" ? (
-          <>
+        <div className="flashcard-meta">
+          <button className="card-bookmark-button" type="button" aria-label="Bewaren in lijst" title="Bewaren in lijst" aria-pressed={storedInLists} onClick={() => setBookmarkOpen(true)}>
+            <MonoIcon name={storedInLists ? "bookmark-filled" : "bookmark"} size={20} />
+          </button>
+          <span className="flashcard-hsk-tag">{levelLabel(word.level, word.custom)}</span>
+        </div>
+        <div className="flashcard-scroll">
+          {(session.revealed || exercise.direction === "zh-nl") && (
             <div className="prompt-mode-toggle" aria-label="Weergave van het Chinese woord">
-              <button
-                className={session.promptMode === "character" ? "active" : ""}
-                onClick={() => onSessionChange({ ...session, promptMode: "character" })}
-              >
-                Karakter
-              </button>
-              <button
-                className={session.promptMode === "strokes" ? "active" : ""}
-                onClick={() => onSessionChange({ ...session, promptMode: "strokes" })}
-              >
-                Schrijfvolgorde
-              </button>
+              <button type="button" className={session.promptMode === "character" ? "active" : ""}
+                onClick={() => onSessionChange({ ...session, promptMode: "character" })}>Karakter</button>
+              <button type="button" className={session.promptMode === "strokes" ? "active" : ""}
+                onClick={() => onSessionChange({ ...session, promptMode: "strokes" })}>Schrijfvolgorde</button>
             </div>
-            {session.promptMode === "character"
-              ? <div className="prompt-hanzi" style={hanziStyle}>{word.hanzi}</div>
-              : <StrokeOrderPreview hanzi={word.hanzi} />}
-          </>
-        ) : <div className="prompt-meaning">{word.meaningNl}</div>}
-
-        {!session.revealed ? (
-          <>
-            {exercise.skill === "pronunciation" && <PronunciationRecorder />}
-            <button className="button primary-button reveal-button" onClick={() => onSessionChange({ ...session, revealed: true })}>
-              Toon het antwoord
-            </button>
-          </>
-        ) : (
-          <div className="answer-block">
-            {exercise.direction === "nl-zh" && (
-              <div className="prompt-mode-toggle" aria-label="Weergave van het Chinese antwoord">
-                <button
-                  className={session.promptMode === "character" ? "active" : ""}
-                  onClick={() => onSessionChange({ ...session, promptMode: "character" })}
-                >
-                  Karakter
-                </button>
-                <button
-                  className={session.promptMode === "strokes" ? "active" : ""}
-                  onClick={() => onSessionChange({ ...session, promptMode: "strokes" })}
-                >
-                  Schrijfvolgorde
-                </button>
+          )}
+          {!session.revealed ? (
+            <>
+              {exercise.skill !== "writing" && <p className="card-instruction">{exercise.skill === "meaning" ? "Wat betekent dit woord?" : "Spreek het Chinese woord hardop uit."}</p>}
+              {exercise.direction === "zh-nl"
+                ? (session.promptMode === "character" ? <div className="prompt-hanzi" style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
+                : <div className="prompt-meaning">{word.meaningNl}</div>}
+              {exercise.skill === "pronunciation" && <PronunciationRecorder />}
+              <button className="button primary-button reveal-button" onClick={() => onSessionChange({ ...session, revealed: true })}>Toon het antwoord</button>
+            </>
+          ) : (
+            <div className="answer-block">
+              {session.promptMode === "strokes"
+                ? <StrokeOrderPreview hanzi={word.hanzi} />
+                : <div className="answer-hanzi" style={hanziStyle}>{word.hanzi}</div>}
+              <div className="answer-pronunciation">
+                <span className="answer-pinyin">{word.pinyin}</span>
+                <button className="answer-audio-button" type="button" aria-label="Uitspraak afspelen" title="Uitspraak afspelen" onClick={() => speakMandarin(word.hanzi, settings.speechRate)}><MonoIcon name="speaker" size={20} /></button>
               </div>
-            )}
-            {exercise.direction === "nl-zh" && session.promptMode === "strokes"
-              ? <StrokeOrderPreview hanzi={word.hanzi} />
-              : <div className="answer-hanzi" style={hanziStyle}>{word.hanzi}</div>}
-            <div className="answer-pinyin">{word.pinyin}</div>
-            <div className="answer-meaning">{word.meaningNl}</div>
-            <div className="literal-meaning"><span>Letterlijk</span>{literalMeaning(word)}</div>
-            <button className="audio-button" onClick={() => speakMandarin(word.hanzi, settings.speechRate)}>
-              <span aria-hidden="true">◖))</span> Luister
-            </button>
-            <WordExampleCard word={word} speechRate={settings.speechRate} compact />
-          </div>
-        )}
+              <div className="answer-meaning">{word.meaningNl}</div>
+              {showLiteral && <p className="answer-literal">Letterlijk: {literal}</p>}
+              <WordExampleCard word={word} speechRate={settings.speechRate} compact />
+            </div>
+          )}
+        </div>
       </section>
 
+      <div className="practice-save-compact">
+        <span>Bewaar dit woord</span>
+        <div>
+          {lists.length > 0 ? (
+            <>
+              <select aria-label="Kies woordenlijst" value={selectedSaveList?.id || ""} onChange={(event) => setSaveListId(event.target.value)}>
+                {lists.map((list) => <option key={list.id} value={list.id}>{list.name}</option>)}
+              </select>
+              <button type="button" disabled={!selectedSaveList || selectedSaveList.wordIds.includes(word.id)} onClick={() => {
+                if (selectedSaveList) onToggleWord(selectedSaveList.id, word.id);
+              }}>{selectedSaveList?.wordIds.includes(word.id) ? "✓ In lijst" : "+ Voeg toe"}</button>
+            </>
+          ) : (
+            <button type="button" className="practice-no-lists" onClick={() => setBookmarkOpen(true)}>+ Maak een lijst</button>
+          )}
+        </div>
+      </div>
+
       {session.revealed && (
-        <section className="self-check">
-          <p>Hoe ging deze oefening?</p>
-          <SkillRating label={skillLabels[exercise.skill]} value={session.ratings[exercise.skill]} onRate={answer} />
-        </section>
+        <div className="session-rating-bar" role="group" aria-label="Zelfbeoordeling">
+          <button type="button" className="session-rate-missed" onClick={() => answerAndAdvance(false)}>Wist ik niet</button>
+          <button type="button" className="session-rate-known" onClick={() => answerAndAdvance(true)}>Wist ik</button>
+        </div>
       )}
 
       <nav className="session-bottom-nav" aria-label="Kaartnavigatie">
@@ -794,6 +811,37 @@ function Learn({
         <span className="session-bottom-counter">{session.index + 1} / {session.queue.length}</span>
         <button className="session-nav-button session-nav-next" type="button" onClick={next} aria-label="Volgende kaart" title="Volgende kaart">›</button>
       </nav>
+
+      {bookmarkOpen && (
+        <div className="session-sheet-backdrop" onClick={() => setBookmarkOpen(false)}>
+          <section className="session-sheet session-bookmark-sheet" role="dialog" aria-modal="true" aria-labelledby="bookmark-sheet-title" onClick={(event) => event.stopPropagation()}>
+            <div className="session-sheet-handle" aria-hidden="true" />
+            <div className="session-sheet-heading">
+              <h2 id="bookmark-sheet-title">Bewaren in lijst</h2>
+              <button type="button" className="session-icon-button" aria-label="Sluit lijsten" onClick={() => setBookmarkOpen(false)}>✕</button>
+            </div>
+            <p className="session-sheet-label">Selecteer een of meerdere lijsten voor {word.hanzi}.</p>
+            <div className="bookmark-list-options">
+              {lists.map((list) => (
+                <label key={list.id}>
+                  <input type="checkbox" checked={list.wordIds.includes(word.id)} onChange={() => onToggleWord(list.id, word.id)} />
+                  <span>{list.name}</span>
+                </label>
+              ))}
+              {lists.length === 0 && <p>Je hebt nog geen eigen lijsten.</p>}
+            </div>
+            <form className="bookmark-new-list" onSubmit={(event) => {
+              event.preventDefault();
+              if (!newListName.trim()) return;
+              onCreateListForWord(newListName, word.id);
+              setNewListName("");
+            }}>
+              <input value={newListName} onChange={(event) => setNewListName(event.target.value)} placeholder="Naam nieuwe lijst" aria-label="Naam nieuwe lijst" />
+              <button type="submit" disabled={!newListName.trim()}>+ Nieuwe lijst</button>
+            </form>
+          </section>
+        </div>
+      )}
 
       {settingsOpen && (
         <div className="session-sheet-backdrop" onClick={() => setSettingsOpen(false)}>
@@ -898,7 +946,7 @@ function WordExampleCard({ word, speechRate, compact = false }: { word: Word; sp
         <span>{example.pinyin}</span>
         <p>{example.dutch}</p>
       </div>
-      <button onClick={() => speakMandarin(example.chinese, speechRate)} aria-label={`Luister naar ${example.chinese}`}>◖))</button>
+      <button type="button" onClick={() => speakMandarin(example.chinese, speechRate)} aria-label="Uitspraak voorbeeldzin afspelen" title="Uitspraak afspelen"><MonoIcon name="speaker" size={20} /></button>
     </div>
   );
 }
