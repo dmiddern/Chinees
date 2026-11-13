@@ -48,7 +48,7 @@ const defaultSettings: Settings = {
   drawingPrecision: "normal",
 };
 
-type IconName = "learn" | "theory" | "words" | "lists" | "write" | "settings" | "plus" | "speaker" | "info" | "search" | "pencil" | "bookmark" | "bookmark-filled";
+type IconName = "learn" | "theory" | "words" | "lists" | "write" | "settings" | "plus" | "speaker" | "info" | "search" | "pencil" | "bookmark" | "bookmark-filled" | "save";
 function MonoIcon({ name, size = 22 }: { name: IconName; size?: number }) {
   const common = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.8, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true as const };
   return <svg {...common}>
@@ -59,6 +59,7 @@ function MonoIcon({ name, size = 22 }: { name: IconName; size?: number }) {
     {name === "write" && <><path d="M4 20h16M5 16l-.5 3.5L8 19l11-11-3-3z"/><path d="m14 7 3 3"/></>}
     {name === "settings" && <><circle cx="12" cy="12" r="3"/><path d="m19 13 2 1-1.5 3-2.1-.5c-.5.5-1 .8-1.6 1L15 20h-3l-.6-2.5c-.6-.2-1.2-.5-1.7-1l-2.1.5L6 14l2-1a7 7 0 0 1 0-2l-2-1 1.6-3 2.1.5c.5-.5 1.1-.8 1.7-1L12 4h3l.8 2.5c.6.2 1.1.5 1.6 1l2.1-.5L21 10l-2 1a8 8 0 0 1 0 2Z" transform="translate(-1.5)"/></>}
     {name === "plus" && <path d="M12 5v14M5 12h14"/>}
+    {name === "save" && <><path d="M4 3h14l3 3v15H3V3z"/><path d="M7 3v7h10V3M7 21v-8h10v8M14 3v5"/></>}
     {(name === "bookmark" || name === "bookmark-filled") && <path d="M6 4.5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2V21l-6-4-6 4z" fill={name === "bookmark-filled" ? "currentColor" : "none"}/>} 
     {name === "speaker" && <><path d="M4 9h4l5-4v14l-5-4H4zM17 9a4 4 0 0 1 0 6M19.5 6a8 8 0 0 1 0 12"/></>}
     {name === "info" && <><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></>}
@@ -266,13 +267,23 @@ function App() {
             onSessionChange={setLearningSession}
             onRate={rate}
             lists={customLists}
-            onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
-            onCreateListForWord={(name, wordId) => {
-              const updated = createCustomList(customLists, name);
-              if (updated.length === customLists.length) return null;
-              const created = updated[updated.length - 1];
-              setCustomLists((current) => [...current, { ...created, wordIds: [wordId] }]);
-              return created.id;
+            onSaveBookmarkChanges={(wordId, selectedIds, pendingLists) => {
+              setCustomLists((current) => {
+                const updated = current.map((list) => {
+                  const hasWord = list.wordIds.includes(wordId);
+                  const shouldHaveWord = selectedIds.includes(list.id);
+                  if (hasWord === shouldHaveWord) return list;
+                  return {
+                    ...list,
+                    wordIds: shouldHaveWord ? [...list.wordIds, wordId] : list.wordIds.filter((id) => id !== wordId),
+                    updatedAt: Date.now(),
+                  };
+                });
+                return [...updated, ...pendingLists.map((list) => ({
+                  ...list,
+                  wordIds: selectedIds.includes(list.id) ? [wordId] : [],
+                }))];
+              });
             }}
             onExit={() => setTab("home")}
           />
@@ -599,8 +610,7 @@ function Learn({
   onSessionChange,
   onRate,
   lists,
-  onToggleWord,
-  onCreateListForWord,
+  onSaveBookmarkChanges,
   onExit,
 }: {
   session: LearningSession | null;
@@ -608,8 +618,7 @@ function Learn({
   onSessionChange: (session: LearningSession) => void;
   onRate: (id: number, skill: Skill, correct: boolean) => void;
   lists: CustomWordList[];
-  onToggleWord: (listId: string, wordId: number) => void;
-  onCreateListForWord: (name: string, wordId: number) => string | null;
+  onSaveBookmarkChanges: (wordId: number, selectedIds: string[], pendingLists: CustomWordList[]) => void;
   onExit: () => void;
 }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -619,7 +628,26 @@ function Learn({
     localStorage.setItem("chinees.show-self-rating.v1", String(visible));
   }
   const [bookmarkOpen, setBookmarkOpen] = useState(false);
+  const [bookmarkSelectedIds, setBookmarkSelectedIds] = useState<string[]>([]);
+  const [pendingBookmarkLists, setPendingBookmarkLists] = useState<CustomWordList[]>([]);
+  const [bookmarkLastTouched, setBookmarkLastTouched] = useState<string | null>(null);
   const [newListName, setNewListName] = useState("");
+
+  function openBookmarkSheet() {
+    if (!session?.queue[session.index]) return;
+    const wordId = session.queue[session.index].wordId;
+    setBookmarkSelectedIds(lists.filter((list) => list.wordIds.includes(wordId)).map((list) => list.id));
+    setPendingBookmarkLists([]);
+    setBookmarkLastTouched(null);
+    setNewListName("");
+    setBookmarkOpen(true);
+  }
+
+  function cancelBookmarkChanges() {
+    setBookmarkOpen(false);
+    setPendingBookmarkLists([]);
+    setNewListName("");
+  }
   function rememberSaveList(listId: string) {
     localStorage.setItem("chinees.last-custom-list.v1", listId);
   }
@@ -732,6 +760,20 @@ function Learn({
   const showLiteral = [...word.hanzi].length > 1 &&
     literal.trim().toLocaleLowerCase("nl-BE") !== word.meaningNl.trim().toLocaleLowerCase("nl-BE");
   const storedInLists = lists.some((list) => list.wordIds.includes(word.id));
+  const savedBookmarkIds = lists.filter((list) => list.wordIds.includes(word.id)).map((list) => list.id);
+  const bookmarkDirty = pendingBookmarkLists.length > 0 ||
+    savedBookmarkIds.length !== bookmarkSelectedIds.filter((id) => lists.some((list) => list.id === id)).length ||
+    savedBookmarkIds.some((id) => !bookmarkSelectedIds.includes(id));
+  function saveBookmarkChanges() {
+    if (!bookmarkDirty) return;
+    onSaveBookmarkChanges(word.id, bookmarkSelectedIds, pendingBookmarkLists);
+    if (bookmarkLastTouched && bookmarkSelectedIds.includes(bookmarkLastTouched)) {
+      rememberSaveList(bookmarkLastTouched);
+    }
+    setBookmarkOpen(false);
+    setPendingBookmarkLists([]);
+    setNewListName("");
+  }
 
   return (
     <div className="page learn-page">
@@ -748,7 +790,7 @@ function Learn({
 
       <section className={`flashcard ${session.revealed ? "revealed" : ""}`}>
         <div className="flashcard-meta">
-          <button className="card-bookmark-button" type="button" aria-label="Bewaren in lijst" title="Bewaren in lijst" aria-pressed={storedInLists} onClick={() => setBookmarkOpen(true)}>
+          <button className="card-bookmark-button" type="button" aria-label="Bewaren in lijst" title="Bewaren in lijst" aria-pressed={storedInLists} onClick={openBookmarkSheet}>
             <MonoIcon name={storedInLists ? "bookmark-filled" : "bookmark"} size={20} />
           </button>
           <span className="flashcard-hsk-tag">{levelLabel(word.level, word.custom)}</span>
@@ -802,36 +844,53 @@ function Learn({
       </nav>
 
       {bookmarkOpen && (
-        <div className="session-sheet-backdrop" onClick={() => setBookmarkOpen(false)}>
+        <div className="session-sheet-backdrop" onClick={cancelBookmarkChanges}>
           <section className="session-sheet session-bookmark-sheet" role="dialog" aria-modal="true" aria-labelledby="bookmark-sheet-title" onClick={(event) => event.stopPropagation()}>
             <div className="session-sheet-handle" aria-hidden="true" />
             <div className="session-sheet-heading">
               <h2 id="bookmark-sheet-title">Bewaren in lijst</h2>
-              <button type="button" className="session-icon-button" aria-label="Sluit lijsten" onClick={() => setBookmarkOpen(false)}>✕</button>
+              <div className="bookmark-sheet-actions">
+                <button type="button" className="session-icon-button bookmark-save-button" aria-label="Opslaan" title="Opslaan en sluiten" disabled={!bookmarkDirty} onClick={saveBookmarkChanges}>
+                  <MonoIcon name="save" size={21} />
+                </button>
+                <button type="button" className="session-icon-button" aria-label="Terug zonder opslaan" title="Terug zonder opslaan" onClick={cancelBookmarkChanges}>✕</button>
+              </div>
             </div>
             <p className="session-sheet-label">Selecteer een of meerdere lijsten voor {word.hanzi}.</p>
             <div className="bookmark-list-options">
-              {lists.map((list) => (
+              {[...lists, ...pendingBookmarkLists].map((list) => (
                 <label key={list.id}>
-                  <input type="checkbox" checked={list.wordIds.includes(word.id)} onChange={() => {
-                    rememberSaveList(list.id);
-                    onToggleWord(list.id, word.id);
-                  }} />
+                  <input
+                    type="checkbox"
+                    checked={bookmarkSelectedIds.includes(list.id)}
+                    onChange={(event) => {
+                      setBookmarkSelectedIds((current) => event.target.checked
+                        ? [...current, list.id]
+                        : current.filter((id) => id !== list.id));
+                      setBookmarkLastTouched(list.id);
+                    }}
+                  />
                   <span>{list.name}</span>
                 </label>
               ))}
-              {lists.length === 0 && <p>Je hebt nog geen eigen lijsten.</p>}
+              {lists.length === 0 && pendingBookmarkLists.length === 0 && <p>Je hebt nog geen eigen lijsten.</p>}
             </div>
             <form className="bookmark-new-list" onSubmit={(event) => {
               event.preventDefault();
-              if (!newListName.trim()) return;
-              const createdId = onCreateListForWord(newListName, word.id);
-              if (createdId) rememberSaveList(createdId);
+              const name = newListName.trim();
+              if (!name) return;
+              const alreadyNamed = [...lists, ...pendingBookmarkLists].some((list) => list.name.toLocaleLowerCase("nl-BE") === name.toLocaleLowerCase("nl-BE"));
+              if (alreadyNamed) return;
+              const pending = createCustomList([], name)[0];
+              setPendingBookmarkLists((current) => [...current, pending]);
+              setBookmarkSelectedIds((current) => [...current, pending.id]);
+              setBookmarkLastTouched(pending.id);
               setNewListName("");
             }}>
               <input value={newListName} onChange={(event) => setNewListName(event.target.value)} placeholder="Naam nieuwe lijst" aria-label="Naam nieuwe lijst" />
               <button type="submit" disabled={!newListName.trim()}>+ Nieuwe lijst</button>
             </form>
+            {bookmarkDirty && <p className="bookmark-unsaved-hint" role="status">Niet-opgeslagen wijzigingen</p>}
           </section>
         </div>
       )}
