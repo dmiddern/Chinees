@@ -1,3 +1,4 @@
+import hsk1Examples from "../data/hsk1Examples.json";
 import type { Word } from "../types";
 
 export interface WordExample {
@@ -83,4 +84,17 @@ export function exampleForWord(word: Word): WordExample {
     pinyin: `Jīntiān wǒmen xuéxí “${word.pinyin}” zhège cí.`,
     dutch: `Vandaag leren we het woord “${meaning}”.`,
   };
+}
+
+export interface ContextualWordExample extends WordExample {
+  grammar?: string;
+}
+
+export function examplesForWord(word: Word): ContextualWordExample[] {
+  if (word.level === 1 && !word.custom) {
+    const curatedExamples = (hsk1Examples as Record<string, ContextualWordExample[]>)[word.hanzi];
+    if (curatedExamples?.length) return curatedExamples;
+  }
+  // Existing examples remain available for other HSK levels and custom words.
+  return [exampleForWord(word)];
 }
