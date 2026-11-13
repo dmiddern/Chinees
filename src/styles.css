@@ -1287,3 +1287,45 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 }
 
 .examples-modal-gloss { color: var(--secondary, #777); font-size: 12px; margin: -4px 0 12px; }
+
+
+/* Dedicated sentence practice */
+.sentence-practice-page { max-width: 760px; margin: 0 auto; padding: 20px 16px 110px; }
+.sentence-practice-heading { margin-bottom: 20px; }
+.sentence-practice-heading h1 { font-size: clamp(25px, 6vw, 34px); margin: 4px 0 8px; }
+.sentence-practice-heading p:last-child { color: var(--secondary, #777); line-height: 1.55; }
+.sentence-practice-panel { background: var(--surface, #fff); border: 1px solid var(--border, #ddd); border-radius: 18px; padding: clamp(18px, 4vw, 28px); }
+.sentence-practice-panel h2 { font-size: 20px; margin: 0 0 8px; }
+.sentence-practice-panel > p { line-height: 1.55; }
+.sentence-practice-fieldset { border: 0; margin: 20px 0; padding: 0; display: flex; flex-wrap: wrap; gap: 12px 20px; }
+.sentence-practice-fieldset legend { font-weight: 650; margin-bottom: 10px; }
+.sentence-practice-fieldset label { display: flex; align-items: center; gap: 7px; cursor: pointer; }
+.sentence-practice-fieldset input { accent-color: currentColor; }
+.sentence-practice-session-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; color: var(--secondary, #777); }
+.sentence-practice-reset { border: 0; background: none; color: inherit; cursor: pointer; text-decoration: underline; padding: 8px; }
+.sentence-practice-progress { height: 5px; background: var(--border, #e5e5e5); border-radius: 20px; margin: 14px 0 30px; overflow: hidden; }
+.sentence-practice-progress span { display: block; height: 100%; background: #449B95; border-radius: inherit; transition: width 150ms ease; }
+.sentence-practice-question { font-size: 14px; color: var(--secondary, #777); text-align: center; }
+.sentence-practice-prompt { font-size: clamp(21px, 5vw, 29px); font-weight: 650; min-height: 145px; display: flex; justify-content: center; align-items: center; line-height: 1.55; text-align: center; overflow-wrap: anywhere; }
+.sentence-practice-prompt.hanzi { font-size: clamp(26px, 6vw, 36px); }
+.sentence-practice-audio { display: flex; align-items: center; justify-content: center; gap: 9px; margin: 0 auto 20px; border: 1px solid var(--border, #ddd); padding: 9px 15px; border-radius: 30px; background: transparent; color: inherit; cursor: pointer; }
+.sentence-practice-answer { padding-top: 18px; border-top: 1px solid var(--border, #ddd); }
+.sentence-practice-answer-chinese { font-size: clamp(23px, 6vw, 31px); font-weight: 600; line-height: 1.65; }
+.sentence-practice-inline-audio { vertical-align: middle; display: inline-grid; place-items: center; background: transparent; color: inherit; border: 1px solid var(--border, #ddd); border-radius: 50%; padding: 8px; margin-left: 8px; cursor: pointer; }
+.sentence-practice-pinyin { color: var(--secondary, #777); font-style: italic; font-size: 15px; margin: 6px 0; }
+.sentence-practice-translation { font-size: 17px; line-height: 1.5; }
+.sentence-practice-details-toggle { display: block; width: 100%; text-align: left; border: 0; border-top: 1px solid var(--border, #ddd); background: transparent; color: inherit; margin-top: 18px; padding: 14px 0; cursor: pointer; font-weight: 600; }
+.sentence-practice-grammar { background: var(--background, #f4f4f4); padding: 12px 14px; border-radius: 12px; line-height: 1.5; }
+.sentence-practice-grammar p { margin: 0 0 8px; }
+.sentence-practice-grammar small { color: var(--secondary, #777); }
+.sentence-practice-rating { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+.sentence-practice-rating button { border: 1px solid var(--border, #ccc); border-radius: 12px; padding: 15px 10px; color: inherit; background: transparent; cursor: pointer; font-weight: 650; }
+.sentence-practice-rating button:last-child { background: #27847a; color: white; border-color: #27847a; }
+.sentence-practice-finished { text-align: center; padding: 24px 0; }
+.sentence-practice-finished p { margin: 14px 0 24px; }
+@media(max-width:440px) { .sentence-practice-page { padding: 12px 12px 105px; } .sentence-practice-panel { padding: 16px; } .sentence-practice-fieldset { gap: 11px; } .sentence-practice-fieldset label { font-size: 14px; } }
+
+/* Six independent destinations, including sentence practice. */
+.bottom-nav { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.bottom-nav button { min-width: 0; }
+@media(max-width: 370px) { .bottom-nav button { font-size: 9px; } .bottom-nav button span svg { width: 19px; height: 19px; } }
