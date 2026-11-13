@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { wordsData } from "./data/words";
 import { literalGlosses } from "./data/literalGlosses";
 import { articleKinds, articleLevels, articleSources, articles, type Article, type ArticleKind, type ArticleLevel } from "./data/articles";
@@ -13,7 +14,7 @@ import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettin
 import { searchWords } from "./lib/search";
 import { addCustomWord, loadCustomWords, type NewCustomWord } from "./lib/customWords";
 import { speakMandarin } from "./lib/speech";
-import { exampleForWord } from "./lib/wordExamples";
+import { examplesForWord } from "./lib/wordExamples";
 import type { Direction, HskLevel, ProgressMap, Skill, Word } from "./types";
 
 type Tab = "home" | "learn" | "guide" | "words" | "lists" | "write" | "settings";
@@ -993,17 +994,68 @@ function SkillRating({ label, value, onRate }: { label: string; value?: boolean;
 }
 
 function WordExampleCard({ word, speechRate, compact = false }: { word: Word; speechRate: number; compact?: boolean }) {
-  const example = exampleForWord(word);
+  const [open, setOpen] = useState(false);
+  const [writingCharacter, setWritingCharacter] = useState<string | null>(null);
+  const examples = examplesForWord(word);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        if (writingCharacter) setWritingCharacter(null);
+        else setOpen(false);
+      }
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [open, writingCharacter]);
+
   return (
-    <div className={`word-example ${compact ? "compact" : ""}`}>
-      <div>
-        <small>Voorbeeldzin</small>
-        <strong>{example.chinese}</strong>
-        <span>{example.pinyin}</span>
-        <p>{example.dutch}</p>
-      </div>
-      <button type="button" onClick={() => speakMandarin(example.chinese, speechRate)} aria-label="Uitspraak voorbeeldzin afspelen" title="Uitspraak afspelen"><MonoIcon name="speaker" size={20} /></button>
-    </div>
+    <>
+      <button type="button" className={`examples-trigger ${compact ? "compact" : ""}`}
+        onClick={() => setOpen(true)} aria-label={`Voorbeelden voor ${word.hanzi} bekijken`}>
+        Voorbeelden <span aria-hidden="true">›</span>
+      </button>
+      {open && createPortal(
+        <div className="examples-modal-backdrop" onClick={() => { setWritingCharacter(null); setOpen(false); }}>
+          <section className="examples-modal" role="dialog" aria-modal="true"
+            aria-label={`Voorbeelden voor ${word.hanzi}`} onClick={(event) => event.stopPropagation()}>
+            <header className="examples-modal-header">
+              <div><h2>Voorbeelden · {word.hanzi}</h2><span>{word.pinyin} · {word.meaningNl}</span></div>
+              <button type="button" onClick={() => { setWritingCharacter(null); setOpen(false); }} aria-label="Sluiten">×</button>
+            </header>
+            <div className="examples-modal-body">
+              {examples.map((example, index) => (
+                <section className="examples-modal-item" key={`${example.chinese}-${index}`}>
+                  {examples.length > 1 && <div className="examples-modal-number">Betekenis of gebruik {index + 1}</div>}
+                  <div className="examples-modal-sentence">
+                    <div className="examples-modal-hanzi" lang="zh">
+                      {[...example.chinese].map((char, i) => /[\u3400-\u9fff]/.test(char)
+                        ? <button type="button" className="examples-character" key={i}
+                            onClick={() => setWritingCharacter(char)} aria-label={`Bekijk schrijfvolgorde van ${char}`}>{char}</button>
+                        : <span key={i}>{char}</span>)}
+                    </div>
+                    <button type="button" className="examples-modal-speaker" onClick={() => speakMandarin(example.chinese, speechRate)}
+                      aria-label="Luister naar deze voorbeeldzin"><MonoIcon name="speaker" size={21}/></button>
+                  </div>
+                  <p className="examples-modal-pinyin">{example.pinyin}</p>
+                  <p className="examples-modal-translation">{example.dutch}</p>
+                  {example.grammar && <div className="examples-modal-grammar"><strong>Grammatica en gebruik</strong><p>{example.grammar}</p></div>}
+                </section>
+              ))}
+            </div>
+            {writingCharacter && <div className="examples-writing-overlay" onClick={() => setWritingCharacter(null)}>
+              <div className="examples-writing-panel" onClick={(event) => event.stopPropagation()}>
+                <button type="button" className="examples-writing-close" onClick={() => setWritingCharacter(null)} aria-label="Schrijfvolgorde sluiten">×</button>
+                <h3>Schrijfvolgorde · {writingCharacter}</h3>
+                <StrokeOrderPreview hanzi={writingCharacter}/>
+              </div>
+            </div>}
+          </section>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
 
