@@ -1027,12 +1027,13 @@ function WordExampleCard({ word, speechRate, compact = false }: { word: Word; sp
             <div className="examples-modal-body">
               {examples.map((example, index) => (
                 <section className="examples-modal-item" key={`${example.chinese}-${index}`}>
-                  {examples.length > 1 && <div className="examples-modal-number">Betekenis of gebruik {index + 1}</div>}
+                  {examples.length > 1 && <div className="examples-modal-number">Betekenis of gebruik {index + 1}{example.reading ? ` · ${example.reading}` : ""}</div>}
                   <div className="examples-modal-sentence">
                     <div className="examples-modal-hanzi" lang="zh">
                       {[...example.chinese].map((char, i) => /[\u3400-\u9fff]/.test(char)
                         ? <button type="button" className="examples-character" key={i}
-                            onClick={() => setWritingCharacter(char)} aria-label={`Bekijk schrijfvolgorde van ${char}`}>{char}</button>
+                            onClick={() => setWritingCharacter(char)} aria-label={`Bekijk schrijfvolgorde van ${char}`}
+                            style={{ color: (() => { const tone = example.toneNumbers?.[[...example.chinese.slice(0, i)].filter((c) => /[\u3400-\u9fff]/.test(c)).length]; return tone && tone < 5 ? `var(--tone-${tone})` : undefined; })() }}>{char}</button>
                         : <span key={i}>{char}</span>)}
                     </div>
                     <button type="button" className="examples-modal-speaker" onClick={() => speakMandarin(example.chinese, speechRate)}
@@ -1040,6 +1041,7 @@ function WordExampleCard({ word, speechRate, compact = false }: { word: Word; sp
                   </div>
                   <p className="examples-modal-pinyin">{example.pinyin}</p>
                   <p className="examples-modal-translation">{example.dutch}</p>
+                  {example.gloss && <p className="examples-modal-gloss">{example.gloss}</p>}
                   {example.grammar && <div className="examples-modal-grammar"><strong>Grammatica en gebruik</strong><p>{example.grammar}</p></div>}
                 </section>
               ))}

@@ -1285,3 +1285,5 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   .examples-modal-header { padding: 18px 18px 14px; }
   .examples-modal-body { padding: 0 18px 18px; }
 }
+
+.examples-modal-gloss { color: var(--secondary, #777); font-size: 12px; margin: -4px 0 12px; }
