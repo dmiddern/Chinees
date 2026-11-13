@@ -1182,3 +1182,27 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .learn-page .session-rating-setting strong{font-size:13px}
 .learn-page .session-rating-setting small{font-size:11px;color:var(--session-muted);line-height:1.4}
 .learn-page .session-rating-setting input{width:22px;height:22px;flex:0 0 22px;accent-color:var(--session-accent)}
+
+/* Explicit bookmark save/cancel actions: do not auto-commit checkboxes. */
+.learn-page .bookmark-sheet-actions{
+  display:flex;align-items:center;justify-content:flex-end;gap:8px;
+  flex:0 0 auto;
+}
+.learn-page .session-bookmark-sheet .bookmark-save-button{
+  background:var(--session-accent);
+  border-color:var(--session-accent);
+  color:#fff;
+}
+.learn-page .session-bookmark-sheet .bookmark-save-button:disabled{
+  background:var(--session-surface);
+  border-color:var(--session-border);
+  color:var(--session-muted);
+  opacity:.5;
+  cursor:default;
+}
+.learn-page .bookmark-unsaved-hint{
+  margin:10px 0 0;
+  color:var(--session-accent);
+  font-size:12px;
+  font-weight:700;
+}
