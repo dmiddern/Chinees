@@ -1171,3 +1171,14 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
   .learn-page .flashcard-scroll .word-example.compact{padding:6px 8px;margin-top:4px}
   .learn-page .practice-save-compact{padding:5px 8px}
 }
+
+/* Optional self-rating in the session settings sheet. */
+.learn-page .session-rating-setting{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  min-height:58px;padding:12px 0;border-top:1px solid var(--session-border);
+  cursor:pointer;color:var(--session-ink);
+}
+.learn-page .session-rating-setting span{display:grid;gap:4px;min-width:0}
+.learn-page .session-rating-setting strong{font-size:13px}
+.learn-page .session-rating-setting small{font-size:11px;color:var(--session-muted);line-height:1.4}
+.learn-page .session-rating-setting input{width:22px;height:22px;flex:0 0 22px;accent-color:var(--session-accent)}
