@@ -614,7 +614,11 @@ function Learn({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [bookmarkOpen, setBookmarkOpen] = useState(false);
   const [newListName, setNewListName] = useState("");
-  const [saveListId, setSaveListId] = useState("");
+  const [saveListId, setSaveListId] = useState(() => localStorage.getItem("chinees.last-custom-list.v1") || "");
+  function rememberSaveList(listId: string) {
+    setSaveListId(listId);
+    localStorage.setItem("chinees.last-custom-list.v1", listId);
+  }
 
   function exitSession() {
     if (session && session.index < session.queue.length &&
@@ -786,11 +790,14 @@ function Learn({
         <div>
           {lists.length > 0 ? (
             <>
-              <select aria-label="Kies woordenlijst" value={selectedSaveList?.id || ""} onChange={(event) => setSaveListId(event.target.value)}>
+              <select aria-label="Kies woordenlijst" value={selectedSaveList?.id || ""} onChange={(event) => rememberSaveList(event.target.value)}>
                 {lists.map((list) => <option key={list.id} value={list.id}>{list.name}</option>)}
               </select>
               <button type="button" disabled={!selectedSaveList || selectedSaveList.wordIds.includes(word.id)} onClick={() => {
-                if (selectedSaveList) onToggleWord(selectedSaveList.id, word.id);
+                if (selectedSaveList) {
+                  rememberSaveList(selectedSaveList.id);
+                  onToggleWord(selectedSaveList.id, word.id);
+                }
               }}>{selectedSaveList?.wordIds.includes(word.id) ? "✓ In lijst" : "+ Voeg toe"}</button>
             </>
           ) : (
@@ -824,7 +831,10 @@ function Learn({
             <div className="bookmark-list-options">
               {lists.map((list) => (
                 <label key={list.id}>
-                  <input type="checkbox" checked={list.wordIds.includes(word.id)} onChange={() => onToggleWord(list.id, word.id)} />
+                  <input type="checkbox" checked={list.wordIds.includes(word.id)} onChange={() => {
+                    rememberSaveList(list.id);
+                    onToggleWord(list.id, word.id);
+                  }} />
                   <span>{list.name}</span>
                 </label>
               ))}
