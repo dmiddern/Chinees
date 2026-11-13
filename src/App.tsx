@@ -766,7 +766,7 @@ function Learn({
     savedBookmarkIds.some((id) => !bookmarkSelectedIds.includes(id));
   function saveBookmarkChanges() {
     if (!bookmarkDirty) return;
-    onSaveBookmarkChanges(word.id, bookmarkSelectedIds, pendingBookmarkLists);
+    onSaveBookmarkChanges(activeWord.id, bookmarkSelectedIds, pendingBookmarkLists);
     if (bookmarkLastTouched && bookmarkSelectedIds.includes(bookmarkLastTouched)) {
       rememberSaveList(bookmarkLastTouched);
     }
