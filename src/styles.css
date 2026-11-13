@@ -1329,3 +1329,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .bottom-nav { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 .bottom-nav button { min-width: 0; }
 @media(max-width: 370px) { .bottom-nav button { font-size: 9px; } .bottom-nav button span svg { width: 19px; height: 19px; } }
+
+.sentence-practice-fieldset input[type="number"] { width: 90px; padding: 9px; }
+.sentence-practice-fieldset select { max-width: 100%; padding: 9px; }
+.sentence-practice-fieldset small { flex-basis: 100%; }

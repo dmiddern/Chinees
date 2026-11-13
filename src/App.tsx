@@ -14,7 +14,7 @@ import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettin
 import { searchWords } from "./lib/search";
 import { addCustomWord, loadCustomWords, type NewCustomWord } from "./lib/customWords";
 import { speakMandarin } from "./lib/speech";
-import { examplesForWord } from "./lib/wordExamples";
+import { curatedExamplesForWord, examplesForWord } from "./lib/wordExamples";
 import type { Direction, HskLevel, ProgressMap, Skill, Word } from "./types";
 
 type Tab = "home" | "learn" | "guide" | "words" | "lists" | "write" | "sentences" | "settings";
@@ -290,7 +290,7 @@ function App() {
             onExit={() => setTab("home")}
           />
         )}
-        {tab === "sentences" && <SentencePractice speechRate={settings.speechRate} />}
+        {tab === "sentences" && <SentencePractice speechRate={settings.speechRate} dailySets={dailySets} />}
         {tab === "guide" && (
           <ArticleGuide
             progress={articleProgress}
@@ -997,6 +997,8 @@ function SkillRating({ label, value, onRate }: { label: string; value?: boolean;
 
 type SentenceCard = {
   id: string;
+  wordId: number;
+  level: HskLevel;
   word: string;
   chinese: string;
   pinyin: string;
@@ -1014,9 +1016,11 @@ type SentencePracticeState = {
   results: Record<string, boolean>;
 };
 const sentenceCards: SentenceCard[] = words
-  .filter((word) => word.level === 1 && !word.custom)
-  .flatMap((word) => examplesForWord(word).map((example, index) => ({
+  .filter((word) => !word.custom)
+  .flatMap((word) => curatedExamplesForWord(word).map((example, index) => ({
     id: `${word.id}:${index}`,
+    wordId: word.id,
+    level: word.level,
     word: word.hanzi,
     ...example,
   })));
@@ -1046,9 +1050,17 @@ function restoreSentencePractice(): SentencePracticeState | null {
   }
 }
 
-function SentencePractice({ speechRate }: { speechRate: number }) {
+function SentencePractice({ speechRate, dailySets }: { speechRate: number; dailySets: DailySetMap }) {
   const [direction, setDirection] = useState<Direction>("zh-nl");
-  const [count, setCount] = useState<"10" | "25" | "all">("10");
+  const [count, setCount] = useState("10");
+  const [level, setLevel] = useState<HskLevel | "all">("all");
+  const [onlyLearned, setOnlyLearned] = useState(false);
+  const learnedWordIds = new Set(Object.values(dailySets).flatMap((set) => set.wordIds));
+  const available = sentenceCards.filter((card) => (level === "all" || card.level === level)
+    && (!onlyLearned || learnedWordIds.has(card.wordId)));
+  const requestedCount = Number(count);
+  const validCount = Number.isInteger(requestedCount) && requestedCount >= 1;
+  const sessionCount = validCount ? Math.min(requestedCount, available.length) : 0;
   const [session, setSession] = useState<SentencePracticeState | null>(restoreSentencePractice);
   const [showDetails, setShowDetails] = useState(false);
   const [writingCharacter, setWritingCharacter] = useState<string | null>(null);
@@ -1059,8 +1071,9 @@ function SentencePractice({ speechRate }: { speechRate: number }) {
   }, [session]);
 
   function startSession() {
-    const shuffled = shuffleSentenceCards(sentenceCards);
-    const limit = count === "all" ? shuffled.length : Number(count);
+    if (!sessionCount) return;
+    const shuffled = shuffleSentenceCards(available);
+    const limit = sessionCount;
     setSession({ direction, queue: shuffled.slice(0, limit).map((item) => item.id),
       index: 0, revealed: false, known: 0, missed: 0, results: {} });
     setShowDetails(false);
@@ -1088,24 +1101,37 @@ function SentencePractice({ speechRate }: { speechRate: number }) {
       <header className="sentence-practice-heading">
         <p className="eyebrow">Oefenen</p>
         <h1>Voorbeeldzinnen</h1>
-        <p>Leer volledige zinnen begrijpen en gebruiken. {sentenceCards.length} zinnen beschikbaar.</p>
       </header>
       {!session && (
         <section className="sentence-practice-panel">
-          <h2>Nieuwe oefensessie</h2>
-          <p>De zinnen komen telkens in een willekeurige volgorde. Je beoordeelt zelf of je het antwoord wist.</p>
           <fieldset className="sentence-practice-fieldset">
             <legend>Oefenrichting</legend>
             <label><input type="radio" name="sentence-direction" checked={direction === "zh-nl"} onChange={() => setDirection("zh-nl")} /> Chinees → Nederlands</label>
             <label><input type="radio" name="sentence-direction" checked={direction === "nl-zh"} onChange={() => setDirection("nl-zh")} /> Nederlands → Chinees</label>
           </fieldset>
           <fieldset className="sentence-practice-fieldset">
-            <legend>Aantal zinnen</legend>
-            <label><input type="radio" name="sentence-count" checked={count === "10"} onChange={() => setCount("10")} /> 10</label>
-            <label><input type="radio" name="sentence-count" checked={count === "25"} onChange={() => setCount("25")} /> 25</label>
-            <label><input type="radio" name="sentence-count" checked={count === "all"} onChange={() => setCount("all")} /> Alle {sentenceCards.length}</label>
+            <legend>HSK-niveau</legend>
+            <select aria-label="HSK-niveau" value={level} onChange={(event) => setLevel(event.target.value === "all" ? "all" : event.target.value === "7-9" ? "7-9" : Number(event.target.value) as HskLevel)}>
+              <option value="all">Alle niveaus</option>
+              {hskLevels.map((item) => <option key={item} value={item}>{levelLabel(item)}</option>)}
+            </select>
           </fieldset>
-          <button type="button" className="button primary-button full-button" onClick={startSession}>Start met oefenen</button>
+          <fieldset className="sentence-practice-fieldset">
+            <legend>Woorden</legend>
+            <label><input type="checkbox" checked={onlyLearned} onChange={(event) => setOnlyLearned(event.target.checked)} /> Enkel reeds geleerde woorden</label>
+            {onlyLearned && <small>Woorden die voorkomen in minstens één daglijst onder Leren.</small>}
+          </fieldset>
+          <fieldset className="sentence-practice-fieldset">
+            <legend>Aantal zinnen</legend>
+            <input aria-label="Aantal zinnen" aria-describedby="sentence-maximum" type="number" min={1} max={available.length} step={1} value={count}
+              disabled={!available.length} onChange={(event) => setCount(event.target.value)} />
+            <span id="sentence-maximum" role="status">Maximum: {available.length}</span>
+          </fieldset>
+          {!available.length && <p role="status">{onlyLearned ? "Geen gecureerde voorbeeldzinnen voor geleerde woorden binnen dit HSK-filter." : "Nog geen gecureerde voorbeeldzinnen voor dit HSK-niveau."}</p>}
+          {available.length > 0 && !validCount && <p role="status">Vul een geheel aantal van minstens 1 in.</p>}
+          <button type="button" className="button primary-button full-button" disabled={!sessionCount} onClick={startSession}>
+            {validCount && requestedCount > available.length && available.length > 0 ? `Start met oefenen (${sessionCount} zinnen)` : "Start met oefenen"}
+          </button>
         </section>
       )}
       {session && (

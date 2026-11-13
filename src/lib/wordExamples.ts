@@ -93,6 +93,16 @@ export interface ContextualWordExample extends WordExample {
   gloss?: string;
 }
 
+// Only authored examples are suitable for standalone sentence practice.
+export function curatedExamplesForWord(word: Word): ContextualWordExample[] {
+  if (word.custom) return [];
+  if (word.level === 1) {
+    const examples = (hsk1Examples as Record<string, ContextualWordExample[]>)[word.hanzi];
+    if (examples?.length) return examples;
+  }
+  return curated[word.hanzi] ? [curated[word.hanzi]] : [];
+}
+
 export function examplesForWord(word: Word): ContextualWordExample[] {
   if (word.level === 1 && !word.custom) {
     const curatedExamples = (hsk1Examples as Record<string, ContextualWordExample[]>)[word.hanzi];
