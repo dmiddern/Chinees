@@ -1,0 +1,2552 @@
+{
+  "爱": [
+    {
+      "chinese": "我爱妈妈，也爱爸爸。",
+      "pinyin": "wǒ ài māma, yě ài bàba.",
+      "dutch": "Ik hou van mama en ook van papa.",
+      "grammar": "爱 drukt sterke genegenheid uit; 也 betekent 'ook'."
+    }
+  ],
+  "八": [
+    {
+      "chinese": "我们八点去学校。",
+      "pinyin": "wǒmen bā diǎn qù xuéxiào.",
+      "dutch": "We gaan om acht uur naar school.",
+      "grammar": "Een tijdstip krijgt 点 na het uurgetal."
+    }
+  ],
+  "爸爸": [
+    {
+      "chinese": "爸爸今天不上班。",
+      "pinyin": "bàba jīntiān bù shàngbān.",
+      "dutch": "Papa werkt vandaag niet.",
+      "grammar": "不 ontkent hier het werkwoord 上班."
+    }
+  ],
+  "吧": [
+    {
+      "chinese": "我们一起吃饭吧！",
+      "pinyin": "wǒmen yìqǐ chī fàn ba!",
+      "dutch": "Laten we samen eten!",
+      "grammar": "吧 maakt de zin tot een vriendelijk voorstel."
+    }
+  ],
+  "白天": [
+    {
+      "chinese": "我白天工作，晚上学习。",
+      "pinyin": "wǒ báitiān gōngzuò, wǎnshang xuéxí.",
+      "dutch": "Overdag werk ik en 's avonds studeer ik.",
+      "grammar": "白天 en 晚上 vormen een natuurlijk tijdscontrast."
+    }
+  ],
+  "百": [
+    {
+      "chinese": "这本书一百元。",
+      "pinyin": "zhè běn shū yī bǎi yuán.",
+      "dutch": "Dit boek kost honderd yuan.",
+      "grammar": "百 volgt op het honderdtal; de prijs eindigt met 元."
+    }
+  ],
+  "半": [
+    {
+      "chinese": "现在八点半。",
+      "pinyin": "xiànzài bā diǎn bàn.",
+      "dutch": "Het is nu halfnegen.",
+      "grammar": "In het Chinees betekent 八点半 letterlijk acht uur plus een halfuur."
+    }
+  ],
+  "包子": [
+    {
+      "chinese": "早上我吃两个包子。",
+      "pinyin": "zǎoshang wǒ chī liǎng gè bāozi.",
+      "dutch": "Ik eet 's ochtends twee gestoomde broodjes.",
+      "grammar": "两 + maatwoord 个 telt de broodjes."
+    }
+  ],
+  "杯子": [
+    {
+      "chinese": "桌子上有三个杯子。",
+      "pinyin": "zhuōzi shàng yǒu sān gè bēizi.",
+      "dutch": "Op tafel staan drie bekers.",
+      "grammar": "有 beschrijft wat op een plaats aanwezig is."
+    }
+  ],
+  "本": [
+    {
+      "chinese": "我想买一本汉语书。",
+      "pinyin": "wǒ xiǎng mǎi yī běn Hànyǔ shū.",
+      "dutch": "Ik wil een Chinees boek kopen.",
+      "grammar": "本 is het maatwoord voor boeken."
+    }
+  ],
+  "边": [
+    {
+      "chinese": "学校在那边。",
+      "pinyin": "xuéxiào zài nàbiān.",
+      "dutch": "De school ligt daar aan die kant.",
+      "grammar": "那边 duidt een richting of plaats aan."
+    }
+  ],
+  "病": [
+    {
+      "chinese": "他的病好了吗？",
+      "pinyin": "tā de bìng hǎo le ma?",
+      "dutch": "Is hij van zijn ziekte hersteld?",
+      "grammar": "病 is een zelfstandig naamwoord; 好了 drukt herstel uit."
+    },
+    {
+      "chinese": "他今天有病，不能上班。",
+      "pinyin": "tā jīntiān yǒu bìng, bù néng shàngbān.",
+      "dutch": "Hij is vandaag ziek en kan niet werken.",
+      "grammar": "有病 drukt ziekte uit; in andere contexten kan het onbeleefd klinken."
+    }
+  ],
+  "不": [
+    {
+      "chinese": "我不喝茶，我喝水。",
+      "pinyin": "wǒ bù hē chá, wǒ hē shuǐ.",
+      "dutch": "Ik drink geen thee, ik drink water.",
+      "grammar": "不 ontkent een gewoonte of voorkeur."
+    }
+  ],
+  "不客气": [
+    {
+      "chinese": "“谢谢！”“不客气！”",
+      "pinyin": "“xièxie!” “bú kèqi!”",
+      "dutch": "‘Dank je!’ ‘Graag gedaan!’",
+      "grammar": "不客气 is de gebruikelijke reactie op 谢谢."
+    }
+  ],
+  "不要": [
+    {
+      "chinese": "不要喝太多水。",
+      "pinyin": "búyào hē tài duō shuǐ.",
+      "dutch": "Drink niet te veel water.",
+      "grammar": "不要 + werkwoord is hier een verbod of advies."
+    }
+  ],
+  "菜": [
+    {
+      "chinese": "这个菜很好吃。",
+      "pinyin": "zhège cài hěn hǎochī.",
+      "dutch": "Dit gerecht is erg lekker.",
+      "grammar": "菜 betekent hier een bereid gerecht, niet alleen groente."
+    }
+  ],
+  "茶": [
+    {
+      "chinese": "你想喝茶还是水？",
+      "pinyin": "nǐ xiǎng hē chá háishi shuǐ?",
+      "dutch": "Wil je thee of water drinken?",
+      "grammar": "还是 verbindt twee alternatieven in een vraag."
+    }
+  ],
+  "唱": [
+    {
+      "chinese": "姐姐喜欢唱歌。",
+      "pinyin": "jiějie xǐhuan chàng gē.",
+      "dutch": "Mijn oudere zus zingt graag.",
+      "grammar": "唱歌 is de gewone combinatie voor 'zingen'."
+    }
+  ],
+  "超市": [
+    {
+      "chinese": "我去超市买牛奶。",
+      "pinyin": "wǒ qù chāoshì mǎi niúnǎi.",
+      "dutch": "Ik ga naar de supermarkt om melk te kopen.",
+      "grammar": "去 + plaats + werkwoord drukt het doel van een verplaatsing uit."
+    }
+  ],
+  "车": [
+    {
+      "chinese": "爸爸的车在外边。",
+      "pinyin": "bàba de chē zài wàibian.",
+      "dutch": "Papa's auto staat buiten.",
+      "grammar": "的 drukt bezit uit."
+    }
+  ],
+  "吃": [
+    {
+      "chinese": "你中午吃什么？",
+      "pinyin": "nǐ zhōngwǔ chī shénme?",
+      "dutch": "Wat eet je vanmiddag?",
+      "grammar": "什么 staat op de plaats van het gevraagde voorwerp."
+    }
+  ],
+  "出租车": [
+    {
+      "chinese": "下雨了，我们坐出租车吧。",
+      "pinyin": "xià yǔ le, wǒmen zuò chūzūchē ba.",
+      "dutch": "Het regent, laten we een taxi nemen.",
+      "grammar": "坐 wordt gebruikt voor reizen met een vervoermiddel."
+    }
+  ],
+  "穿": [
+    {
+      "chinese": "今天很冷，你穿什么？",
+      "pinyin": "jīntiān hěn lěng, nǐ chuān shénme?",
+      "dutch": "Het is vandaag koud; wat trek je aan?",
+      "grammar": "穿 gebruik je voor het dragen van kleding."
+    }
+  ],
+  "打电话": [
+    {
+      "chinese": "我晚上给妈妈打电话。",
+      "pinyin": "wǒ wǎnshang gěi māma dǎ diànhuà.",
+      "dutch": "Ik bel mama vanavond.",
+      "grammar": "给 + persoon + 打电话 geeft aan wie je belt."
+    }
+  ],
+  "大": [
+    {
+      "chinese": "这间教室很大。",
+      "pinyin": "zhè jiān jiàoshì hěn dà.",
+      "dutch": "Dit klaslokaal is groot.",
+      "grammar": "很 staat vaak tussen onderwerp en bijvoeglijk naamwoord."
+    }
+  ],
+  "大家": [
+    {
+      "chinese": "大家都喜欢这个老师。",
+      "pinyin": "dàjiā dōu xǐhuan zhège lǎoshī.",
+      "dutch": "Iedereen vindt deze leraar leuk.",
+      "grammar": "都 benadrukt dat de uitspraak voor iedereen geldt."
+    }
+  ],
+  "大学": [
+    {
+      "chinese": "哥哥在大学学习汉语。",
+      "pinyin": "gēge zài dàxué xuéxí Hànyǔ.",
+      "dutch": "Mijn oudere broer studeert Chinees aan de universiteit.",
+      "grammar": "在 + plaats beschrijft waar iets gebeurt."
+    }
+  ],
+  "大学生": [
+    {
+      "chinese": "我姐姐是大学生。",
+      "pinyin": "wǒ jiějie shì dàxuéshēng.",
+      "dutch": "Mijn oudere zus is universiteitsstudent.",
+      "grammar": "是 verbindt een persoon met een rol."
+    }
+  ],
+  "到": [
+    {
+      "chinese": "火车九点到。",
+      "pinyin": "huǒchē jiǔ diǎn dào.",
+      "dutch": "De trein komt om negen uur aan.",
+      "grammar": "到 beschrijft het aankomen op een plaats of tijdstip."
+    }
+  ],
+  "的": [
+    {
+      "chinese": "这是妹妹的书。",
+      "pinyin": "zhè shì mèimei de shū.",
+      "dutch": "Dit is het boek van mijn jongere zus.",
+      "grammar": "的 vormt een bezitsconstructie: persoon + 的 + ding."
+    }
+  ],
+  "第": [
+    {
+      "chinese": "今天是第一天。",
+      "pinyin": "jīntiān shì dì yī tiān.",
+      "dutch": "Vandaag is de eerste dag.",
+      "grammar": "第 vóór een telwoord maakt er een rangtelwoord van."
+    }
+  ],
+  "弟弟": [
+    {
+      "chinese": "弟弟今年十岁。",
+      "pinyin": "dìdi jīnnián shí suì.",
+      "dutch": "Mijn jongere broer is dit jaar tien.",
+      "grammar": "岁 volgt op de leeftijd."
+    }
+  ],
+  "点": [
+    {
+      "chinese": "现在几点？",
+      "pinyin": "xiànzài jǐ diǎn?",
+      "dutch": "Hoe laat is het nu?",
+      "grammar": "几点 vraagt naar het uur."
+    },
+    {
+      "chinese": "我想吃一点儿米饭。",
+      "pinyin": "wǒ xiǎng chī yìdiǎnr mǐfàn.",
+      "dutch": "Ik wil een beetje rijst.",
+      "grammar": "一点儿 verwijst naar een kleine hoeveelheid, anders dan 点 bij een kloktijd."
+    }
+  ],
+  "店": [
+    {
+      "chinese": "这家店卖什么？",
+      "pinyin": "zhè jiā diàn mài shénme?",
+      "dutch": "Wat verkoopt deze winkel?",
+      "grammar": "家 is een maatwoord voor winkels en bedrijven."
+    }
+  ],
+  "电话": [
+    {
+      "chinese": "你的电话是多少？",
+      "pinyin": "nǐ de diànhuà shì duōshao?",
+      "dutch": "Wat is jouw telefoonnummer?",
+      "grammar": "多少 vraagt naar een getal."
+    }
+  ],
+  "电脑": [
+    {
+      "chinese": "我的电脑在桌子上。",
+      "pinyin": "wǒ de diànnǎo zài zhuōzi shàng.",
+      "dutch": "Mijn computer staat op het bureau.",
+      "grammar": "在 ... 上 betekent 'op'."
+    }
+  ],
+  "电视": [
+    {
+      "chinese": "晚上我们一起看电视。",
+      "pinyin": "wǎnshang wǒmen yìqǐ kàn diànshì.",
+      "dutch": "We kijken 's avonds samen tv.",
+      "grammar": "看电视 is de vaste combinatie voor televisiekijken."
+    }
+  ],
+  "电影": [
+    {
+      "chinese": "这个电影好看吗？",
+      "pinyin": "zhège diànyǐng hǎokàn ma?",
+      "dutch": "Is deze film goed?",
+      "grammar": "好看 beoordeelt iets dat je bekijkt."
+    }
+  ],
+  "电影院": [
+    {
+      "chinese": "电影院在学校后边。",
+      "pinyin": "diànyǐngyuàn zài xuéxiào hòu biān.",
+      "dutch": "De bioscoop ligt achter de school.",
+      "grammar": "后边 duidt een plaats achter iets aan."
+    }
+  ],
+  "东西": [
+    {
+      "chinese": "这些东西是谁的？",
+      "pinyin": "zhèxiē dōngxi shì shéi/shuí de?",
+      "dutch": "Van wie zijn deze spullen?",
+      "grammar": "谁的 vraagt naar de eigenaar."
+    }
+  ],
+  "都": [
+    {
+      "chinese": "他们都在家。",
+      "pinyin": "tāmen dōu zài jiā.",
+      "dutch": "Ze zijn allemaal thuis.",
+      "grammar": "都 staat vóór het werkwoord of de plaatsaanduiding."
+    }
+  ],
+  "读": [
+    {
+      "chinese": "请读这个汉字。",
+      "pinyin": "qǐng dú zhège Hànzì.",
+      "dutch": "Lees dit Chinese karakter, alsjeblieft.",
+      "grammar": "请 + werkwoord is een beleefde opdracht."
+    }
+  ],
+  "读书": [
+    {
+      "chinese": "妹妹在房间里读书。",
+      "pinyin": "mèimei zài fángjiān lǐ dúshū.",
+      "dutch": "Mijn zusje leest in haar kamer.",
+      "grammar": "读书 betekent hier lezen, afhankelijk van de context ook studeren."
+    }
+  ],
+  "对": [
+    {
+      "chinese": "对，这个字是“人”。",
+      "pinyin": "duì, zhège zì shì “rén”.",
+      "dutch": "Ja, juist, dit karakter is ‘人’.",
+      "grammar": "对 kan een antwoord bevestigen."
+    },
+    {
+      "chinese": "这个答案不对。",
+      "pinyin": "zhège ? ? bù duì.",
+      "dutch": "Dit antwoord is niet juist.",
+      "grammar": "对 betekent hier correct; 答案 valt buiten HSK1."
+    }
+  ],
+  "对不起": [
+    {
+      "chinese": "对不起，我来晚了。",
+      "pinyin": "duìbuqǐ, wǒ lái wǎn le.",
+      "dutch": "Sorry, ik ben te laat.",
+      "grammar": "对不起 is een verontschuldiging; 了 duidt een verandering aan."
+    }
+  ],
+  "多": [
+    {
+      "chinese": "这里的人很多。",
+      "pinyin": "zhèlǐ de rén hěn duō.",
+      "dutch": "Hier zijn veel mensen.",
+      "grammar": "很多 volgt op het zelfstandig naamwoord met het patroon 人很多."
+    },
+    {
+      "chinese": "你想多吃一点儿吗？",
+      "pinyin": "nǐ xiǎng duō chī yìdiǎnr ma?",
+      "dutch": "Wil je iets meer eten?",
+      "grammar": "多 vóór een werkwoord drukt een grotere hoeveelheid uit."
+    }
+  ],
+  "多少": [
+    {
+      "chinese": "这件衣服多少钱？",
+      "pinyin": "zhè jiàn yīfu duōshao qián?",
+      "dutch": "Hoeveel kost dit kledingstuk?",
+      "grammar": "多少钱 vraagt naar de prijs."
+    }
+  ],
+  "儿子": [
+    {
+      "chinese": "我儿子今年上小学。",
+      "pinyin": "wǒ érzi jīnnián shàng xiǎoxué.",
+      "dutch": "Mijn zoon gaat dit jaar naar de lagere school.",
+      "grammar": "上小学 betekent naar de lagere school gaan."
+    }
+  ],
+  "二": [
+    {
+      "chinese": "我有二十本书。",
+      "pinyin": "wǒ yǒu èr shí běn shū.",
+      "dutch": "Ik heb twintig boeken.",
+      "grammar": "二 wordt gebruikt in tientallen, zoals 二十."
+    }
+  ],
+  "饭": [
+    {
+      "chinese": "饭好了，我们吃吧。",
+      "pinyin": "fàn hǎo le, wǒmen chī ba.",
+      "dutch": "Het eten is klaar, laten we eten.",
+      "grammar": "饭 kan naar een maaltijd verwijzen; 好了 betekent klaar."
+    }
+  ],
+  "饭店": [
+    {
+      "chinese": "这家饭店的饺子好吃。",
+      "pinyin": "zhè jiā fàndiàn de jiǎozi hǎochī.",
+      "dutch": "De dumplings van dit restaurant zijn lekker.",
+      "grammar": "这家 duidt één restaurant aan."
+    }
+  ],
+  "房间": [
+    {
+      "chinese": "我的房间有一张桌子。",
+      "pinyin": "wǒ de fángjiān yǒu yī zhāng zhuōzi.",
+      "dutch": "In mijn kamer staat een tafel.",
+      "grammar": "有 drukt bestaan of aanwezigheid uit."
+    }
+  ],
+  "非常": [
+    {
+      "chinese": "今天的天气非常好。",
+      "pinyin": "jīntiān de tiānqì fēicháng hǎo.",
+      "dutch": "Het weer is vandaag erg goed.",
+      "grammar": "非常 versterkt het bijvoeglijk naamwoord 好."
+    }
+  ],
+  "飞机": [
+    {
+      "chinese": "明天我们坐飞机去中国。",
+      "pinyin": "míngtiān wǒmen zuò fēijī qù Zhōngguó.",
+      "dutch": "Morgen vliegen we naar China.",
+      "grammar": "坐飞机 betekent met het vliegtuig reizen."
+    }
+  ],
+  "分": [
+    {
+      "chinese": "现在九点十分。",
+      "pinyin": "xiànzài jiǔ diǎn shí fēn.",
+      "dutch": "Het is nu tien over negen.",
+      "grammar": "分 geeft minuten aan na 点."
+    }
+  ],
+  "分钟": [
+    {
+      "chinese": "我等你十分钟。",
+      "pinyin": "wǒ děng nǐ shí fēnzhōng.",
+      "dutch": "Ik wacht tien minuten op jou.",
+      "grammar": "分钟 is een tijdsduur, geen kloktijd."
+    }
+  ],
+  "高兴": [
+    {
+      "chinese": "见到你，我很高兴。",
+      "pinyin": "jiàn dào nǐ, wǒ hěn gāoxìng.",
+      "dutch": "Ik ben blij je te zien.",
+      "grammar": "很高兴 drukt een gevoel uit."
+    }
+  ],
+  "歌": [
+    {
+      "chinese": "这首歌很好听。",
+      "pinyin": "zhè shǒu gē hěn hǎotīng.",
+      "dutch": "Dit lied klinkt erg mooi.",
+      "grammar": "首 is het maatwoord voor liedjes."
+    }
+  ],
+  "哥哥": [
+    {
+      "chinese": "哥哥会开车。",
+      "pinyin": "gēge huì kāichē.",
+      "dutch": "Mijn oudere broer kan autorijden.",
+      "grammar": "会 drukt een aangeleerde vaardigheid uit."
+    }
+  ],
+  "个": [
+    {
+      "chinese": "我有一个朋友。",
+      "pinyin": "wǒ yǒu yī gè péngyou.",
+      "dutch": "Ik heb een vriend.",
+      "grammar": "个 is een veelgebruikt algemeen maatwoord."
+    }
+  ],
+  "给": [
+    {
+      "chinese": "妈妈给我一本书。",
+      "pinyin": "māma gěi wǒ yī běn shū.",
+      "dutch": "Mama geeft mij een boek.",
+      "grammar": "Bij geven volgt na 给 eerst de ontvanger en dan het voorwerp."
+    },
+    {
+      "chinese": "我给你买一杯茶。",
+      "pinyin": "wǒ gěi nǐ mǎi yī ? chá.",
+      "dutch": "Ik koop een kop thee voor jou.",
+      "grammar": "给 + persoon + werkwoord vertelt voor wie je iets doet."
+    }
+  ],
+  "公司": [
+    {
+      "chinese": "爸爸在公司工作。",
+      "pinyin": "bàba zài gōngsī gōngzuò.",
+      "dutch": "Papa werkt bij een bedrijf.",
+      "grammar": "在 geeft de plaats van de handeling aan."
+    }
+  ],
+  "工作": [
+    {
+      "chinese": "我星期日不工作。",
+      "pinyin": "wǒ xīngqīrì bù gōngzuò.",
+      "dutch": "Ik werk niet op zondag.",
+      "grammar": "工作 is hier een werkwoord, geen zelfstandig naamwoord."
+    }
+  ],
+  "狗": [
+    {
+      "chinese": "那只狗很小。",
+      "pinyin": "nà zhǐ gǒu hěn xiǎo.",
+      "dutch": "Die hond is klein.",
+      "grammar": "只 is het maatwoord voor veel dieren."
+    }
+  ],
+  "贵": [
+    {
+      "chinese": "这件衣服太贵了。",
+      "pinyin": "zhè jiàn yīfu tài guì le.",
+      "dutch": "Dit kledingstuk is veel te duur.",
+      "grammar": "太 + bijvoeglijk naamwoord + 了 drukt een sterke beoordeling uit."
+    }
+  ],
+  "国": [
+    {
+      "chinese": "中国是一个大国。",
+      "pinyin": "Zhōngguó shì yī gè dà guó.",
+      "dutch": "China is een groot land.",
+      "grammar": "国 betekent 'land' en vormt samenstellingen als 中国."
+    }
+  ],
+  "还": [
+    {
+      "chinese": "现在还早。",
+      "pinyin": "xiànzài huán zǎo.",
+      "dutch": "Het is nog vroeg.",
+      "grammar": "还 drukt hier uit dat een toestand nog voortduurt."
+    },
+    {
+      "chinese": "我还想喝一杯水。",
+      "pinyin": "wǒ huán xiǎng hē yī ? shuǐ.",
+      "dutch": "Ik wil nog een glas water.",
+      "grammar": "还 drukt een aanvullende of voortgezette wens uit."
+    }
+  ],
+  "孩子": [
+    {
+      "chinese": "那两个孩子是我的学生。",
+      "pinyin": "nà liǎng gè háizi shì wǒ de xuéshēng.",
+      "dutch": "Die twee kinderen zijn mijn leerlingen.",
+      "grammar": "两 komt vóór het maatwoord 个."
+    }
+  ],
+  "汉语": [
+    {
+      "chinese": "她会说汉语。",
+      "pinyin": "tā huì shuō Hànyǔ.",
+      "dutch": "Zij kan Mandarijn spreken.",
+      "grammar": "说 wordt gebruikt voor een taal spreken."
+    }
+  ],
+  "汉字": [
+    {
+      "chinese": "这个汉字怎么写？",
+      "pinyin": "zhège Hànzì zěnme xiě?",
+      "dutch": "Hoe schrijf je dit Chinese karakter?",
+      "grammar": "怎么 + werkwoord vraagt naar de manier."
+    }
+  ],
+  "好": [
+    {
+      "chinese": "你的汉语很好。",
+      "pinyin": "nǐ de Hànyǔ hěn hǎo.",
+      "dutch": "Je Chinees is heel goed.",
+      "grammar": "很好 beoordeelt hier de taalvaardigheid."
+    }
+  ],
+  "好吃": [
+    {
+      "chinese": "妈妈做的饭很好吃。",
+      "pinyin": "māma zuò de fàn hěn hǎochī.",
+      "dutch": "Het eten dat mama maakt is lekker.",
+      "grammar": "好吃 beoordeelt eten of drinken op smaak."
+    }
+  ],
+  "好看": [
+    {
+      "chinese": "你的新衣服真好看！",
+      "pinyin": "nǐ de xīn yīfu zhēn hǎokàn!",
+      "dutch": "Je nieuwe kleren zien er echt mooi uit!",
+      "grammar": "真 versterkt een positieve beoordeling."
+    }
+  ],
+  "好听": [
+    {
+      "chinese": "这首歌真好听。",
+      "pinyin": "zhè shǒu gē zhēn hǎotīng.",
+      "dutch": "Dit lied klinkt echt mooi.",
+      "grammar": "好听 wordt gebruikt voor aangenaam geluid."
+    }
+  ],
+  "好玩儿": [
+    {
+      "chinese": "这个游戏很好玩儿。",
+      "pinyin": "zhège yóuxì hěn hǎowánr.",
+      "dutch": "Dit spel is erg leuk.",
+      "grammar": "好玩儿 beoordeelt een activiteit als leuk; 游戏 valt buiten HSK1."
+    }
+  ],
+  "号": [
+    {
+      "chinese": "今天是五月八号。",
+      "pinyin": "jīntiān shì wǔ yuè bā hào.",
+      "dutch": "Vandaag is het 8 mei.",
+      "grammar": "号 volgt op het dagnummer in een datum."
+    }
+  ],
+  "喝": [
+    {
+      "chinese": "天气热，我想喝水。",
+      "pinyin": "tiānqì rè, wǒ xiǎng hē shuǐ.",
+      "dutch": "Het is warm, ik wil water drinken.",
+      "grammar": "想 + werkwoord drukt een wens uit."
+    }
+  ],
+  "和": [
+    {
+      "chinese": "我和姐姐一起去学校。",
+      "pinyin": "wǒ hé jiějie yìqǐ qù xuéxiào.",
+      "dutch": "Mijn zus en ik gaan samen naar school.",
+      "grammar": "和 verbindt twee zelfstandige naamwoorden."
+    },
+    {
+      "chinese": "我想和你说话。",
+      "pinyin": "wǒ xiǎng hé nǐ shuōhuà.",
+      "dutch": "Ik wil met jou praten.",
+      "grammar": "和 + persoon kan het gezelschap bij een handeling aangeven."
+    }
+  ],
+  "很": [
+    {
+      "chinese": "这个苹果很甜。",
+      "pinyin": "zhège píngguǒ hěn tián.",
+      "dutch": "Deze appel is zoet.",
+      "grammar": "很 kan de verbinding maken tussen onderwerp en eigenschap; 甜 valt buiten HSK1."
+    }
+  ],
+  "后": [
+    {
+      "chinese": "下课后，我回家。",
+      "pinyin": "xiàkè hòu, wǒ huí jiā.",
+      "dutch": "Na de les ga ik naar huis.",
+      "grammar": "后 staat na een gebeurtenis en betekent 'na'."
+    }
+  ],
+  "回": [
+    {
+      "chinese": "我明天回家。",
+      "pinyin": "wǒ míngtiān huí jiā.",
+      "dutch": "Morgen ga ik naar huis terug.",
+      "grammar": "回 beschrijft teruggaan naar een eerdere plaats."
+    }
+  ],
+  "会": [
+    {
+      "chinese": "我会写汉字。",
+      "pinyin": "wǒ huì xiě Hànzì.",
+      "dutch": "Ik kan Chinese karakters schrijven.",
+      "grammar": "会 duidt een aangeleerde vaardigheid aan."
+    },
+    {
+      "chinese": "明天会下雨。",
+      "pinyin": "míngtiān huì xià yǔ.",
+      "dutch": "Morgen zal het regenen.",
+      "grammar": "会 duidt hier een verwachting aan, geen aangeleerde vaardigheid."
+    }
+  ],
+  "火车": [
+    {
+      "chinese": "火车什么时候来？",
+      "pinyin": "huǒchē shénme shíhou lái?",
+      "dutch": "Wanneer komt de trein?",
+      "grammar": "什么时候 vraagt naar een tijdstip."
+    }
+  ],
+  "鸡蛋": [
+    {
+      "chinese": "早饭我吃一个鸡蛋。",
+      "pinyin": "zǎofàn wǒ chī yī gè jīdàn.",
+      "dutch": "Bij het ontbijt eet ik een ei.",
+      "grammar": "一个 is een gebruikelijke hoeveelheid voor een ei."
+    }
+  ],
+  "几": [
+    {
+      "chinese": "你有几个哥哥？",
+      "pinyin": "nǐ yǒu jǐ gè gēge?",
+      "dutch": "Hoeveel oudere broers heb je?",
+      "grammar": "几 vraagt naar een klein aantal en neemt een maatwoord."
+    }
+  ],
+  "家": [
+    {
+      "chinese": "我家有五个人。",
+      "pinyin": "wǒ jiā yǒu wǔ gè rén.",
+      "dutch": "Ons gezin bestaat uit vijf personen.",
+      "grammar": "家 betekent hier gezin of huishouden."
+    }
+  ],
+  "家人": [
+    {
+      "chinese": "星期天我和家人一起吃饭。",
+      "pinyin": "xīngqītiān wǒ hé jiārén yìqǐ chī fàn.",
+      "dutch": "Zondag eet ik samen met mijn familie.",
+      "grammar": "和 verbindt de deelnemer met 家人."
+    }
+  ],
+  "见": [
+    {
+      "chinese": "明天见！",
+      "pinyin": "míngtiān jiàn!",
+      "dutch": "Tot morgen!",
+      "grammar": "见 wordt in een afscheid gebruikt om weerzien uit te drukken."
+    }
+  ],
+  "件": [
+    {
+      "chinese": "我买了两件衣服。",
+      "pinyin": "wǒ mǎi le liǎng jiàn yīfu.",
+      "dutch": "Ik heb twee kledingstukken gekocht.",
+      "grammar": "件 is een maatwoord voor kleding."
+    }
+  ],
+  "饺子": [
+    {
+      "chinese": "我们晚上吃饺子吧。",
+      "pinyin": "wǒmen wǎnshang chī jiǎozi ba.",
+      "dutch": "Laten we vanavond dumplings eten.",
+      "grammar": "吧 verzacht het voorstel."
+    }
+  ],
+  "叫": [
+    {
+      "chinese": "我叫小明。",
+      "pinyin": "wǒ jiào Xiǎomíng.",
+      "dutch": "Ik heet Xiaoming.",
+      "grammar": "叫 + naam geeft aan hoe iemand heet."
+    }
+  ],
+  "姐姐": [
+    {
+      "chinese": "姐姐在医院工作。",
+      "pinyin": "jiějie zài yīyuàn gōngzuò.",
+      "dutch": "Mijn oudere zus werkt in het ziekenhuis.",
+      "grammar": "在 + plaats + werkwoord geeft de werkplek aan."
+    }
+  ],
+  "今年": [
+    {
+      "chinese": "我今年二十岁。",
+      "pinyin": "wǒ jīnnián èr shí suì.",
+      "dutch": "Ik ben dit jaar twintig.",
+      "grammar": "今年 staat vóór de mededeling over leeftijd."
+    }
+  ],
+  "今天": [
+    {
+      "chinese": "今天星期五。",
+      "pinyin": "jīntiān xīngqī wǔ.",
+      "dutch": "Vandaag is het vrijdag.",
+      "grammar": "Een dag van de week kan zonder 是 na 今天 staan."
+    }
+  ],
+  "九": [
+    {
+      "chinese": "我有九个苹果。",
+      "pinyin": "wǒ yǒu jiǔ gè píngguǒ.",
+      "dutch": "Ik heb negen appels.",
+      "grammar": "Een telwoord krijgt voor een zelfstandig naamwoord een maatwoord."
+    }
+  ],
+  "觉得": [
+    {
+      "chinese": "我觉得这本书很好看。",
+      "pinyin": "wǒ juéde zhè běn shū hěn hǎokàn.",
+      "dutch": "Ik vind dit boek erg goed.",
+      "grammar": "觉得 leidt een persoonlijke mening in."
+    }
+  ],
+  "开": [
+    {
+      "chinese": "请开门。",
+      "pinyin": "qǐng kāi mén.",
+      "dutch": "Doe de deur open, alsjeblieft.",
+      "grammar": "开 kan openen of aanzetten betekenen."
+    },
+    {
+      "chinese": "爸爸会开车。",
+      "pinyin": "bàba huì kāichē.",
+      "dutch": "Papa kan autorijden.",
+      "grammar": "开 + 车 betekent een voertuig besturen."
+    }
+  ],
+  "开车": [
+    {
+      "chinese": "我爸爸每天开车上班。",
+      "pinyin": "wǒ bàba měi tiān kāichē shàngbān.",
+      "dutch": "Mijn vader rijdt elke dag met de auto naar zijn werk.",
+      "grammar": "开车 betekent besturen van een auto."
+    }
+  ],
+  "看": [
+    {
+      "chinese": "你看，那是我的老师！",
+      "pinyin": "nǐ kàn, nà shì wǒ de lǎoshī!",
+      "dutch": "Kijk, dat is mijn leraar!",
+      "grammar": "看 kan een opdracht zijn om ergens naar te kijken."
+    },
+    {
+      "chinese": "我晚上看书。",
+      "pinyin": "wǒ wǎnshang kàn shū.",
+      "dutch": "Ik lees 's avonds boeken.",
+      "grammar": "看书 betekent lezen, hoewel 看 letterlijk kijken is."
+    }
+  ],
+  "看病": [
+    {
+      "chinese": "她今天去医院看病。",
+      "pinyin": "tā jīntiān qù yīyuàn kànbìng.",
+      "dutch": "Zij gaat vandaag naar het ziekenhuis voor een consult.",
+      "grammar": "看病 gebruik je voor een arts bezoeken vanwege ziekte."
+    }
+  ],
+  "看见": [
+    {
+      "chinese": "我看见你的车了。",
+      "pinyin": "wǒ kànjiàn nǐ de chē le.",
+      "dutch": "Ik heb je auto gezien.",
+      "grammar": "看见 benadrukt het resultaat van kijken."
+    }
+  ],
+  "可以": [
+    {
+      "chinese": "这里可以坐吗？",
+      "pinyin": "zhèlǐ kěyǐ zuò ma?",
+      "dutch": "Mag ik hier zitten?",
+      "grammar": "可以 vraagt hier naar toestemming."
+    },
+    {
+      "chinese": "我可以喝水吗？",
+      "pinyin": "wǒ kěyǐ hē shuǐ ma?",
+      "dutch": "Mag ik wat water drinken?",
+      "grammar": "可以 vraagt hier beleefd om toestemming."
+    }
+  ],
+  "课": [
+    {
+      "chinese": "我们今天有三节课。",
+      "pinyin": "wǒmen jīntiān yǒu sān jié kè.",
+      "dutch": "We hebben vandaag drie lessen.",
+      "grammar": "节 is een maatwoord voor lessen."
+    }
+  ],
+  "口": [
+    {
+      "chinese": "我家有四口人。",
+      "pinyin": "wǒ jiā yǒu sì kǒu rén.",
+      "dutch": "Ons gezin telt vier personen.",
+      "grammar": "口 wordt als maatwoord gebruikt voor gezinsleden."
+    }
+  ],
+  "块": [
+    {
+      "chinese": "这个面包三块钱。",
+      "pinyin": "zhège miànbāo sān kuài qián.",
+      "dutch": "Dit brood kost drie yuan.",
+      "grammar": "块 is een informele munteenheid voor yuan."
+    },
+    {
+      "chinese": "我买了两块面包。",
+      "pinyin": "wǒ mǎi le liǎng kuài miànbāo.",
+      "dutch": "Ik heb twee stukken brood gekocht.",
+      "grammar": "块 is hier een maatwoord voor stukken, geen munteenheid."
+    }
+  ],
+  "来": [
+    {
+      "chinese": "你明天来我家吗？",
+      "pinyin": "nǐ míngtiān lái wǒ jiā ma?",
+      "dutch": "Kom je morgen bij mij thuis?",
+      "grammar": "来 drukt beweging naar de spreker toe uit."
+    }
+  ],
+  "老师": [
+    {
+      "chinese": "老师正在写汉字。",
+      "pinyin": "lǎoshī zhèngzài xiě Hànzì.",
+      "dutch": "De leraar is Chinese karakters aan het schrijven.",
+      "grammar": "正在 geeft een handeling aan die nu bezig is."
+    }
+  ],
+  "了": [
+    {
+      "chinese": "下雨了。",
+      "pinyin": "xià yǔ le.",
+      "dutch": "Het is begonnen te regenen.",
+      "grammar": "了 drukt hier een verandering van toestand uit."
+    },
+    {
+      "chinese": "我买了两个苹果。",
+      "pinyin": "wǒ mǎi le liǎng gè píngguǒ.",
+      "dutch": "Ik heb twee appels gekocht.",
+      "grammar": "了 achter een werkwoord markeert een afgeronde gebeurtenis."
+    }
+  ],
+  "冷": [
+    {
+      "chinese": "外边很冷，穿上衣服吧。",
+      "pinyin": "wàibian hěn lěng, chuān shàngyī ? ba.",
+      "dutch": "Het is koud buiten, trek iets aan.",
+      "grammar": "很冷 beschrijft het weer."
+    }
+  ],
+  "里": [
+    {
+      "chinese": "书在包里。",
+      "pinyin": "shū zài bāo lǐ.",
+      "dutch": "Het boek zit in de tas.",
+      "grammar": "里 is een plaatswoord voor 'binnenin'; 包 valt buiten HSK1."
+    }
+  ],
+  "两": [
+    {
+      "chinese": "我买了两杯茶。",
+      "pinyin": "wǒ mǎi le liǎng ? chá.",
+      "dutch": "Ik kocht twee kopjes thee.",
+      "grammar": "两 gebruik je gewoonlijk vóór een maatwoord."
+    }
+  ],
+  "零": [
+    {
+      "chinese": "今天是零度。",
+      "pinyin": "jīntiān shì líng dù.",
+      "dutch": "Het is vandaag nul graden.",
+      "grammar": "零 betekent nul; 度 valt buiten HSK1."
+    }
+  ],
+  "六": [
+    {
+      "chinese": "妹妹六岁了。",
+      "pinyin": "mèimei liù suì le.",
+      "dutch": "Mijn zusje is zes geworden.",
+      "grammar": "Een leeftijd wordt uitgedrukt met getal + 岁."
+    }
+  ],
+  "妈妈": [
+    {
+      "chinese": "妈妈在做晚饭。",
+      "pinyin": "māma zài zuò wǎnfàn.",
+      "dutch": "Mama is het avondeten aan het klaarmaken.",
+      "grammar": "在 + werkwoord geeft een lopende handeling aan."
+    }
+  ],
+  "吗": [
+    {
+      "chinese": "你喜欢中国菜吗？",
+      "pinyin": "nǐ xǐhuan Zhōngguó cài ma?",
+      "dutch": "Hou je van Chinees eten?",
+      "grammar": "吗 maakt van een mededeling een ja-neevraag."
+    }
+  ],
+  "买": [
+    {
+      "chinese": "我想买一个新手机。",
+      "pinyin": "wǒ xiǎng mǎi yī gè xīn shǒujī.",
+      "dutch": "Ik wil een nieuwe telefoon kopen.",
+      "grammar": "买 is kopen; het voorwerp volgt direct."
+    }
+  ],
+  "卖": [
+    {
+      "chinese": "这家店卖水果。",
+      "pinyin": "zhè jiā diàn mài shuǐguǒ.",
+      "dutch": "Deze winkel verkoopt fruit.",
+      "grammar": "卖 is verkopen, tegenover 买."
+    }
+  ],
+  "忙": [
+    {
+      "chinese": "我今天很忙，明天见吧。",
+      "pinyin": "wǒ jīntiān hěn máng, míngtiān jiàn ba.",
+      "dutch": "Ik heb het vandaag druk, tot morgen.",
+      "grammar": "很忙 beschrijft hoe iemand het heeft."
+    }
+  ],
+  "猫": [
+    {
+      "chinese": "我的猫喜欢睡觉。",
+      "pinyin": "wǒ de māo xǐhuan shuìjiào.",
+      "dutch": "Mijn kat slaapt graag.",
+      "grammar": "喜欢 + werkwoord drukt voorkeur voor een activiteit uit."
+    }
+  ],
+  "没关系": [
+    {
+      "chinese": "“对不起！”“没关系！”",
+      "pinyin": "“duìbuqǐ!” “méi guānxi!”",
+      "dutch": "‘Sorry!’ ‘Geeft niet!’",
+      "grammar": "没关系 stelt iemand gerust na een verontschuldiging."
+    }
+  ],
+  "没事": [
+    {
+      "chinese": "你没事吧？",
+      "pinyin": "nǐ méishì ba?",
+      "dutch": "Gaat het wel met je?",
+      "grammar": "没事 betekent dat er geen probleem is."
+    }
+  ],
+  "没有": [
+    {
+      "chinese": "我没有哥哥。",
+      "pinyin": "wǒ méiyǒu gēge.",
+      "dutch": "Ik heb geen oudere broer.",
+      "grammar": "没有 ontkent bezit of bestaan."
+    }
+  ],
+  "妹妹": [
+    {
+      "chinese": "我妹妹喜欢画画。",
+      "pinyin": "wǒ mèimei xǐhuan huà huà.",
+      "dutch": "Mijn zusje tekent graag.",
+      "grammar": "妹妹 betekent jongere zus; 画画 valt buiten HSK1."
+    }
+  ],
+  "们": [
+    {
+      "chinese": "同学们，早上好！",
+      "pinyin": "tóngxué men, zǎoshang hǎo!",
+      "dutch": "Goedemorgen, leerlingen!",
+      "grammar": "们 maakt een groep mensen expliciet meervoudig."
+    }
+  ],
+  "米饭": [
+    {
+      "chinese": "我中午吃米饭。",
+      "pinyin": "wǒ zhōngwǔ chī mǐfàn.",
+      "dutch": "Ik eet rijst als middagmaal.",
+      "grammar": "米饭 verwijst naar gekookte rijst."
+    }
+  ],
+  "面包": [
+    {
+      "chinese": "早饭我吃面包，喝牛奶。",
+      "pinyin": "zǎofàn wǒ chī miànbāo, hē niúnǎi.",
+      "dutch": "Ik eet brood en drink melk als ontbijt.",
+      "grammar": "Twee werkwoorden kunnen achter elkaar bij hetzelfde onderwerp staan."
+    }
+  ],
+  "面条儿": [
+    {
+      "chinese": "今天我想吃面条儿。",
+      "pinyin": "jīntiān wǒ xiǎng chī miàntiáor.",
+      "dutch": "Vandaag heb ik zin in noedels.",
+      "grammar": "儿 is hier een regionale uitgang."
+    }
+  ],
+  "明年": [
+    {
+      "chinese": "明年我想去中国。",
+      "pinyin": "míngnián wǒ xiǎng qù Zhōngguó.",
+      "dutch": "Volgend jaar wil ik naar China.",
+      "grammar": "明年 komt vóór de handeling als tijdsbepaling."
+    }
+  ],
+  "明天": [
+    {
+      "chinese": "明天你有时间吗？",
+      "pinyin": "míngtiān nǐ yǒushí jiān ma?",
+      "dutch": "Heb je morgen tijd?",
+      "grammar": "明天 bepaalt de tijd van de hele vraag."
+    }
+  ],
+  "名字": [
+    {
+      "chinese": "请写你的名字。",
+      "pinyin": "qǐng xiě nǐ de míngzi.",
+      "dutch": "Schrijf je naam op, alsjeblieft.",
+      "grammar": "名字 is een zelfstandig naamwoord, gecombineerd met 写."
+    }
+  ],
+  "哪": [
+    {
+      "chinese": "你要哪本书？",
+      "pinyin": "nǐ yào nǎ běn shū?",
+      "dutch": "Welk boek wil je?",
+      "grammar": "哪 staat vóór het maatwoord 本."
+    },
+    {
+      "chinese": "哪件衣服是你的？",
+      "pinyin": "nǎ jiàn yīfu shì nǐ de?",
+      "dutch": "Welk kledingstuk is van jou?",
+      "grammar": "哪 + maatwoord vraagt naar één keuze."
+    }
+  ],
+  "哪个": [
+    {
+      "chinese": "哪个是你的杯子？",
+      "pinyin": "nǎge shì nǐ de bēizi?",
+      "dutch": "Welke is jouw beker?",
+      "grammar": "哪个 vraagt een keuze uit enkele dingen."
+    }
+  ],
+  "哪里": [
+    {
+      "chinese": "你在哪里工作？",
+      "pinyin": "nǐ zài nǎlǐ gōngzuò?",
+      "dutch": "Waar werk je?",
+      "grammar": "哪里 vraagt naar een locatie."
+    }
+  ],
+  "哪儿": [
+    {
+      "chinese": "洗手间在哪儿？",
+      "pinyin": "xǐshǒujiān zài nǎr?",
+      "dutch": "Waar is het toilet?",
+      "grammar": "哪儿 is een veelgebruikte spreektaalvariant van 哪里; 洗手间 valt buiten HSK1."
+    },
+    {
+      "chinese": "你去哪儿？",
+      "pinyin": "nǐ qù nǎr?",
+      "dutch": "Waar ga je naartoe?",
+      "grammar": "哪儿 na 去 vraagt naar een bestemming."
+    }
+  ],
+  "哪些": [
+    {
+      "chinese": "哪些学生会说汉语？",
+      "pinyin": "nǎxiē xuéshēng huì shuō Hànyǔ?",
+      "dutch": "Welke leerlingen spreken Chinees?",
+      "grammar": "哪些 vraagt naar meerdere zaken of personen."
+    }
+  ],
+  "那": [
+    {
+      "chinese": "那是我的学校。",
+      "pinyin": "nà shì wǒ de xuéxiào.",
+      "dutch": "Dat is mijn school.",
+      "grammar": "那 verwijst naar iets verder weg."
+    }
+  ],
+  "那边": [
+    {
+      "chinese": "你看，那边有一家饭店。",
+      "pinyin": "nǐ kàn, nàbiān yǒu yī jiā fàndiàn.",
+      "dutch": "Kijk, daar is een restaurant.",
+      "grammar": "那边 duidt de richting verder van de spreker aan."
+    }
+  ],
+  "那个": [
+    {
+      "chinese": "那个男生是我弟弟。",
+      "pinyin": "nàge nánshēng shì wǒ dìdi.",
+      "dutch": "Die jongen is mijn jongere broer.",
+      "grammar": "那个 vormt een aanwijzende woordgroep; 男生 valt buiten HSK1."
+    }
+  ],
+  "那里": [
+    {
+      "chinese": "我的朋友在那里。",
+      "pinyin": "wǒ de péngyou zài nàlǐ.",
+      "dutch": "Mijn vriend is daar.",
+      "grammar": "那里 beschrijft een plaats verder weg."
+    }
+  ],
+  "那儿": [
+    {
+      "chinese": "你在那儿等我。",
+      "pinyin": "nǐ zài nàr děng wǒ.",
+      "dutch": "Wacht daar op mij.",
+      "grammar": "那儿 is een spreektaalvariant van 那里."
+    }
+  ],
+  "那些": [
+    {
+      "chinese": "那些书都是我的。",
+      "pinyin": "nàxiē shū dōu shì wǒ de.",
+      "dutch": "Die boeken zijn allemaal van mij.",
+      "grammar": "那些 verwijst naar meerdere verder gelegen dingen."
+    }
+  ],
+  "男": [
+    {
+      "chinese": "这是男厕所。",
+      "pinyin": "zhè shì nán cèsuǒ.",
+      "dutch": "Dit is het herentoilet.",
+      "grammar": "男 vormt samenstellingen die mannelijk aanduiden; 厕所 valt buiten HSK1."
+    }
+  ],
+  "男朋友": [
+    {
+      "chinese": "这是我男朋友。",
+      "pinyin": "zhè shì wǒ nánpéngyou.",
+      "dutch": "Dit is mijn vriend.",
+      "grammar": "男朋友 betekent een romantische partner, niet zomaar een mannelijke vriend."
+    }
+  ],
+  "呢": [
+    {
+      "chinese": "我的书在这里，你的呢？",
+      "pinyin": "wǒ de shū zài zhèlǐ, nǐ de ne?",
+      "dutch": "Mijn boek ligt hier, en het jouwe?",
+      "grammar": "呢 vraagt terug naar een al genoemd onderwerp."
+    }
+  ],
+  "能": [
+    {
+      "chinese": "我今天不能去上课。",
+      "pinyin": "wǒ jīntiān bù néng qù shàngkè.",
+      "dutch": "Ik kan vandaag niet naar de les.",
+      "grammar": "能 gaat hier over praktische mogelijkheid."
+    }
+  ],
+  "你": [
+    {
+      "chinese": "你想吃什么？",
+      "pinyin": "nǐ xiǎng chī shénme?",
+      "dutch": "Wat wil jij eten?",
+      "grammar": "你 is het informele enkelvoudige 'jij'."
+    }
+  ],
+  "你好": [
+    {
+      "chinese": "你好！请问你叫什么名字？",
+      "pinyin": "nǐ hǎo! qǐngwèn nǐ jiào shénme míngzi?",
+      "dutch": "Hallo! Mag ik vragen hoe je heet?",
+      "grammar": "你好 is een gewone begroeting."
+    }
+  ],
+  "你们": [
+    {
+      "chinese": "你们今天上课吗？",
+      "pinyin": "nǐmen jīntiān shàngkè ma?",
+      "dutch": "Hebben jullie vandaag les?",
+      "grammar": "你们 is de meervoudsvorm van 你."
+    }
+  ],
+  "年": [
+    {
+      "chinese": "我在中国住了两年。",
+      "pinyin": "wǒ zài Zhōngguó zhù le liǎng nián.",
+      "dutch": "Ik heb twee jaar in China gewoond.",
+      "grammar": "年 telt jaren; 了 markeert hier een afgeronde tijdsperiode."
+    }
+  ],
+  "您": [
+    {
+      "chinese": "您好，请进。",
+      "pinyin": "nín hǎo, qǐng jìn.",
+      "dutch": "Goedendag, komt u binnen.",
+      "grammar": "您 is de beleefde vorm van 你; 进 valt buiten HSK1."
+    }
+  ],
+  "牛奶": [
+    {
+      "chinese": "我不喝茶，只喝牛奶。",
+      "pinyin": "wǒ bù hē chá, zhǐ hē niúnǎi.",
+      "dutch": "Ik drink geen thee, alleen melk.",
+      "grammar": "只 beperkt hier de keuze tot melk."
+    }
+  ],
+  "女": [
+    {
+      "chinese": "她是女医生。",
+      "pinyin": "tā shì nǚ yīshēng.",
+      "dutch": "Zij is arts.",
+      "grammar": "女 duidt een vrouwelijke beroepsbeoefenaar aan."
+    }
+  ],
+  "女儿": [
+    {
+      "chinese": "我的女儿今年上小学。",
+      "pinyin": "wǒ de nǚ’ér jīnnián shàng xiǎoxué.",
+      "dutch": "Mijn dochter gaat dit jaar naar de lagere school.",
+      "grammar": "女儿 betekent dochter."
+    }
+  ],
+  "女朋友": [
+    {
+      "chinese": "他和女朋友一起看电影。",
+      "pinyin": "tā hé nǚpéngyou yìqǐ kàn diànyǐng.",
+      "dutch": "Hij kijkt samen met zijn vriendin een film.",
+      "grammar": "女朋友 betekent romantische vriendin."
+    }
+  ],
+  "女士": [
+    {
+      "chinese": "王女士，您好！",
+      "pinyin": "Wáng nǚshì, nín hǎo!",
+      "dutch": "Mevrouw Wang, goedendag!",
+      "grammar": "女士 staat als beleefde aanspreektitel achter een familienaam."
+    }
+  ],
+  "朋友": [
+    {
+      "chinese": "我和朋友去电影院。",
+      "pinyin": "wǒ hé péngyou qù diànyǐngyuàn.",
+      "dutch": "Ik ga met een vriend naar de bioscoop.",
+      "grammar": "和 verbindt iemand met zijn gezelschap."
+    }
+  ],
+  "便宜": [
+    {
+      "chinese": "这个苹果很便宜。",
+      "pinyin": "zhège píngguǒ hěn piányi.",
+      "dutch": "Deze appel is goedkoop.",
+      "grammar": "便宜 is het tegenovergestelde van 贵."
+    }
+  ],
+  "漂亮": [
+    {
+      "chinese": "你女儿真漂亮！",
+      "pinyin": "nǐ nǚ’ér zhēn piàoliang!",
+      "dutch": "Je dochter is echt mooi!",
+      "grammar": "真 versterkt een eigenschap."
+    }
+  ],
+  "苹果": [
+    {
+      "chinese": "桌子上有两个苹果。",
+      "pinyin": "zhuōzi shàng yǒu liǎng gè píngguǒ.",
+      "dutch": "Op tafel liggen twee appels.",
+      "grammar": "两个 duidt het aantal aan."
+    }
+  ],
+  "七": [
+    {
+      "chinese": "今天是七月七号。",
+      "pinyin": "jīntiān shì qī yuè qī hào.",
+      "dutch": "Vandaag is het zeven juli.",
+      "grammar": "Maand en dag krijgen 月 en 号."
+    }
+  ],
+  "起床": [
+    {
+      "chinese": "我每天早上七点起床。",
+      "pinyin": "wǒ měi tiān zǎoshang qī diǎn qǐchuáng.",
+      "dutch": "Ik sta elke ochtend om zeven uur op.",
+      "grammar": "起床 verwijst naar opstaan uit bed."
+    }
+  ],
+  "千": [
+    {
+      "chinese": "这台电脑两千元。",
+      "pinyin": "zhè tái diànnǎo liǎng qiān yuán.",
+      "dutch": "Deze computer kost tweeduizend yuan.",
+      "grammar": "千 is duizend; 台 is een maatwoord voor apparaten."
+    }
+  ],
+  "前": [
+    {
+      "chinese": "学校前边有一家商店。",
+      "pinyin": "xuéxiào qián biān yǒu yī jiā shāngdiàn.",
+      "dutch": "Voor de school is een winkel.",
+      "grammar": "前边 duidt een plaats vóór iets aan."
+    }
+  ],
+  "钱": [
+    {
+      "chinese": "我没有钱买新车。",
+      "pinyin": "wǒ méiyǒu qián mǎi xīn chē.",
+      "dutch": "Ik heb geen geld om een nieuwe auto te kopen.",
+      "grammar": "钱 is geld, niet het telwoord voor een prijs."
+    }
+  ],
+  "请": [
+    {
+      "chinese": "请坐。",
+      "pinyin": "qǐng zuò.",
+      "dutch": "Gaat u zitten, alstublieft.",
+      "grammar": "请 maakt een verzoek beleefd."
+    }
+  ],
+  "请问": [
+    {
+      "chinese": "请问，医院在哪里？",
+      "pinyin": "qǐngwèn, yīyuàn zài nǎlǐ?",
+      "dutch": "Mag ik vragen waar het ziekenhuis is?",
+      "grammar": "请问 leidt een beleefde vraag in."
+    }
+  ],
+  "去": [
+    {
+      "chinese": "我们星期天去书店。",
+      "pinyin": "wǒmen xīngqītiān qù shūdiàn.",
+      "dutch": "We gaan zondag naar de boekwinkel.",
+      "grammar": "去 drukt beweging weg van de spreker uit."
+    }
+  ],
+  "去年": [
+    {
+      "chinese": "去年我在北京工作。",
+      "pinyin": "qùnián wǒ zài Běijīng gōngzuò.",
+      "dutch": "Vorig jaar werkte ik in Beijing.",
+      "grammar": "去年 is een tijdsbepaling voor het verleden."
+    }
+  ],
+  "热": [
+    {
+      "chinese": "今天太热了！",
+      "pinyin": "jīntiān tài rè le!",
+      "dutch": "Het is vandaag veel te warm!",
+      "grammar": "太 ... 了 drukt een sterke reactie uit."
+    }
+  ],
+  "人": [
+    {
+      "chinese": "这里有很多人。",
+      "pinyin": "zhèlǐ yǒu hěn duō rén.",
+      "dutch": "Hier zijn veel mensen.",
+      "grammar": "很多 geeft een groot aantal aan."
+    }
+  ],
+  "认识": [
+    {
+      "chinese": "你认识那位老师吗？",
+      "pinyin": "nǐ rènshi nà wèi lǎoshī ma?",
+      "dutch": "Ken jij die leraar?",
+      "grammar": "认识 gaat over iemand kennen of herkennen; 位 is een beleefd maatwoord."
+    }
+  ],
+  "日": [
+    {
+      "chinese": "今天是十月一日。",
+      "pinyin": "jīntiān shì shí yuè yī rì.",
+      "dutch": "Vandaag is het 1 oktober.",
+      "grammar": "日 is een formelere datumaanduiding dan 号."
+    }
+  ],
+  "三": [
+    {
+      "chinese": "我们三个人一起去。",
+      "pinyin": "wǒmen sān gè rén yìqǐ qù.",
+      "dutch": "We gaan met z'n drieën.",
+      "grammar": "三个人 betekent drie personen."
+    }
+  ],
+  "商店": [
+    {
+      "chinese": "商店九点开门。",
+      "pinyin": "shāngdiàn jiǔ diǎn kāi mén.",
+      "dutch": "De winkel gaat om negen uur open.",
+      "grammar": "开门 betekent letterlijk de deur openen, vaak opengaan."
+    }
+  ],
+  "上": [
+    {
+      "chinese": "猫在桌子上。",
+      "pinyin": "māo zài zhuōzi shàng.",
+      "dutch": "De kat zit op tafel.",
+      "grammar": "上 na een plaats duidt 'op' aan."
+    },
+    {
+      "chinese": "上星期我生病了。",
+      "pinyin": "shàng xīngqī wǒ shēngbìng le.",
+      "dutch": "Vorige week was ik ziek.",
+      "grammar": "上 vóór een tijdseenheid verwijst naar de vorige periode."
+    }
+  ],
+  "上班": [
+    {
+      "chinese": "我爸爸八点上班。",
+      "pinyin": "wǒ bàba bā diǎn shàngbān.",
+      "dutch": "Mijn vader begint om acht uur te werken.",
+      "grammar": "上班 betekent naar het werk gaan of beginnen te werken."
+    }
+  ],
+  "上课": [
+    {
+      "chinese": "我们现在上课。",
+      "pinyin": "wǒmen xiànzài shàngkè.",
+      "dutch": "We hebben nu les.",
+      "grammar": "上课 betekent les volgen of lesgeven, afhankelijk van het onderwerp."
+    }
+  ],
+  "上午": [
+    {
+      "chinese": "我上午学习，下午工作。",
+      "pinyin": "wǒ shàngwǔ xuéxí, xiàwǔ gōngzuò.",
+      "dutch": "In de voormiddag studeer ik, in de namiddag werk ik.",
+      "grammar": "上午 en 下午 zijn tijdsbepalingen."
+    }
+  ],
+  "上学": [
+    {
+      "chinese": "孩子们七点去上学。",
+      "pinyin": "háizi men qī diǎn qù shàngxué.",
+      "dutch": "De kinderen gaan om zeven uur naar school.",
+      "grammar": "上学 beschrijft schoollopen."
+    }
+  ],
+  "少": [
+    {
+      "chinese": "今天来的人很少。",
+      "pinyin": "jīntiān lái de rén hěn shǎo.",
+      "dutch": "Er zijn vandaag weinig mensen gekomen.",
+      "grammar": "很少 drukt een kleine hoeveelheid uit."
+    },
+    {
+      "chinese": "少喝一点儿茶吧。",
+      "pinyin": "shǎo hē yìdiǎnr chá ba.",
+      "dutch": "Drink wat minder thee.",
+      "grammar": "少 vóór het werkwoord betekent minder doen."
+    }
+  ],
+  "谁": [
+    {
+      "chinese": "这是谁的手机？",
+      "pinyin": "zhè shì shéi/shuí de shǒujī?",
+      "dutch": "Van wie is deze telefoon?",
+      "grammar": "谁的 vraagt naar het bezit."
+    }
+  ],
+  "什么": [
+    {
+      "chinese": "你在看什么？",
+      "pinyin": "nǐ zài kàn shénme?",
+      "dutch": "Wat ben je aan het bekijken?",
+      "grammar": "什么 komt waar het gevraagde voorwerp zou staan."
+    }
+  ],
+  "生病": [
+    {
+      "chinese": "妹妹生病了，今天不上学。",
+      "pinyin": "mèimei shēngbìng le, jīntiān bù shàngxué.",
+      "dutch": "Mijn zusje is ziek geworden en gaat vandaag niet naar school.",
+      "grammar": "生病了 duidt het ziek worden aan."
+    }
+  ],
+  "十": [
+    {
+      "chinese": "我有十个同学。",
+      "pinyin": "wǒ yǒu shí gè tóngxué.",
+      "dutch": "Ik heb tien klasgenoten.",
+      "grammar": "十 staat vóór het maatwoord 个."
+    }
+  ],
+  "时候": [
+    {
+      "chinese": "你什么时候回家？",
+      "pinyin": "nǐ shénme shíhou huí jiā?",
+      "dutch": "Wanneer kom je naar huis?",
+      "grammar": "什么时候 vraagt naar een tijdstip."
+    }
+  ],
+  "时间": [
+    {
+      "chinese": "现在有时间吗？",
+      "pinyin": "xiànzài yǒushí jiān ma?",
+      "dutch": "Heb je nu tijd?",
+      "grammar": "有时间 betekent tijd hebben."
+    }
+  ],
+  "事": [
+    {
+      "chinese": "我有一件事想问你。",
+      "pinyin": "wǒ yǒu yī jiàn shì xiǎng wèn nǐ.",
+      "dutch": "Ik wil je iets vragen.",
+      "grammar": "一件事 betekent één zaak of kwestie."
+    }
+  ],
+  "是": [
+    {
+      "chinese": "他是我哥哥。",
+      "pinyin": "tā shì wǒ gēge.",
+      "dutch": "Hij is mijn oudere broer.",
+      "grammar": "是 verbindt twee zelfstandige naamwoorden."
+    },
+    {
+      "chinese": "这是书，不是电脑。",
+      "pinyin": "zhè shì shū, bù shì diànnǎo.",
+      "dutch": "Dit is een boek, geen computer.",
+      "grammar": "不是 ontkent een identificatie."
+    }
+  ],
+  "手机": [
+    {
+      "chinese": "我的手机没有电了。",
+      "pinyin": "wǒ de shǒujī méiyǒu diàn le.",
+      "dutch": "De batterij van mijn telefoon is leeg.",
+      "grammar": "手机 is een mobiele telefoon; 电 valt buiten HSK1."
+    }
+  ],
+  "书": [
+    {
+      "chinese": "我晚上喜欢看书。",
+      "pinyin": "wǒ wǎnshang xǐhuan kàn shū.",
+      "dutch": "Ik lees 's avonds graag boeken.",
+      "grammar": "看书 betekent lezen, letterlijk 'boeken bekijken'."
+    }
+  ],
+  "书店": [
+    {
+      "chinese": "书店在电影院旁边。",
+      "pinyin": "shūdiàn zài diànyǐngyuàn pángbiān.",
+      "dutch": "De boekwinkel ligt naast de bioscoop.",
+      "grammar": "旁边 duidt 'naast' aan."
+    }
+  ],
+  "水": [
+    {
+      "chinese": "请给我一杯水。",
+      "pinyin": "qǐng gěi wǒ yī ? shuǐ.",
+      "dutch": "Geef me alstublieft een glas water.",
+      "grammar": "一杯 is een hoeveelheid met het maatwoord 杯."
+    }
+  ],
+  "水果": [
+    {
+      "chinese": "饭后我吃一点儿水果。",
+      "pinyin": "fàn hòu wǒ chī yìdiǎnr shuǐguǒ.",
+      "dutch": "Na het eten eet ik wat fruit.",
+      "grammar": "一点儿 drukt een kleine hoeveelheid uit."
+    }
+  ],
+  "睡": [
+    {
+      "chinese": "你先睡吧，我还不累。",
+      "pinyin": "nǐ xiān shuì ba, wǒ huán bù lèi.",
+      "dutch": "Ga jij maar eerst slapen, ik ben nog niet moe.",
+      "grammar": "睡 is de korte vorm van het werkwoord slapen; 先 en 累 vallen buiten HSK1."
+    }
+  ],
+  "睡觉": [
+    {
+      "chinese": "孩子晚上九点睡觉。",
+      "pinyin": "háizi wǎnshang jiǔ diǎn shuìjiào.",
+      "dutch": "Het kind gaat om negen uur slapen.",
+      "grammar": "睡觉 is de gebruikelijke volledige vorm."
+    }
+  ],
+  "说": [
+    {
+      "chinese": "请说慢一点儿。",
+      "pinyin": "qǐng shuō màn yìdiǎnr.",
+      "dutch": "Spreek wat langzamer, alsjeblieft.",
+      "grammar": "说 betekent spreken of zeggen; 慢 valt buiten HSK1."
+    }
+  ],
+  "说话": [
+    {
+      "chinese": "老师在说话，请听。",
+      "pinyin": "lǎoshī zài shuōhuà, qǐng tīng.",
+      "dutch": "De leraar spreekt, luister alsjeblieft.",
+      "grammar": "说话 verwijst naar praten of spreken."
+    }
+  ],
+  "四": [
+    {
+      "chinese": "桌子上有四本书。",
+      "pinyin": "zhuōzi shàng yǒu sì běn shū.",
+      "dutch": "Er liggen vier boeken op tafel.",
+      "grammar": "本 telt boeken."
+    }
+  ],
+  "岁": [
+    {
+      "chinese": "你今年几岁？",
+      "pinyin": "nǐ jīnnián jǐ suì?",
+      "dutch": "Hoe oud ben jij dit jaar?",
+      "grammar": "几岁 is een gebruikelijke leeftijdsvraag."
+    }
+  ],
+  "他": [
+    {
+      "chinese": "他是我的男朋友。",
+      "pinyin": "tā shì wǒ de nánpéngyou.",
+      "dutch": "Hij is mijn vriend.",
+      "grammar": "他 verwijst naar een mannelijke persoon."
+    }
+  ],
+  "它": [
+    {
+      "chinese": "我有一只猫，它很小。",
+      "pinyin": "wǒ yǒu yī zhǐ māo, tā hěn xiǎo.",
+      "dutch": "Ik heb een kat; die is klein.",
+      "grammar": "它 verwijst naar dieren of dingen."
+    }
+  ],
+  "她": [
+    {
+      "chinese": "她喜欢唱歌。",
+      "pinyin": "tā xǐhuan chàng gē.",
+      "dutch": "Zij zingt graag.",
+      "grammar": "她 verwijst schriftelijk naar een vrouwelijke persoon."
+    }
+  ],
+  "他们": [
+    {
+      "chinese": "他们是我的同学。",
+      "pinyin": "tāmen shì wǒ de tóngxué.",
+      "dutch": "Zij zijn mijn klasgenoten.",
+      "grammar": "他们 is de meervoudsvorm met 他."
+    }
+  ],
+  "它们": [
+    {
+      "chinese": "这些狗很可爱，它们喜欢玩。",
+      "pinyin": "zhèxiē gǒu hěn kě'ài, tāmen xǐhuan wán.",
+      "dutch": "Deze honden zijn schattig; ze spelen graag.",
+      "grammar": "它们 is meervoud voor dieren en dingen; 可爱 valt buiten HSK1."
+    }
+  ],
+  "她们": [
+    {
+      "chinese": "她们都是老师。",
+      "pinyin": "tāmen dōu shì lǎoshī.",
+      "dutch": "Zij zijn allemaal leraressen.",
+      "grammar": "她们 verwijst naar een groep vrouwen."
+    }
+  ],
+  "太": [
+    {
+      "chinese": "这个房间太小了。",
+      "pinyin": "zhège fángjiān tài xiǎo le.",
+      "dutch": "Deze kamer is veel te klein.",
+      "grammar": "太 ... 了 drukt een sterke beoordeling uit."
+    }
+  ],
+  "天": [
+    {
+      "chinese": "我在这里住了三天。",
+      "pinyin": "wǒ zài zhèlǐ zhù le sān tiān.",
+      "dutch": "Ik heb hier drie dagen gewoond.",
+      "grammar": "天 is een dag als tijdsduur."
+    }
+  ],
+  "天气": [
+    {
+      "chinese": "明天天气怎么样？",
+      "pinyin": "míngtiān tiānqì zěnmeyàng?",
+      "dutch": "Hoe wordt het weer morgen?",
+      "grammar": "怎么样 vraagt hoe iets is of zal zijn."
+    }
+  ],
+  "听": [
+    {
+      "chinese": "请听老师说话。",
+      "pinyin": "qǐng tīng lǎoshī shuōhuà.",
+      "dutch": "Luister alstublieft naar de leraar.",
+      "grammar": "听 duidt aandachtig luisteren aan."
+    }
+  ],
+  "听见": [
+    {
+      "chinese": "我听见有人叫我。",
+      "pinyin": "wǒ tīngjiàn yǒu rén jiào wǒ.",
+      "dutch": "Ik hoorde iemand mij roepen.",
+      "grammar": "听见 geeft aan dat het geluid werkelijk gehoord is."
+    }
+  ],
+  "同学": [
+    {
+      "chinese": "他是我的新同学。",
+      "pinyin": "tā shì wǒ de xīn tóngxué.",
+      "dutch": "Hij is mijn nieuwe klasgenoot.",
+      "grammar": "同学 kan klasgenoot of medestudent betekenen."
+    }
+  ],
+  "外": [
+    {
+      "chinese": "房子外有一只狗。",
+      "pinyin": "fángzi wài yǒu yī zhǐ gǒu.",
+      "dutch": "Buiten het huis staat een hond.",
+      "grammar": "外 is 'buiten'; 房子 valt buiten HSK1."
+    }
+  ],
+  "外边": [
+    {
+      "chinese": "外边下雨了。",
+      "pinyin": "wàibian xià yǔ le.",
+      "dutch": "Buiten regent het.",
+      "grammar": "外边 duidt een plaats buiten aan."
+    }
+  ],
+  "玩": [
+    {
+      "chinese": "孩子们在外边玩。",
+      "pinyin": "háizi men zài wàibian wán.",
+      "dutch": "De kinderen spelen buiten.",
+      "grammar": "在 + werkwoord duidt de lopende handeling aan."
+    }
+  ],
+  "晚": [
+    {
+      "chinese": "今天我回家很晚。",
+      "pinyin": "jīntiān wǒ huí jiā hěn wǎn.",
+      "dutch": "Vandaag kom ik laat thuis.",
+      "grammar": "晚 betekent laat in de tijd."
+    }
+  ],
+  "晚饭": [
+    {
+      "chinese": "我们七点吃晚饭。",
+      "pinyin": "wǒmen qī diǎn chī wǎnfàn.",
+      "dutch": "We eten om zeven uur avondmaal.",
+      "grammar": "吃晚饭 is de vaste combinatie."
+    }
+  ],
+  "晚上": [
+    {
+      "chinese": "晚上我不喝咖啡。",
+      "pinyin": "wǎnshang wǒ bù hē kāfēi.",
+      "dutch": "Ik drink 's avonds geen koffie.",
+      "grammar": "晚上 staat als tijdsbepaling vóór de handeling; 咖啡 valt buiten HSK1."
+    }
+  ],
+  "喂": [
+    {
+      "chinese": "喂，你好！",
+      "pinyin": "wèi, nǐ hǎo!",
+      "dutch": "Hallo, goedendag!",
+      "grammar": "喂 wordt vaak gebruikt bij het opnemen van de telefoon."
+    }
+  ],
+  "问": [
+    {
+      "chinese": "我想问老师一个问题。",
+      "pinyin": "wǒ xiǎng wèn lǎoshī yī gè wèntí.",
+      "dutch": "Ik wil de leraar een vraag stellen.",
+      "grammar": "问 + persoon + vraag duidt de ontvanger van een vraag aan."
+    }
+  ],
+  "问题": [
+    {
+      "chinese": "这个问题我不知道。",
+      "pinyin": "zhège wèntí wǒ bù zhīdào.",
+      "dutch": "Ik weet het antwoord op deze vraag niet.",
+      "grammar": "问题 betekent vraag of probleem."
+    }
+  ],
+  "我": [
+    {
+      "chinese": "我喜欢学汉语。",
+      "pinyin": "wǒ xǐhuan xué Hànyǔ.",
+      "dutch": "Ik leer graag Chinees.",
+      "grammar": "我 is het persoonlijk voornaamwoord 'ik'."
+    }
+  ],
+  "我们": [
+    {
+      "chinese": "我们一起回学校吧。",
+      "pinyin": "wǒmen yìqǐ huí xuéxiào ba.",
+      "dutch": "Laten we samen naar school teruggaan.",
+      "grammar": "我们 betekent 'wij' en kan de gesprekspartner omvatten."
+    }
+  ],
+  "五": [
+    {
+      "chinese": "我五点下班。",
+      "pinyin": "wǒ wǔ diǎn xiàbān.",
+      "dutch": "Ik ben om vijf uur klaar met werken.",
+      "grammar": "五点 duidt een uur aan."
+    }
+  ],
+  "午饭": [
+    {
+      "chinese": "今天的午饭很好吃。",
+      "pinyin": "jīntiān de wǔfàn hěn hǎochī.",
+      "dutch": "De lunch van vandaag is lekker.",
+      "grammar": "的 verbindt de tijdsbepaling met 午饭."
+    }
+  ],
+  "喜欢": [
+    {
+      "chinese": "我喜欢看电影。",
+      "pinyin": "wǒ xǐhuan kàn diànyǐng.",
+      "dutch": "Ik kijk graag films.",
+      "grammar": "喜欢 + werkwoord drukt een favoriete activiteit uit."
+    }
+  ],
+  "下": [
+    {
+      "chinese": "桌子下有一只猫。",
+      "pinyin": "zhuōzi xià yǒu yī zhǐ māo.",
+      "dutch": "Onder de tafel is een kat.",
+      "grammar": "下 duidt de plaats onder iets aan."
+    },
+    {
+      "chinese": "你下星期有时间吗？",
+      "pinyin": "nǐ xià xīngqī yǒushí jiān ma?",
+      "dutch": "Heb je volgende week tijd?",
+      "grammar": "下 vóór een tijdseenheid verwijst naar de volgende periode."
+    }
+  ],
+  "下雨": [
+    {
+      "chinese": "明天会下雨吗？",
+      "pinyin": "míngtiān huì xià yǔ ma?",
+      "dutch": "Gaat het morgen regenen?",
+      "grammar": "会 kan een verwachting over de toekomst uitdrukken."
+    }
+  ],
+  "下班": [
+    {
+      "chinese": "妈妈六点下班。",
+      "pinyin": "māma liù diǎn xiàbān.",
+      "dutch": "Mama is om zes uur klaar met werken.",
+      "grammar": "下班 verwijst naar het einde van de werkdag."
+    }
+  ],
+  "下课": [
+    {
+      "chinese": "下课了，我们走吧。",
+      "pinyin": "xiàkè le, wǒmen zǒu ba.",
+      "dutch": "De les is afgelopen, laten we gaan.",
+      "grammar": "下课了 geeft aan dat de les voorbij is."
+    }
+  ],
+  "下午": [
+    {
+      "chinese": "今天下午我去医院。",
+      "pinyin": "jīntiān xiàwǔ wǒ qù yīyuàn.",
+      "dutch": "Vanmiddag ga ik naar het ziekenhuis.",
+      "grammar": "下午 bepaalt wanneer de handeling plaatsvindt."
+    }
+  ],
+  "先生": [
+    {
+      "chinese": "李先生今天不在公司。",
+      "pinyin": "Lǐ xiānsheng jīntiān bù zài gōngsī.",
+      "dutch": "Meneer Li is vandaag niet op kantoor.",
+      "grammar": "先生 is een beleefde aanspreektitel na een familienaam."
+    }
+  ],
+  "现在": [
+    {
+      "chinese": "我现在没有时间。",
+      "pinyin": "wǒ xiànzài méiyǒu shíjiān.",
+      "dutch": "Ik heb nu geen tijd.",
+      "grammar": "现在 geeft het huidige moment aan."
+    }
+  ],
+  "想": [
+    {
+      "chinese": "我想喝一杯茶。",
+      "pinyin": "wǒ xiǎng hē yī ? chá.",
+      "dutch": "Ik zou graag een kop thee drinken.",
+      "grammar": "想 + werkwoord drukt een wens uit."
+    },
+    {
+      "chinese": "我想妈妈了。",
+      "pinyin": "wǒ xiǎng māma le.",
+      "dutch": "Ik mis mama.",
+      "grammar": "想 + persoon kan betekenen dat je die persoon mist."
+    }
+  ],
+  "小": [
+    {
+      "chinese": "这只狗很小。",
+      "pinyin": "zhè zhǐ gǒu hěn xiǎo.",
+      "dutch": "Deze hond is klein.",
+      "grammar": "小 beschrijft een kleine omvang."
+    }
+  ],
+  "小朋友": [
+    {
+      "chinese": "小朋友们在学校玩。",
+      "pinyin": "xiǎopéngyǒu men zài xuéxiào wán.",
+      "dutch": "De kinderen spelen op school.",
+      "grammar": "小朋友 is een vriendelijke benaming voor kinderen."
+    }
+  ],
+  "小时": [
+    {
+      "chinese": "坐火车要两个小时。",
+      "pinyin": "zuò huǒchē yào liǎng gè xiǎoshí.",
+      "dutch": "De treinreis duurt twee uur.",
+      "grammar": "小时 is een tijdsduur in uren."
+    }
+  ],
+  "小学": [
+    {
+      "chinese": "我女儿在这所小学上学。",
+      "pinyin": "wǒ nǚ’ér zài zhè suǒ xiǎoxué shàngxué.",
+      "dutch": "Mijn dochter gaat naar deze lagere school.",
+      "grammar": "上学 geeft schoollopen aan; 所 is een maatwoord voor scholen."
+    }
+  ],
+  "小学生": [
+    {
+      "chinese": "他弟弟是小学生。",
+      "pinyin": "tā dìdi shì xiǎoxuéshēng.",
+      "dutch": "Zijn jongere broer zit op de lagere school.",
+      "grammar": "是 verbindt iemand met diens rol."
+    }
+  ],
+  "些": [
+    {
+      "chinese": "请给我一些水。",
+      "pinyin": "qǐng gěi wǒ yìxiē shuǐ.",
+      "dutch": "Geef me alstublieft wat water.",
+      "grammar": "一些 duidt een onbepaalde hoeveelheid aan."
+    }
+  ],
+  "写": [
+    {
+      "chinese": "我每天写五个汉字。",
+      "pinyin": "wǒ měi tiān xiě wǔ gè Hànzì.",
+      "dutch": "Ik schrijf elke dag vijf Chinese karakters.",
+      "grammar": "写 wordt gebruikt voor schrijven."
+    }
+  ],
+  "谢谢": [
+    {
+      "chinese": "谢谢你给我这本书。",
+      "pinyin": "xièxie nǐ gěi wǒ zhè běn shū.",
+      "dutch": "Bedankt dat je me dit boek geeft.",
+      "grammar": "谢谢 + persoon richt de dank tot iemand."
+    }
+  ],
+  "新": [
+    {
+      "chinese": "我买了一件新衣服。",
+      "pinyin": "wǒ mǎi le yī jiàn xīn yīfu.",
+      "dutch": "Ik heb een nieuw kledingstuk gekocht.",
+      "grammar": "新 staat als bepaling vóór het zelfstandig naamwoord."
+    }
+  ],
+  "星期": [
+    {
+      "chinese": "一个星期有七天。",
+      "pinyin": "yī gè xīngqī yǒu qī tiān.",
+      "dutch": "Een week telt zeven dagen.",
+      "grammar": "星期 betekent week."
+    }
+  ],
+  "星期日": [
+    {
+      "chinese": "星期日我们不上课。",
+      "pinyin": "xīngqīrì wǒmen bù shàngkè.",
+      "dutch": "Op zondag hebben we geen les.",
+      "grammar": "星期日 is hetzelfde als 星期天."
+    }
+  ],
+  "星期天": [
+    {
+      "chinese": "星期天我和朋友去玩。",
+      "pinyin": "xīngqītiān wǒ hé péngyou qù wán.",
+      "dutch": "Op zondag ga ik iets leuks doen met vrienden.",
+      "grammar": "星期天 is de gewone vorm voor zondag."
+    }
+  ],
+  "休息": [
+    {
+      "chinese": "我很累，想休息一下。",
+      "pinyin": "wǒ hěn lèi, xiǎng xiūxi yíxià.",
+      "dutch": "Ik ben moe en wil even rusten.",
+      "grammar": "一下 verzacht of verkort de handeling; 累 valt buiten HSK1."
+    }
+  ],
+  "学": [
+    {
+      "chinese": "你在哪里学汉语？",
+      "pinyin": "nǐ zài nǎlǐ xué Hànyǔ?",
+      "dutch": "Waar leer jij Chinees?",
+      "grammar": "学 is leren of studeren."
+    }
+  ],
+  "学生": [
+    {
+      "chinese": "这些学生都很高兴。",
+      "pinyin": "zhèxiē xuéshēng dōu hěn gāoxìng.",
+      "dutch": "Deze leerlingen zijn allemaal blij.",
+      "grammar": "都 verwijst naar alle genoemde leerlingen."
+    }
+  ],
+  "学习": [
+    {
+      "chinese": "我晚上学习中文。",
+      "pinyin": "wǒ wǎnshang xuéxí Zhōngwén.",
+      "dutch": "Ik studeer 's avonds Chinees.",
+      "grammar": "学习 is een formeel of neutraal woord voor studeren."
+    }
+  ],
+  "学校": [
+    {
+      "chinese": "这所学校很大。",
+      "pinyin": "zhè suǒ xuéxiào hěn dà.",
+      "dutch": "Deze school is groot.",
+      "grammar": "所 is een maatwoord voor scholen."
+    }
+  ],
+  "雪": [
+    {
+      "chinese": "昨天晚上下雪了。",
+      "pinyin": "zuótiān wǎnshang xià xuě le.",
+      "dutch": "Gisteravond heeft het gesneeuwd.",
+      "grammar": "下雪 is de vaste combinatie voor sneeuwen."
+    }
+  ],
+  "要": [
+    {
+      "chinese": "我要一杯水。",
+      "pinyin": "wǒ yào yī ? shuǐ.",
+      "dutch": "Ik wil een glas water.",
+      "grammar": "要 + zelfstandig naamwoord drukt een wens of bestelling uit."
+    },
+    {
+      "chinese": "明天我要去医院。",
+      "pinyin": "míngtiān wǒ yào qù yīyuàn.",
+      "dutch": "Morgen moet ik naar het ziekenhuis.",
+      "grammar": "要 + werkwoord kan een noodzaak of een plan uitdrukken."
+    }
+  ],
+  "也": [
+    {
+      "chinese": "我喜欢茶，妈妈也喜欢。",
+      "pinyin": "wǒ xǐhuan chá, māma yě xǐhuan.",
+      "dutch": "Ik hou van thee en mama ook.",
+      "grammar": "也 staat vóór het werkwoord."
+    }
+  ],
+  "一": [
+    {
+      "chinese": "我只有一个问题。",
+      "pinyin": "wǒ zhǐyǒu yī gè wèntí.",
+      "dutch": "Ik heb maar één vraag.",
+      "grammar": "一 staat vóór het maatwoord 个."
+    }
+  ],
+  "衣服": [
+    {
+      "chinese": "今天你穿什么衣服？",
+      "pinyin": "jīntiān nǐ chuān shénme yīfu?",
+      "dutch": "Welke kleren draag je vandaag?",
+      "grammar": "穿 combineert met 衣服."
+    }
+  ],
+  "医生": [
+    {
+      "chinese": "这位医生认识我。",
+      "pinyin": "zhè wèi yīshēng rènshi wǒ.",
+      "dutch": "Deze arts kent mij.",
+      "grammar": "位 is een beleefd maatwoord voor personen."
+    }
+  ],
+  "医院": [
+    {
+      "chinese": "生病了就去医院。",
+      "pinyin": "shēngbìng le jiù qù yīyuàn.",
+      "dutch": "Als je ziek bent, ga je naar het ziekenhuis.",
+      "grammar": "去 + plaats duidt de bestemming aan; 就 maakt het gevolg duidelijk."
+    }
+  ],
+  "一半": [
+    {
+      "chinese": "这个苹果我吃了一半。",
+      "pinyin": "zhège píngguǒ wǒ chī le yíbàn.",
+      "dutch": "Ik heb de helft van deze appel opgegeten.",
+      "grammar": "一半 betekent een helft van iets."
+    }
+  ],
+  "一下": [
+    {
+      "chinese": "请等一下。",
+      "pinyin": "qǐng děng yíxià.",
+      "dutch": "Wacht alstublieft even.",
+      "grammar": "一下 verzacht een kort verzoek."
+    }
+  ],
+  "椅子": [
+    {
+      "chinese": "这里有一把椅子。",
+      "pinyin": "zhèlǐ yǒu yī bǎ yǐzi.",
+      "dutch": "Hier staat een stoel.",
+      "grammar": "把 is het gebruikelijke maatwoord voor stoelen."
+    }
+  ],
+  "一点儿": [
+    {
+      "chinese": "我想喝一点儿水。",
+      "pinyin": "wǒ xiǎng hē yìdiǎnr shuǐ.",
+      "dutch": "Ik wil een beetje water drinken.",
+      "grammar": "一点儿 staat vóór een ontelbaar zelfstandig naamwoord."
+    }
+  ],
+  "一些": [
+    {
+      "chinese": "我买了一些水果。",
+      "pinyin": "wǒ mǎi le yìxiē shuǐguǒ.",
+      "dutch": "Ik heb wat fruit gekocht.",
+      "grammar": "一些 geeft een onbepaald meervoud of hoeveelheid."
+    }
+  ],
+  "有": [
+    {
+      "chinese": "桌子上有一本书。",
+      "pinyin": "zhuōzi shàng yǒu yī běn shū.",
+      "dutch": "Op tafel ligt een boek.",
+      "grammar": "有 geeft aan dat iets ergens aanwezig is."
+    },
+    {
+      "chinese": "我有一个女儿。",
+      "pinyin": "wǒ yǒu yī gè nǚ’ér.",
+      "dutch": "Ik heb een dochter.",
+      "grammar": "有 drukt bezit uit, anders dan het bestaan van iets op een plaats."
+    }
+  ],
+  "有的": [
+    {
+      "chinese": "有的学生喜欢早上学习。",
+      "pinyin": "yǒude xuéshēng xǐhuan zǎoshang xuéxí.",
+      "dutch": "Sommige leerlingen studeren graag 's ochtends.",
+      "grammar": "有的 + zelfstandig naamwoord betekent 'sommige'."
+    }
+  ],
+  "有点儿": [
+    {
+      "chinese": "今天有点儿冷。",
+      "pinyin": "jīntiān yǒudiǎnr lěng.",
+      "dutch": "Het is vandaag een beetje koud.",
+      "grammar": "有点儿 staat vóór een eigenschap, vaak met lichte negatieve gevoelswaarde."
+    }
+  ],
+  "有些": [
+    {
+      "chinese": "有些人不喜欢喝茶。",
+      "pinyin": "yǒuxiē rén bù xǐhuan hē chá.",
+      "dutch": "Sommige mensen drinken niet graag thee.",
+      "grammar": "有些 + zelfstandig naamwoord duidt een deel van een groep aan."
+    }
+  ],
+  "雨": [
+    {
+      "chinese": "今天的雨很大。",
+      "pinyin": "jīntiān de yǔ hěn dà.",
+      "dutch": "Het regent vandaag hard.",
+      "grammar": "雨 is het zelfstandig naamwoord 'regen'."
+    }
+  ],
+  "元": [
+    {
+      "chinese": "这杯茶五元。",
+      "pinyin": "zhè ? chá wǔ yuán.",
+      "dutch": "Deze kop thee kost vijf yuan.",
+      "grammar": "元 is de officiële munteenheid."
+    }
+  ],
+  "月": [
+    {
+      "chinese": "我明年三月去中国。",
+      "pinyin": "wǒ míngnián sān yuè qù Zhōngguó.",
+      "dutch": "Ik ga volgend jaar in maart naar China.",
+      "grammar": "三月 betekent de derde maand."
+    }
+  ],
+  "再": [
+    {
+      "chinese": "请再说一次。",
+      "pinyin": "qǐng zài shuō yī cì.",
+      "dutch": "Zeg het nog een keer, alstublieft.",
+      "grammar": "再 duidt een herhaling in de toekomst aan; 次 valt buiten HSK1."
+    },
+    {
+      "chinese": "明天再说吧。",
+      "pinyin": "míngtiān zài shuō ba.",
+      "dutch": "Laten we er morgen verder over praten.",
+      "grammar": "再 duidt een latere herhaling aan."
+    }
+  ],
+  "在": [
+    {
+      "chinese": "我的手机在房间里。",
+      "pinyin": "wǒ de shǒujī zài fángjiān lǐ.",
+      "dutch": "Mijn telefoon ligt in de kamer.",
+      "grammar": "在 + plaats zegt waar iets zich bevindt."
+    },
+    {
+      "chinese": "妈妈在做饭。",
+      "pinyin": "māma zài zuò fàn.",
+      "dutch": "Mama is aan het koken.",
+      "grammar": "在 + werkwoord duidt een lopende handeling aan."
+    }
+  ],
+  "再见": [
+    {
+      "chinese": "老师，再见！",
+      "pinyin": "lǎoshī, zàijiàn!",
+      "dutch": "Tot ziens, leraar!",
+      "grammar": "再见 is een gebruikelijke afscheidsgroet."
+    }
+  ],
+  "早": [
+    {
+      "chinese": "你今天怎么这么早？",
+      "pinyin": "nǐ jīntiān zěnme zhème zǎo?",
+      "dutch": "Waarom ben je vandaag zo vroeg?",
+      "grammar": "早 beschrijft een vroeg tijdstip; 这么 valt buiten HSK1."
+    }
+  ],
+  "早饭": [
+    {
+      "chinese": "早饭我想吃鸡蛋。",
+      "pinyin": "zǎofàn wǒ xiǎng chī jīdàn.",
+      "dutch": "Als ontbijt wil ik een ei eten.",
+      "grammar": "早饭 is de ochtendmaaltijd."
+    }
+  ],
+  "早上": [
+    {
+      "chinese": "我早上六点起床。",
+      "pinyin": "wǒ zǎoshang liù diǎn qǐchuáng.",
+      "dutch": "Ik sta 's ochtends om zes uur op.",
+      "grammar": "早上 bepaalt het deel van de dag."
+    }
+  ],
+  "怎么": [
+    {
+      "chinese": "这个字怎么读？",
+      "pinyin": "zhège zì zěnme dú?",
+      "dutch": "Hoe spreek je dit karakter uit?",
+      "grammar": "怎么 vraagt naar de manier."
+    }
+  ],
+  "怎么样": [
+    {
+      "chinese": "你的新工作怎么样？",
+      "pinyin": "nǐ de xīn gōngzuò zěnmeyàng?",
+      "dutch": "Hoe bevalt je nieuwe baan?",
+      "grammar": "怎么样 vraagt om een beoordeling."
+    }
+  ],
+  "找": [
+    {
+      "chinese": "我在找我的手机。",
+      "pinyin": "wǒ zài zhǎo wǒ de shǒujī.",
+      "dutch": "Ik ben mijn telefoon aan het zoeken.",
+      "grammar": "找 betekent zoeken, niet vinden."
+    }
+  ],
+  "这": [
+    {
+      "chinese": "这是我的朋友。",
+      "pinyin": "zhè shì wǒ de péngyou.",
+      "dutch": "Dit is mijn vriend.",
+      "grammar": "这 verwijst naar iets dichtbij."
+    }
+  ],
+  "这边": [
+    {
+      "chinese": "请来这边坐。",
+      "pinyin": "qǐng lái zhèbiān zuò.",
+      "dutch": "Kom hier aan deze kant zitten.",
+      "grammar": "这边 geeft een richting dichtbij de spreker aan."
+    }
+  ],
+  "这个": [
+    {
+      "chinese": "这个苹果好吃吗？",
+      "pinyin": "zhège píngguǒ hǎochī ma?",
+      "dutch": "Is deze appel lekker?",
+      "grammar": "这个 is aanwijzend voor één ding."
+    }
+  ],
+  "这里": [
+    {
+      "chinese": "我的书在这里。",
+      "pinyin": "wǒ de shū zài zhèlǐ.",
+      "dutch": "Mijn boek ligt hier.",
+      "grammar": "这里 is een locatie dicht bij de spreker."
+    }
+  ],
+  "这儿": [
+    {
+      "chinese": "你在这儿等我吧。",
+      "pinyin": "nǐ zài zhèr děng wǒ ba.",
+      "dutch": "Wacht hier maar op mij.",
+      "grammar": "这儿 is de spreektaalvariant van 这里."
+    }
+  ],
+  "这些": [
+    {
+      "chinese": "这些汉字我都会写。",
+      "pinyin": "zhèxiē Hànzì wǒ dōu huì xiě.",
+      "dutch": "Ik kan al deze karakters schrijven.",
+      "grammar": "这些 wijst naar meerdere nabijgelegen dingen."
+    }
+  ],
+  "真": [
+    {
+      "chinese": "你的中文真好！",
+      "pinyin": "nǐ de Zhōngwén zhēn hǎo!",
+      "dutch": "Je Chinees is echt goed!",
+      "grammar": "真 versterkt het bijvoeglijk naamwoord."
+    }
+  ],
+  "正在": [
+    {
+      "chinese": "他正在看电影。",
+      "pinyin": "tā zhèngzài kàn diànyǐng.",
+      "dutch": "Hij is op dit moment een film aan het kijken.",
+      "grammar": "正在 + werkwoord benadrukt een handeling die nu bezig is."
+    }
+  ],
+  "只": [
+    {
+      "chinese": "我家有两只猫。",
+      "pinyin": "wǒ jiā yǒu liǎng zhǐ māo.",
+      "dutch": "Wij hebben twee katten thuis.",
+      "grammar": "只 is hier het maatwoord voor dieren."
+    },
+    {
+      "chinese": "我只想喝水。",
+      "pinyin": "wǒ zhǐ xiǎng hē shuǐ.",
+      "dutch": "Ik wil alleen water drinken.",
+      "grammar": "只 vóór een werkwoord betekent uitsluitend."
+    }
+  ],
+  "知道": [
+    {
+      "chinese": "你知道他的名字吗？",
+      "pinyin": "nǐ zhīdào tā de míngzi ma?",
+      "dutch": "Weet jij hoe hij heet?",
+      "grammar": "知道 betekent weten of op de hoogte zijn."
+    }
+  ],
+  "中国": [
+    {
+      "chinese": "我朋友在中国工作。",
+      "pinyin": "wǒ péngyou zài Zhōngguó gōngzuò.",
+      "dutch": "Mijn vriend werkt in China.",
+      "grammar": "在 + plaats geeft aan waar iemand werkt."
+    }
+  ],
+  "中文": [
+    {
+      "chinese": "你会写中文吗？",
+      "pinyin": "nǐ huì xiě Zhōngwén ma?",
+      "dutch": "Kun jij Chinees schrijven?",
+      "grammar": "中文 verwijst naar de Chinese taal, vooral ook schriftelijk."
+    }
+  ],
+  "中午": [
+    {
+      "chinese": "我们中午十二点吃饭。",
+      "pinyin": "wǒmen zhōngwǔ shí èr diǎn chī fàn.",
+      "dutch": "We eten 's middags om twaalf uur.",
+      "grammar": "中午 duidt het midden van de dag aan."
+    }
+  ],
+  "中学": [
+    {
+      "chinese": "哥哥在中学上学。",
+      "pinyin": "gēge zài zhōngxué shàngxué.",
+      "dutch": "Mijn oudere broer zit op de middelbare school.",
+      "grammar": "在 + school + 上学 geeft aan waar iemand schoolloopt."
+    }
+  ],
+  "中学生": [
+    {
+      "chinese": "她是中学生，不是大学生。",
+      "pinyin": "tā shì zhōngxuéshēng, bù shì dàxuéshēng.",
+      "dutch": "Zij is middelbare scholier, geen student.",
+      "grammar": "不是 ontkent de identiteit."
+    }
+  ],
+  "住": [
+    {
+      "chinese": "你住在哪里？",
+      "pinyin": "nǐ zhù zài nǎlǐ?",
+      "dutch": "Waar woon jij?",
+      "grammar": "住 beschrijft ergens wonen."
+    }
+  ],
+  "桌子": [
+    {
+      "chinese": "桌子下面有一只狗。",
+      "pinyin": "zhuōzi xiàmiàn yǒu yī zhǐ gǒu.",
+      "dutch": "Onder de tafel ligt een hond.",
+      "grammar": "下面 duidt de plaats onder iets aan."
+    }
+  ],
+  "字": [
+    {
+      "chinese": "这个字我不认识。",
+      "pinyin": "zhège zì wǒ bù rènshi.",
+      "dutch": "Dit karakter ken ik niet.",
+      "grammar": "认识 verwijst hier naar het herkennen van een karakter."
+    }
+  ],
+  "昨天": [
+    {
+      "chinese": "昨天你为什么没来？",
+      "pinyin": "zuótiān nǐ wèishénme ? lái?",
+      "dutch": "Waarom ben je gisteren niet gekomen?",
+      "grammar": "昨天 is een tijdsbepaling voor gisteren; 为什么 valt buiten HSK1."
+    }
+  ],
+  "坐": [
+    {
+      "chinese": "请坐在这里。",
+      "pinyin": "qǐng zuò zài zhèlǐ.",
+      "dutch": "Ga hier zitten, alstublieft.",
+      "grammar": "坐 betekent zitten; 在这里 geeft de plaats aan."
+    }
+  ],
+  "做": [
+    {
+      "chinese": "你在做什么？",
+      "pinyin": "nǐ zài zuò shénme?",
+      "dutch": "Wat ben je aan het doen?",
+      "grammar": "做 drukt een handeling of bezigheid uit."
+    }
+  ],
+  "做饭": [
+    {
+      "chinese": "爸爸今天给我们做饭。",
+      "pinyin": "bàba jīntiān gěi wǒmen zuò fàn.",
+      "dutch": "Papa kookt vandaag voor ons.",
+      "grammar": "给 + persoon geeft aan voor wie er gekookt wordt."
+    }
+  ]
+}
