@@ -17,7 +17,7 @@ import { speakMandarin } from "./lib/speech";
 import { examplesForWord } from "./lib/wordExamples";
 import type { Direction, HskLevel, ProgressMap, Skill, Word } from "./types";
 
-type Tab = "home" | "learn" | "guide" | "words" | "lists" | "write" | "settings";
+type Tab = "home" | "learn" | "guide" | "words" | "lists" | "write" | "sentences" | "settings";
 
 interface Settings {
   levels: HskLevel[];
@@ -73,6 +73,7 @@ const navItems: { id: Tab; label: string; icon: IconName }[] = [
   { id: "home", label: "Leren", icon: "learn" },
   { id: "guide", label: "Theorie", icon: "theory" },
   { id: "words", label: "Woorden", icon: "words" },
+  { id: "sentences", label: "Zinnen", icon: "theory" },
   { id: "lists", label: "Lijsten", icon: "lists" },
   { id: "write", label: "Schrijven", icon: "write" },
 ];
@@ -289,6 +290,7 @@ function App() {
             onExit={() => setTab("home")}
           />
         )}
+        {tab === "sentences" && <SentencePractice speechRate={settings.speechRate} />}
         {tab === "guide" && (
           <ArticleGuide
             progress={articleProgress}
@@ -989,6 +991,197 @@ function SkillRating({ label, value, onRate }: { label: string; value?: boolean;
         <button className={value === false ? "selected no" : ""} onClick={() => onRate(false)} aria-label={`${label} niet gekend`}>×</button>
         <button className={value === true ? "selected yes" : ""} onClick={() => onRate(true)} aria-label={`${label} gekend`}>✓</button>
       </div>
+    </div>
+  );
+}
+
+type SentenceCard = {
+  id: string;
+  word: string;
+  chinese: string;
+  pinyin: string;
+  dutch: string;
+  grammar?: string;
+  gloss?: string;
+};
+type SentencePracticeState = {
+  direction: Direction;
+  queue: string[];
+  index: number;
+  revealed: boolean;
+  known: number;
+  missed: number;
+  results: Record<string, boolean>;
+};
+const sentenceCards: SentenceCard[] = words
+  .filter((word) => word.level === 1 && !word.custom)
+  .flatMap((word) => examplesForWord(word).map((example, index) => ({
+    id: `${word.id}:${index}`,
+    word: word.hanzi,
+    ...example,
+  })));
+const sentenceById = new Map(sentenceCards.map((sentence) => [sentence.id, sentence]));
+const SENTENCE_PRACTICE_KEY = "chinees.sentence-practice.v1";
+
+function shuffleSentenceCards(cards: SentenceCard[]) {
+  const result = [...cards];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+
+function restoreSentencePractice(): SentencePracticeState | null {
+  try {
+    const saved = localStorage.getItem(SENTENCE_PRACTICE_KEY);
+    if (!saved) return null;
+    const value = JSON.parse(saved) as SentencePracticeState;
+    if (!Array.isArray(value.queue) || !value.queue.length || value.queue.some((id) => !sentenceById.has(id))) return null;
+    if (!Number.isInteger(value.index) || value.index < 0 || value.index > value.queue.length) return null;
+    if (value.direction !== "zh-nl" && value.direction !== "nl-zh") return null;
+    return { ...value, results: value.results || {}, known: value.known || 0, missed: value.missed || 0, revealed: Boolean(value.revealed) };
+  } catch {
+    return null;
+  }
+}
+
+function SentencePractice({ speechRate }: { speechRate: number }) {
+  const [direction, setDirection] = useState<Direction>("zh-nl");
+  const [count, setCount] = useState<"10" | "25" | "all">("10");
+  const [session, setSession] = useState<SentencePracticeState | null>(restoreSentencePractice);
+  const [showDetails, setShowDetails] = useState(false);
+  const [writingCharacter, setWritingCharacter] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (session) localStorage.setItem(SENTENCE_PRACTICE_KEY, JSON.stringify(session));
+    else localStorage.removeItem(SENTENCE_PRACTICE_KEY);
+  }, [session]);
+
+  function startSession() {
+    const shuffled = shuffleSentenceCards(sentenceCards);
+    const limit = count === "all" ? shuffled.length : Number(count);
+    setSession({ direction, queue: shuffled.slice(0, limit).map((item) => item.id),
+      index: 0, revealed: false, known: 0, missed: 0, results: {} });
+    setShowDetails(false);
+    setWritingCharacter(null);
+  }
+
+  function recordAnswer(correct: boolean) {
+    if (!session || !session.revealed) return;
+    const id = session.queue[session.index];
+    const prior = session.results[id];
+    setSession({ ...session, index: session.index + 1, revealed: false,
+      known: session.known - (prior === true ? 1 : 0) + (correct ? 1 : 0),
+      missed: session.missed - (prior === false ? 1 : 0) + (correct ? 0 : 1),
+      results: { ...session.results, [id]: correct } });
+    setShowDetails(false);
+    setWritingCharacter(null);
+  }
+
+  const current = session && session.index < session.queue.length
+    ? sentenceById.get(session.queue[session.index])
+    : null;
+  const completed = session && session.index >= session.queue.length;
+  return (
+    <div className="sentence-practice-page">
+      <header className="sentence-practice-heading">
+        <p className="eyebrow">Oefenen</p>
+        <h1>Voorbeeldzinnen</h1>
+        <p>Leer volledige zinnen begrijpen en gebruiken. {sentenceCards.length} zinnen beschikbaar.</p>
+      </header>
+      {!session && (
+        <section className="sentence-practice-panel">
+          <h2>Nieuwe oefensessie</h2>
+          <p>De zinnen komen telkens in een willekeurige volgorde. Je beoordeelt zelf of je het antwoord wist.</p>
+          <fieldset className="sentence-practice-fieldset">
+            <legend>Oefenrichting</legend>
+            <label><input type="radio" name="sentence-direction" checked={direction === "zh-nl"} onChange={() => setDirection("zh-nl")} /> Chinees → Nederlands</label>
+            <label><input type="radio" name="sentence-direction" checked={direction === "nl-zh"} onChange={() => setDirection("nl-zh")} /> Nederlands → Chinees</label>
+          </fieldset>
+          <fieldset className="sentence-practice-fieldset">
+            <legend>Aantal zinnen</legend>
+            <label><input type="radio" name="sentence-count" checked={count === "10"} onChange={() => setCount("10")} /> 10</label>
+            <label><input type="radio" name="sentence-count" checked={count === "25"} onChange={() => setCount("25")} /> 25</label>
+            <label><input type="radio" name="sentence-count" checked={count === "all"} onChange={() => setCount("all")} /> Alle {sentenceCards.length}</label>
+          </fieldset>
+          <button type="button" className="button primary-button full-button" onClick={startSession}>Start met oefenen</button>
+        </section>
+      )}
+      {session && (
+        <section className="sentence-practice-panel">
+          <div className="sentence-practice-session-top">
+            <span>{completed ? "Afgerond" : `Zin ${session.index + 1} van ${session.queue.length}`}</span>
+            <button type="button" className="sentence-practice-reset" onClick={() => {
+              if (window.confirm("De huidige oefensessie beëindigen?")) setSession(null);
+            }}>Nieuwe sessie</button>
+          </div>
+          <div className="sentence-practice-progress" role="progressbar" aria-valuemin={0} aria-valuemax={session.queue.length} aria-valuenow={session.index}>
+            <span style={{ width: `${(session.index / session.queue.length) * 100}%` }} />
+          </div>
+          {completed ? (
+            <div className="sentence-practice-finished">
+              <h2>Oefensessie voltooid</h2>
+              <p><strong>{session.known}</strong> zinnen gekend · <strong>{session.missed}</strong> nog oefenen</p>
+              <button type="button" className="button primary-button full-button" onClick={() => setSession(null)}>Nog eens oefenen</button>
+            </div>
+          ) : current && (
+            <>
+              <p className="sentence-practice-question">{session.direction === "zh-nl" ? "Wat betekent deze zin?" : "Hoe zeg je dit in het Chinees?"}</p>
+              <div className={session.direction === "zh-nl" ? "sentence-practice-prompt hanzi" : "sentence-practice-prompt"}>
+                {session.direction === "zh-nl" ? current.chinese : current.dutch}
+              </div>
+              {session.direction === "zh-nl" && (
+                <button type="button" className="sentence-practice-audio" onClick={() => speakMandarin(current.chinese, speechRate)}>
+                  <MonoIcon name="speaker" size={19} /> Beluister de zin
+                </button>
+              )}
+              {!session.revealed ? (
+                <button type="button" className="button primary-button full-button" onClick={() => setSession({ ...session, revealed: true })}>Toon het antwoord</button>
+              ) : (
+                <div className="sentence-practice-answer">
+                  <div className="sentence-practice-answer-chinese" lang="zh">
+                    {[...current.chinese].map((char, index) => /[\u3400-\u9fff]/.test(char)
+                      ? <button type="button" key={index} className="examples-character"
+                          onClick={() => setWritingCharacter(char)} aria-label={`Bekijk schrijfvolgorde van ${char}`}>{char}</button>
+                      : <span key={index}>{char}</span>)}
+                    <button className="sentence-practice-inline-audio" type="button"
+                      onClick={() => speakMandarin(current.chinese, speechRate)} aria-label="Beluister de zin">
+                      <MonoIcon name="speaker" size={20} />
+                    </button>
+                  </div>
+                  <p className="sentence-practice-pinyin">{current.pinyin}</p>
+                  <p className="sentence-practice-translation">{current.dutch}</p>
+                  <button type="button" className="sentence-practice-details-toggle"
+                    aria-expanded={showDetails} onClick={() => setShowDetails(!showDetails)}>
+                    Grammatica en gebruik {showDetails ? "⌃" : "⌄"}
+                  </button>
+                  {showDetails && (
+                    <div className="sentence-practice-grammar">
+                      <p>{current.grammar}</p>{current.gloss && <small>{current.gloss}</small>}
+                    </div>
+                  )}
+                  <div className="sentence-practice-rating" role="group" aria-label="Zelfbeoordeling">
+                    <button type="button" onClick={() => recordAnswer(false)}>Wist ik niet</button>
+                    <button type="button" onClick={() => recordAnswer(true)}>Wist ik</button>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </section>
+      )}
+      {writingCharacter && createPortal(
+        <div className="examples-modal-backdrop" onClick={() => setWritingCharacter(null)}>
+          <section className="examples-writing-panel" role="dialog" aria-modal="true"
+            aria-label={`Schrijfvolgorde van ${writingCharacter}`} onClick={(event) => event.stopPropagation()}>
+            <button type="button" className="examples-writing-close" onClick={() => setWritingCharacter(null)} aria-label="Sluiten">×</button>
+            <h3>Schrijfvolgorde · {writingCharacter}</h3>
+            <StrokeOrderPreview hanzi={writingCharacter} />
+          </section>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }
