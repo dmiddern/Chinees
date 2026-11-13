@@ -309,10 +309,10 @@
   ],
   "电影": [
     {
-      "chinese": "这个电影好看吗？",
-      "pinyin": "zhège diànyǐng hǎokàn ma?",
+      "chinese": "这部电影好看吗？",
+      "pinyin": "zhè bù diànyǐng hǎokàn ma?",
       "dutch": "Is deze film goed?",
-      "grammar": "好看 beoordeelt iets dat je bekijkt."
+      "grammar": "部 is het gebruikelijke maatwoord voor films; het ligt buiten HSK1."
     }
   ],
   "电影院": [
