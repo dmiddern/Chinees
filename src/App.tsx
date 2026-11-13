@@ -267,12 +267,13 @@ function App() {
             onRate={rate}
             lists={customLists}
             onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
-            onCreateListForWord={(name, wordId) => setCustomLists((current) => {
-              const updated = createCustomList(current, name);
-              if (updated.length === current.length) return current;
+            onCreateListForWord={(name, wordId) => {
+              const updated = createCustomList(customLists, name);
+              if (updated.length === customLists.length) return null;
               const created = updated[updated.length - 1];
-              return toggleWordInList(updated, created.id, wordId);
-            })}
+              setCustomLists((current) => [...current, { ...created, wordIds: [wordId] }]);
+              return created.id;
+            }}
             onExit={() => setTab("home")}
           />
         )}
@@ -608,7 +609,7 @@ function Learn({
   onRate: (id: number, skill: Skill, correct: boolean) => void;
   lists: CustomWordList[];
   onToggleWord: (listId: string, wordId: number) => void;
-  onCreateListForWord: (name: string, wordId: number) => void;
+  onCreateListForWord: (name: string, wordId: number) => string | null;
   onExit: () => void;
 }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -843,7 +844,8 @@ function Learn({
             <form className="bookmark-new-list" onSubmit={(event) => {
               event.preventDefault();
               if (!newListName.trim()) return;
-              onCreateListForWord(newListName, word.id);
+              const createdId = onCreateListForWord(newListName, word.id);
+              if (createdId) rememberSaveList(createdId);
               setNewListName("");
             }}>
               <input value={newListName} onChange={(event) => setNewListName(event.target.value)} placeholder="Naam nieuwe lijst" aria-label="Naam nieuwe lijst" />
