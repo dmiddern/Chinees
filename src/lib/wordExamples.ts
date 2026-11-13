@@ -90,6 +90,7 @@ export interface ContextualWordExample extends WordExample {
   grammar?: string;
   toneNumbers?: number[];
   reading?: string;
+  gloss?: string;
 }
 
 export function examplesForWord(word: Word): ContextualWordExample[] {
