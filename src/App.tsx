@@ -615,9 +615,7 @@ function Learn({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [bookmarkOpen, setBookmarkOpen] = useState(false);
   const [newListName, setNewListName] = useState("");
-  const [saveListId, setSaveListId] = useState(() => localStorage.getItem("chinees.last-custom-list.v1") || "");
   function rememberSaveList(listId: string) {
-    setSaveListId(listId);
     localStorage.setItem("chinees.last-custom-list.v1", listId);
   }
 
@@ -729,7 +727,6 @@ function Learn({
   const showLiteral = [...word.hanzi].length > 1 &&
     literal.trim().toLocaleLowerCase("nl-BE") !== word.meaningNl.trim().toLocaleLowerCase("nl-BE");
   const storedInLists = lists.some((list) => list.wordIds.includes(word.id));
-  const selectedSaveList = lists.find((list) => list.id === saveListId) || lists[0];
 
   return (
     <div className="page learn-page">
@@ -785,27 +782,6 @@ function Learn({
           )}
         </div>
       </section>
-
-      <div className="practice-save-compact">
-        <span>Bewaar dit woord</span>
-        <div>
-          {lists.length > 0 ? (
-            <>
-              <select aria-label="Kies woordenlijst" value={selectedSaveList?.id || ""} onChange={(event) => rememberSaveList(event.target.value)}>
-                {lists.map((list) => <option key={list.id} value={list.id}>{list.name}</option>)}
-              </select>
-              <button type="button" disabled={!selectedSaveList || selectedSaveList.wordIds.includes(word.id)} onClick={() => {
-                if (selectedSaveList) {
-                  rememberSaveList(selectedSaveList.id);
-                  onToggleWord(selectedSaveList.id, word.id);
-                }
-              }}>{selectedSaveList?.wordIds.includes(word.id) ? "✓ In lijst" : "+ Voeg toe"}</button>
-            </>
-          ) : (
-            <button type="button" className="practice-no-lists" onClick={() => setBookmarkOpen(true)}>+ Maak een lijst</button>
-          )}
-        </div>
-      </div>
 
       {session.revealed && (
         <div className="session-rating-bar" role="group" aria-label="Zelfbeoordeling">
