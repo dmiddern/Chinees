@@ -613,6 +613,11 @@ function Learn({
   onExit: () => void;
 }) {
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [showSelfRating, setShowSelfRating] = useState(() => localStorage.getItem("chinees.show-self-rating.v1") === "true");
+  function updateSelfRating(visible: boolean) {
+    setShowSelfRating(visible);
+    localStorage.setItem("chinees.show-self-rating.v1", String(visible));
+  }
   const [bookmarkOpen, setBookmarkOpen] = useState(false);
   const [newListName, setNewListName] = useState("");
   function rememberSaveList(listId: string) {
@@ -783,7 +788,7 @@ function Learn({
         </div>
       </section>
 
-      {session.revealed && (
+      {session.revealed && showSelfRating && (
         <div className="session-rating-bar" role="group" aria-label="Zelfbeoordeling">
           <button type="button" className="session-rate-missed" onClick={() => answerAndAdvance(false)}>Wist ik niet</button>
           <button type="button" className="session-rate-known" onClick={() => answerAndAdvance(true)}>Wist ik</button>
@@ -844,6 +849,10 @@ function Learn({
               <button type="button" className={exercise.direction === "zh-nl" ? "active" : ""} onClick={() => switchDirection("zh-nl")}>Chinees → {meaningLanguageLabel}</button>
               <button type="button" className={exercise.direction === "nl-zh" ? "active" : ""} onClick={() => switchDirection("nl-zh")}>{meaningLanguageLabel} → Chinees</button>
             </div>
+            <label className="session-rating-setting">
+              <span><strong>Zelfbeoordeling</strong><small>Toon ‘Wist ik’ en ‘Wist ik niet’ na elk antwoord</small></span>
+              <input type="checkbox" checked={showSelfRating} onChange={(event) => updateSelfRating(event.target.checked)} aria-label="Zelfbeoordeling tonen" />
+            </label>
             <div className="session-sheet-info">
               <span>{selectedListCount !== null ? "Geselecteerde daglijsten" : "Reeks"}</span>
               <strong>{selectedListCount !== null ? selectedListCount : (session.title || "Daglijst")}</strong>
