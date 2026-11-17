@@ -1336,3 +1336,8 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 /* Six practice directions remain usable on narrow screens. */
 .practice-direction-choice > div:last-child, .session-sheet .direction-indicator { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; flex-wrap: wrap; }
 #pinyin-answer { display: block; width: 100%; margin: 12px 0; padding: 12px; font-size: 18px; }
+
+.pinyin-tone-toolbar { display: flex; gap: 8px; margin: 0 0 16px; }
+.pinyin-tone-toolbar button { flex: 1; min-width: 0; border: 1px solid #ddd8d2; border-radius: 10px; background: #fffdfa; color: inherit; padding: 10px 4px; cursor: pointer; font-size: 22px; }
+.pinyin-tone-toolbar button small { display: block; font-size: 11px; color: #6d6863; }
+.pinyin-tone-toolbar button:focus-visible { outline: 2px solid #a66a57; outline-offset: 2px; }

@@ -1,3 +1,4 @@
+import { applyPinyinTone } from "./lib/pinyinInput";
 import { directions, directionLabels, promptValue, matchingPromptWords, checkPinyinAnswer } from "./lib/practiceDirections";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -621,7 +622,20 @@ function Learn({
   onSaveBookmarkChanges: (wordId: number, selectedIds: string[], pendingLists: CustomWordList[]) => void;
   onExit: () => void;
 }) {
+  const pinyinInputRef = useRef<HTMLInputElement>(null);
   const [pinyinInput, setPinyinInput] = useState("");
+  function editPinyin(tone: number | "ü") {
+    const input = pinyinInputRef.current;
+    if (!input) return;
+    const start = input.selectionStart ?? pinyinInput.length;
+    const end = input.selectionEnd ?? start;
+    const edit = tone === "ü"
+      ? { value: pinyinInput.slice(0, start) + "ü" + pinyinInput.slice(end), cursor: start + 1 }
+      : applyPinyinTone(pinyinInput, start, end, tone);
+    setPinyinInput(edit.value);
+    input.focus({ preventScroll: true });
+    requestAnimationFrame(() => input.setSelectionRange(edit.cursor, edit.cursor));
+  }
   const [pinyinCorrect, setPinyinCorrect] = useState<boolean | null>(null);
   useEffect(() => { if (!session?.revealed) { setPinyinInput(""); setPinyinCorrect(null); } }, [session?.index, session?.direction, session?.date, session?.revealed]);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -821,8 +835,11 @@ function Learn({
                 setPinyinCorrect(checkPinyinAnswer(pinyinInput, word, exercise.direction, words));
                 onSessionChange({ ...session, revealed: true });
               }}>
-                <label htmlFor="pinyin-answer">Pinyin met tonen</label>
-                <input id="pinyin-answer" value={pinyinInput} onChange={event => setPinyinInput(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder="nǐ hǎo of ni3 hao3" />
+                <input ref={pinyinInputRef} aria-label="Pinyinantwoord" id="pinyin-answer" value={pinyinInput} onChange={event => setPinyinInput(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} />
+                <div className="pinyin-tone-toolbar" role="group" aria-label="Toon toepassen">
+                  {["ā", "á", "ǎ", "à", "a"].map((mark, index) => <button key={index} type="button" aria-label={index === 4 ? "Neutrale toon" : `Toon ${index + 1}`} onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(index + 1)}><span>{mark}</span><small>{index + 1}</small></button>)}
+                  <button type="button" aria-label="ü invoegen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin("ü")}>ü</button>
+                </div>
                 <button className="button primary-button" type="submit" disabled={!pinyinInput.trim()}>Controleer antwoord</button>
               </form>}
               <button className="button primary-button reveal-button" onClick={() => onSessionChange({ ...session, revealed: true })}>Toon het antwoord</button>

@@ -44,3 +44,14 @@ assert.equal(progress[1].meaning.incorrect,1);
 saveProgress(progress); assert.deepEqual(loadProgress(),progress);
 console.log('Practice directions: normalization, ambiguity, six sessions, legacy progress and persistence passed.');
 
+
+const { applyPinyinTone: tone } = await import('../src/lib/pinyinInput.ts');
+for (const [input, cursor, selectedTone, expected] of [
+ ['hao',3,3,'hǎo'], ['ni hao',2,3,'nǐ hao'], ['ni hao',6,3,'ni hǎo'],
+ ['nihao',5,3,'nihǎo'], ['liu',3,2,'liú'], ['gui',3,4,'guì'], ['shui',4,3,'shuǐ'],
+ ['ou',2,1,'ōu'], ['nǚ',2,4,'nǜ'], ['lv',2,4,'lǜ'], ['nu:',3,3,'nǚ'],
+ ['hao3',4,4,'hào'], ['hǎo',3,5,'hao'], ['HAO',3,3,'HǍO'], ['',0,1,''],
+ ['ni ',3,3,'nǐ '], ['nihao',2,3,'nǐhao'],
+]) assert.equal(tone(input,cursor,cursor,selectedTone).value,expected,input);
+assert.deepEqual(tone('ni hao',3,6,3), {value:'ni hǎo',cursor:6});
+console.log('Tone editing: caret, selection, placement, replacement, neutral tone and keyboard aliases passed.');
