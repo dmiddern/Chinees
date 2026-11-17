@@ -16,7 +16,7 @@ function currentWord(): Word | null {
   try {
     const session = JSON.parse(localStorage.getItem("chinees.learning-session.v1") || "null");
     const exercise = session?.queue?.[session.index];
-    if ((session?.direction !== "nl-zh" && session?.direction !== "pinyin-zh") || !exercise) return null;
+    if ((session?.direction !== "nl-zh" && session?.direction !== "pinyin-zh") || !exercise || session.revealed) return null;
     const allWords = [...builtInWords, ...loadCustomWords()];
     return allWords.find((word) => word.id === exercise.wordId) || null;
   } catch {
@@ -41,22 +41,6 @@ function addStyles() {
     .stroke-quiz-status.is-complete{color:#39705d;font-weight:700}
   `;
   document.head.append(style);
-}
-
-function applyAutomaticWritingRating() {
-  const card = document.querySelector(".flashcard") as HTMLElement | null;
-  const result = card?.dataset.writingCorrect;
-  if (!card || result === undefined) return;
-
-  const ratingRows = [...document.querySelectorAll(".self-check .skill-rating")];
-  const writingRow = ratingRows.find((row) => row.querySelector("span")?.textContent?.trim() === "Schrijfwijze");
-  if (!writingRow) return;
-
-  const buttons = writingRow.querySelectorAll("button");
-  const target = result === "true" ? buttons[1] : buttons[0];
-  if (target && !target.classList.contains("selected")) {
-    (target as HTMLButtonElement).click();
-  }
 }
 
 function installQuiz(
@@ -139,9 +123,8 @@ function enhancePractice() {
     return;
   }
 
-  const wordKey = String(word.id);
+  const wordKey = card.dataset.exerciseKey || String(word.id);
   if (existing?.dataset.wordId === wordKey && card.contains(existing)) {
-    applyAutomaticWritingRating();
     return;
   }
 
@@ -161,6 +144,7 @@ function enhancePractice() {
   row.dataset.count = String(characters.length);
 
   const results = new Map<number, number>();
+  const exerciseKey = card.dataset.exerciseKey;
 
   characters.forEach((character, index) => {
     const box = document.createElement("div");
@@ -177,16 +161,13 @@ function enhancePractice() {
     box.append(target, status);
     row.append(box);
     installQuiz(target, character, status, (mistakes) => {
+      if (!target.isConnected || !card.isConnected || card.dataset.exerciseKey !== exerciseKey) return;
       results.set(index, mistakes);
       if (results.size !== characters.length) return;
 
-      const totalMistakes = [...results.values()].reduce((total, value) => total + value, 0);
-      card.dataset.writingMistakes = String(totalMistakes);
-      card.dataset.writingCorrect = String(totalMistakes === 0);
-
-      const reveal = card.querySelector(".reveal-button") as HTMLButtonElement | null;
-      if (reveal) reveal.click();
-      requestAnimationFrame(applyAutomaticWritingRating);
+      window.dispatchEvent(new CustomEvent("chinees:writing-result", {
+        detail: { key: exerciseKey, mistakes: characters.map((_, index) => results.get(index)!) },
+      }));
     });
   });
 
@@ -211,11 +192,10 @@ export function installStrokeQuizPatch() {
     requestAnimationFrame(() => {
       scheduled = false;
       enhancePractice();
-      applyAutomaticWritingRating();
-    });
+      });
   };
 
-  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-exercise-key"] });
   window.addEventListener("storage", schedule);
   schedule();
 }

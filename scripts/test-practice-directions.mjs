@@ -72,3 +72,45 @@ assert.equal(umlaut('lǔ',2,2).value,'lǚ');
 assert.equal(umlaut('nu3',3,3).value,'nü3');
 assert.equal(umlaut('',0,0).value,'ü');
 console.log('Trema application passed.');
+
+const { writingIsAccepted, recordPracticeResult, sessionMistakes, saveLastMistakes, loadLastMistakes, exerciseKey } = await import('../src/lib/practiceResults.ts');
+const { saveMistakesAsList, saveCustomLists, loadCustomLists } = await import('../src/lib/customLists.ts');
+assert.equal(writingIsAccepted([0]),true);
+assert.equal(writingIsAccepted([1,1]),true);
+assert.equal(writingIsAccepted([2,0]),false);
+assert.equal(writingIsAccepted([0,2]),false);
+assert.equal(writingIsAccepted([]),false);
+assert.equal(writingIsAccepted([-1]),false);
+let attempt = createLearningSession('mistakes-test',[1,2,3],'Test','zh-pinyin');
+const firstId = attempt.queue[0].wordId;
+attempt = recordPracticeResult(attempt,false,'pinyin',{input:'ni2'});
+assert.equal(sessionMistakes(attempt).wordIds[0],firstId);
+assert.equal(recordPracticeResult(attempt,true,'pinyin'),attempt); // revisiting is not counted twice
+saveLearningSession(attempt);
+assert.deepEqual(loadLearningSession().results,attempt.results);
+const firstKey = exerciseKey(attempt);
+attempt = {...attempt, index:1};
+assert.notEqual(exerciseKey(attempt),firstKey);
+attempt = recordPracticeResult(attempt,false,'revealed');
+attempt = {...attempt, index:2};
+attempt = recordPracticeResult(attempt,false,'skipped');
+assert.equal(sessionMistakes(attempt).wordIds.length,3);
+attempt = {...attempt, queue:[...attempt.queue,{...attempt.queue[0]}],index:3};
+attempt = recordPracticeResult(attempt,true,'pinyin'); // later success must preserve first error
+assert.equal(sessionMistakes(attempt).wordIds.length,3);
+attempt = {...attempt, queue:[...attempt.queue,{...attempt.queue[0]}],index:4};
+attempt = recordPracticeResult(attempt,false,'pinyin'); // same word is listed once
+assert.equal(sessionMistakes(attempt).wordIds.length,3);
+saveLastMistakes(attempt);
+const last = loadLastMistakes();
+assert.equal(last.results.length,4);
+assert.equal(last.direction,'zh-pinyin');
+const savedLists = saveMistakesAsList([],last);
+assert.deepEqual(savedLists[0].wordIds,last.wordIds);
+assert.equal(savedLists[0].direction,'zh-pinyin');
+assert.equal(savedLists[0].mistakes.length,4);
+assert.equal(saveMistakesAsList(savedLists,last).length,1);
+saveCustomLists(savedLists);
+assert.deepEqual(loadCustomLists(),savedLists);
+assert.equal(saveMistakesAsList([],sessionMistakes(createLearningSession('none',[1],undefined,'zh-nl'))).length,0);
+console.log('Automatic mistakes: per-character tolerance, immediate/persisted outcomes, skips, reveal, deduplication, later success, saved lists and remembered direction passed.');

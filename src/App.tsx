@@ -1,3 +1,4 @@
+import { exerciseKey, writingIsAccepted, recordPracticeResult, sessionMistakes, saveLastMistakes, loadLastMistakes, type ResultReason, type PracticeResult } from "./lib/practiceResults";
 import { applyPinyinTone, applyPinyinUmlaut } from "./lib/pinyinInput";
 import { directions, directionLabels, promptValue, matchingPromptWords, checkPinyinAnswer, pinyinFeedback } from "./lib/practiceDirections";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -8,7 +9,7 @@ import { articleKinds, articleLevels, articleSources, articles, type Article, ty
 import HanziPractice, { StrokeOrderPreview } from "./components/HanziPractice";
 import ListManager from "./components/ListManager";
 import { loadArticleProgress, recordArticleQuiz, saveArticleProgress, updateArticleProgress, type ArticleProgressMap } from "./lib/articleProgress";
-import { createCustomList, loadCustomLists, saveCustomLists, toggleWordInList, type CustomWordList } from "./lib/customLists";
+import { createCustomList, saveMistakesAsList, loadCustomLists, saveCustomLists, toggleWordInList, type CustomWordList } from "./lib/customLists";
 import { exercisesForArticle, relatedWordsForArticle } from "./lib/course";
 import { clearDailySets, createDailySet, loadDailySets, localDateKey, saveDailySets, type DailySet, type DailySetMap } from "./lib/dailySets";
 import { createLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
@@ -106,7 +107,14 @@ function App() {
   useEffect(() => saveDailySets(dailySets), [dailySets]);
   useEffect(() => saveArticleProgress(articleProgress), [articleProgress]);
   useEffect(() => saveCustomLists(customLists), [customLists]);
-  useEffect(() => saveLearningSession(learningSession), [learningSession]);
+  const [lastMistakes, setLastMistakes] = useState(loadLastMistakes);
+  useEffect(() => {
+    saveLearningSession(learningSession);
+    if (learningSession && learningSession.index >= learningSession.queue.length) {
+      saveLastMistakes(learningSession);
+      setLastMistakes(sessionMistakes(learningSession));
+    }
+  }, [learningSession]);
 
   useEffect(() => {
     const listener = (event: Event) => {
@@ -223,9 +231,9 @@ function App() {
     setTab("learn");
   }
 
-  function startWordList(wordIds: number[], title: string) {
+  function startWordList(wordIds: number[], title: string, direction: Direction = settings.direction) {
     if (!wordIds.length) return;
-    setLearningSession(createLearningSession(`list:${Date.now()}`, wordIds, title, settings.direction));
+    setLearningSession(createLearningSession(`list:${Date.now()}`, wordIds, title, direction));
     setTab("learn");
   }
 
@@ -252,6 +260,8 @@ function App() {
       <main>
         {tab === "home" && (
           <Home
+            lastMistakesCount={lastMistakes?.wordIds.length || 0}
+            onRetryMistakes={() => { if (lastMistakes) startWordList(lastMistakes.wordIds, "Nog oefenen", lastMistakes.direction); }}
             stats={stats}
             settings={settings}
             todayWords={todayWords}
@@ -267,6 +277,7 @@ function App() {
         )}
         {tab === "learn" && (
           <Learn
+            onSaveMistakes={(completed) => setCustomLists(current => saveMistakesAsList(current, sessionMistakes(completed)))}
             progress={progress}
             session={learningSession}
             settings={settings}
@@ -326,7 +337,7 @@ function App() {
             onDelete={(listId) => setCustomLists((current) => current.filter((list) => list.id !== listId))}
             onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
             onReplaceWords={(listId, wordIds) => setCustomLists((current) => current.map((list) => list.id === listId ? { ...list, wordIds: [...new Set(wordIds)], updatedAt: Date.now() } : list))}
-            onPractice={(list) => startWordList(list.wordIds, list.name)}
+            onPractice={(list) => startWordList(list.wordIds, list.name, list.direction)}
           />
         )}
         {tab === "write" && (
@@ -414,6 +425,8 @@ function App() {
 }
 
 function Home({
+  lastMistakesCount,
+  onRetryMistakes,
   stats,
   settings,
   todayWords,
@@ -426,6 +439,8 @@ function Home({
   onToggleLevel,
   onOpenDay,
 }: {
+  lastMistakesCount: number;
+  onRetryMistakes: () => void;
   stats: { total: number; known: number; learning: number; newCount: number; reviews: number };
   settings: Settings;
   todayWords: Word[];
@@ -506,6 +521,7 @@ function Home({
         <button className="text-button" onClick={onWrite}>Of oefen eerst je schrijfwijze</button>
       </section>
 
+      {lastMistakesCount > 0 && <button className="button secondary-button" onClick={onRetryMistakes}>Oefen fouten laatste oefening ({lastMistakesCount})</button>}
       <section className="stats-grid" aria-label="Voortgang">
         <StatCard value={stats.known} label="Gekend" tone="success" />
         <StatCard value={stats.learning} label="Bezig" tone="warning" />
@@ -605,6 +621,7 @@ function PracticeDirectionButtons({
 }
 
 function Learn({
+  onSaveMistakes,
   progress,
   session,
   settings,
@@ -614,6 +631,7 @@ function Learn({
   onSaveBookmarkChanges,
   onExit,
 }: {
+  onSaveMistakes: (session: LearningSession) => void;
   progress: ProgressMap;
   session: LearningSession | null;
   settings: Settings;
@@ -642,14 +660,33 @@ function Learn({
     input.focus({ preventScroll: true });
     requestAnimationFrame(() => input.setSelectionRange(edit.cursor, edit.cursor));
   }
-  const [pinyinCorrect, setPinyinCorrect] = useState<boolean | null>(null);
-  useEffect(() => { if (!session?.revealed) { setPinyinInput(""); setPinyinCorrect(null); } }, [session?.index, session?.direction, session?.date, session?.revealed]);
-  const [settingsOpen, setSettingsOpen] = useState(false);
-  const [showSelfRating, setShowSelfRating] = useState(() => localStorage.getItem("chinees.show-self-rating.v1") === "true");
-  function updateSelfRating(visible: boolean) {
-    setShowSelfRating(visible);
-    localStorage.setItem("chinees.show-self-rating.v1", String(visible));
+  const currentResult = session?.results?.[session.index];
+  const pinyinCorrect = currentResult?.reason === "pinyin" ? currentResult.correct : null;
+  const [mistakesSaved, setMistakesSaved] = useState(false);
+  useEffect(() => setMistakesSaved(false), [session?.id]);
+  function recordOutcome(correct: boolean, reason: ResultReason, details: Pick<PracticeResult,"input" | "writingMistakes"> = {}) {
+    if (!session) return session;
+    const updated = recordPracticeResult(session, correct, reason, details);
+    if (updated !== session) {
+      const exercise = session.queue[session.index];
+      onRate(exercise.wordId, exercise.skill, correct, exercise.direction);
+    }
+    return updated;
   }
+  useEffect(() => {
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<{ key: string; mistakes: number[] }>).detail;
+      if (!session || session.revealed || !detail || detail.key !== exerciseKey(session)) return;
+      const count = [...(words.find(word => word.id === session.queue[session.index]?.wordId)?.hanzi || "")].filter(char => /[\u3400-\u9fff]/.test(char)).length;
+      if (!Array.isArray(detail.mistakes) || detail.mistakes.length !== count) return;
+      const updated = recordOutcome(writingIsAccepted(detail.mistakes), "writing", { writingMistakes: detail.mistakes });
+      if (updated) onSessionChange({ ...updated, revealed: true });
+    };
+    window.addEventListener("chinees:writing-result", listener);
+    return () => window.removeEventListener("chinees:writing-result", listener);
+  }, [session, onRate, onSessionChange]);
+  useEffect(() => { if (!session?.revealed) { setPinyinInput(""); } }, [session?.index, session?.direction, session?.date, session?.revealed]);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [bookmarkOpen, setBookmarkOpen] = useState(false);
   const [bookmarkSelectedIds, setBookmarkSelectedIds] = useState<string[]>([]);
   const [pendingBookmarkLists, setPendingBookmarkLists] = useState<CustomWordList[]>([]);
@@ -690,6 +727,8 @@ function Learn({
   if (!session?.queue.length) return <EmptyState title="Je daglijst wordt klaargezet" text="Ga even terug naar Vandaag en open de leersessie opnieuw." />;
   const exercise = session.queue[session.index];
   if (!exercise) {
+    const mistakes = sessionMistakes(session);
+    const saved = mistakesSaved || lists.some(list => list.mistakeSessionId === mistakes.id);
     return (
       <div className="page daily-complete">
         <div className="hero-character">好</div>
@@ -699,6 +738,18 @@ function Learn({
           Je hebt {session.wordIds.length} woorden uit {session.title || "deze reeks"} geoefend van{" "}
           {directionLabels[session.direction]}.
         </p>
+        {mistakes.wordIds.length > 0 ? <section className="session-mistakes">
+          <h2>Nog oefenen · {mistakes.wordIds.length} woorden</h2>
+          <p>Ook woorden die je later juist had, blijven hier staan.</p>
+          <ul className="session-mistake-words">{mistakes.wordIds.map(id => {
+            const word = words.find(word => word.id === id);
+            const labels = { pinyin: "Pinyin fout", writing: "Tekenfouten", revealed: "Antwoord getoond", skipped: "Overgeslagen" };
+            const reasons = [...new Set(mistakes.results.filter(result => result.wordId === id).map(result => labels[result.reason]))];
+            return <li key={id}><strong>{word?.hanzi}</strong><span>{word?.pinyin} · {word?.meaningNl}</span><small>{reasons.join(" · ")}</small></li>;
+          })}</ul>
+          <button className="button primary-button" onClick={() => onSessionChange(createLearningSession(`mistakes:${Date.now()}`, mistakes.wordIds, "Nog oefenen", session.direction))}>Oefen mijn fouten opnieuw</button>
+          <button className="button secondary-button" disabled={saved} onClick={() => { onSaveMistakes(session); setMistakesSaved(true); }}>{saved ? "Bewaard als lijst" : "Bewaar fouten als lijst"}</button>
+        </section> : <p>Geen fouten om opnieuw te oefenen.</p>}
         <button className="button primary-button" onClick={restart}>Oefen deze lijst opnieuw</button>
         <button className="button secondary-button" onClick={onExit}>Terug naar Leren</button>
       </div>
@@ -708,23 +759,6 @@ function Learn({
   if (!word) return <EmptyState title="Dit woord is niet beschikbaar" text="Start de daglijst opnieuw om verder te oefenen." />;
   const activeSession: LearningSession = session;
   const activeWord: Word = word;
-
-  function answerAndAdvance(correct: boolean) {
-    onRate(activeWord.id, exercise.skill, correct, exercise.direction);
-    const queue = [...activeSession.queue];
-    if (!correct) {
-      // Space a missed word among later cards instead of repeating it immediately.
-      queue.splice(Math.min(queue.length, activeSession.index + 4), 0, { ...exercise });
-    }
-    onSessionChange({
-      ...activeSession,
-      queue,
-      index: activeSession.index + 1,
-      revealed: false,
-      promptMode: "character",
-      ratings: {},
-    });
-  }
 
   function previous() {
     if (activeSession.index === 0) return;
@@ -738,16 +772,16 @@ function Learn({
   }
 
   function next() {
-    if (pinyinCorrect !== null) { answerAndAdvance(pinyinCorrect); return; }
-    const rating = pinyinCorrect ?? activeSession.ratings[exercise.skill];
-    if (rating !== undefined) onRate(activeWord.id, exercise.skill, rating, exercise.direction);
-    onSessionChange({
-      ...activeSession,
-      index: activeSession.index + 1,
-      revealed: false,
-      promptMode: "character",
-      ratings: {},
-    });
+    const evaluated = activeSession.results?.[activeSession.index];
+    const updated = evaluated ? activeSession : recordOutcome(false, "skipped");
+    if (!updated) return;
+    const queue = [...updated.queue];
+    const repeatedIndices = [...(updated.repeatedIndices || [])];
+    if (evaluated && !evaluated.correct && (evaluated.reason === "pinyin" || evaluated.reason === "writing") && !repeatedIndices.includes(updated.index)) {
+      queue.splice(Math.min(queue.length, updated.index + 4), 0, { ...exercise });
+      repeatedIndices.push(updated.index);
+    }
+    onSessionChange({ ...updated, queue, repeatedIndices, index: updated.index + 1, revealed: false, promptMode: "character", ratings: {} });
   }
 
   function switchDirection(direction: Direction) {
@@ -780,7 +814,8 @@ function Learn({
 
   const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
   const promptMatches = matchingPromptWords(word, exercise.direction, words);
-  const feedback = pinyinCorrect === false ? pinyinFeedback(pinyinInput, promptMatches.map(candidate => candidate.pinyin)) : null;
+  const feedbackInput = currentResult?.input ?? pinyinInput;
+  const feedback = pinyinCorrect === false ? pinyinFeedback(feedbackInput, promptMatches.map(candidate => candidate.pinyin)) : null;
   const literal = literalMeaning(word);
   const showLiteral = [...word.hanzi].length > 1 &&
     literal.trim().toLocaleLowerCase("nl-BE") !== word.meaningNl.trim().toLocaleLowerCase("nl-BE");
@@ -813,7 +848,7 @@ function Learn({
         </button>
       </header>
 
-      <section className={`flashcard ${session.revealed ? "revealed" : ""}`}>
+      <section data-exercise-key={exerciseKey(session)} className={`flashcard ${session.revealed ? "revealed" : ""}`}>
         <div className="flashcard-meta">
           <button className="card-bookmark-button" type="button" aria-label="Bewaren in lijst" title="Bewaren in lijst" aria-pressed={storedInLists} onClick={openBookmarkSheet}>
             <MonoIcon name={storedInLists ? "bookmark-filled" : "bookmark"} size={20} />
@@ -839,8 +874,8 @@ function Learn({
               {exercise.direction.endsWith("pinyin") && <form className="pinyin-answer-form" onSubmit={event => {
                 event.preventDefault();
                 if (!pinyinInput.trim()) return;
-                setPinyinCorrect(checkPinyinAnswer(pinyinInput, word, exercise.direction, words));
-                onSessionChange({ ...session, revealed: true });
+                const updated = recordOutcome(checkPinyinAnswer(pinyinInput, word, exercise.direction, words), "pinyin", { input: pinyinInput });
+                if (updated) onSessionChange({ ...updated, revealed: true });
               }}>
                 <input autoFocus ref={pinyinInputRef} aria-label="Pinyinantwoord" id="pinyin-answer" value={pinyinInput} onChange={event => setPinyinInput(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} />
                 <div className="pinyin-tone-toolbar" role="group" aria-label="Toon toepassen">
@@ -850,14 +885,16 @@ function Learn({
                 </div>
                 <button className="button primary-button" type="submit" disabled={!pinyinInput.trim()}>Controleer antwoord</button>
               </form>}
-              <button className="button primary-button reveal-button" onClick={() => onSessionChange({ ...session, revealed: true })}>Toon het antwoord</button>
+              <button className="button primary-button reveal-button" onClick={() => { const updated = recordOutcome(false, "revealed"); if (updated) onSessionChange({ ...updated, revealed: true }); }}>Toon het antwoord</button>
             </>
           ) : (
             <div className="answer-block">
+              {currentResult?.reason === "writing" && <p role="status">{currentResult.correct ? "✓ Schrijfoefening geslaagd — maximaal één fout per karakter." : "✕ Nog oefenen — minstens één karakter had twee of meer fouten."}</p>}
+              {currentResult?.reason === "revealed" && <p role="status">Antwoord getoond — toegevoegd aan Nog oefenen.</p>}
               {pinyinCorrect === true && <p className="pinyin-feedback-correct" role="status">✓ Correct!</p>}
               {feedback && <section className="pinyin-feedback-error" role="status" aria-label="Antwoord verbeteren">
                 <strong>✕ Fout antwoord</strong>
-                <p>Jouw antwoord: <b>{pinyinInput}</b></p>
+                <p>Jouw antwoord: <b>{feedbackInput}</b></p>
                 <p>Juiste antwoord: <b>{feedback.expected}</b></p>
                 <ul>{feedback.details.map((detail,index) => <li key={index}>{detail}</li>)}</ul>
               </section>}
@@ -876,13 +913,6 @@ function Learn({
           )}
         </div>
       </section>
-
-      {session.revealed && showSelfRating && pinyinCorrect === null && (
-        <div className="session-rating-bar" role="group" aria-label="Zelfbeoordeling">
-          <button type="button" className="session-rate-missed" onClick={() => navigateWithInputFocus(() => answerAndAdvance(pinyinCorrect ?? false))}>Wist ik niet</button>
-          <button type="button" className="session-rate-known" onClick={() => navigateWithInputFocus(() => answerAndAdvance(pinyinCorrect ?? true))}>Wist ik</button>
-        </div>
-      )}
 
       <nav className="session-bottom-nav" aria-label="Kaartnavigatie">
         <button className="session-nav-button session-nav-prev" type="button" onClick={() => navigateWithInputFocus(previous)} disabled={session.index === 0} aria-label="Vorige kaart" title="Vorige kaart">‹</button>
@@ -962,10 +992,6 @@ function Learn({
             <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">
               {directions.map(direction => <button key={direction} type="button" className={exercise.direction === direction ? "active" : ""} onClick={() => switchDirection(direction)}>{directionLabels[direction]}</button>)}
             </div>
-            <label className="session-rating-setting">
-              <span><strong>Zelfbeoordeling</strong><small>Toon ‘Wist ik’ en ‘Wist ik niet’ na elk antwoord</small></span>
-              <input type="checkbox" checked={showSelfRating} onChange={(event) => updateSelfRating(event.target.checked)} aria-label="Zelfbeoordeling tonen" />
-            </label>
             <div className="session-sheet-info">
               <span>{selectedListCount !== null ? "Geselecteerde daglijsten" : "Reeks"}</span>
               <strong>{selectedListCount !== null ? selectedListCount : (session.title || "Daglijst")}</strong>

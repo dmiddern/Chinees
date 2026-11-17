@@ -1,3 +1,4 @@
+import type { PracticeResult } from "./practiceResults";
 import { directionSkill, isDirection } from "./practiceDirections";
 import type { Direction, Skill } from "../types";
 
@@ -10,6 +11,9 @@ export interface LearningExercise {
 }
 
 export interface LearningSession {
+  id?: string;
+  results?: Record<number, PracticeResult>;
+  repeatedIndices?: number[];
   date: string;
   title?: string;
   direction: Direction;
@@ -40,6 +44,7 @@ export function createLearningSession(
   const queue = shuffle(exercises);
 
   return {
+    id: crypto.randomUUID(),
     date,
     title,
     direction,

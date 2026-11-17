@@ -1353,3 +1353,10 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .pinyin-answer-form { width: min(100%, 380px); margin-inline: auto; }
 .pinyin-tone-toolbar button { display: flex; align-items: center; justify-content: center; min-height: 54px; padding: 10px 4px; }
 .pinyin-tone-icon { display: block; width: 28px; height: 28px; flex: 0 0 auto; }
+
+.session-mistakes { padding: 18px; margin: 20px 0; border: 1px solid var(--border, #ddd8d2); border-radius: 16px; }
+.session-mistakes .button { display: block; width: 100%; margin-top: 12px; }
+.session-mistake-words { padding: 0; list-style: none; text-align: left; }
+.session-mistake-words li { display: grid; gap: 4px; padding: 10px 0; border-bottom: 1px solid var(--border, #ddd8d2); }
+.session-mistake-words strong { font-size: 23px; }
+.session-mistake-words small { color: var(--secondary, #6d6863); }

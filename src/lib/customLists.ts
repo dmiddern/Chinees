@@ -1,6 +1,11 @@
+import type { Direction } from "../types";
+import type { PracticeMistakes, PracticeResult } from "./practiceResults";
 const STORAGE_KEY = "chinees.custom-lists.v1";
 
 export interface CustomWordList {
+  direction?: Direction;
+  mistakeSessionId?: string;
+  mistakes?: PracticeResult[];
   id: string;
   name: string;
   wordIds: number[];
@@ -45,4 +50,10 @@ export function toggleWordInList(lists: CustomWordList[], listId: string, wordId
       : [...list.wordIds, wordId];
     return { ...list, wordIds, updatedAt: Date.now() };
   });
+}
+
+export function saveMistakesAsList(lists: CustomWordList[], mistakes: PracticeMistakes): CustomWordList[] {
+  if (!mistakes.wordIds.length || lists.some(list => list.mistakeSessionId === mistakes.id)) return lists;
+  const created = createCustomList(lists, `Nog oefenen · ${new Date().toLocaleString("nl-BE")}`);
+  return created.map((list,index) => index === created.length - 1 ? { ...list, wordIds: mistakes.wordIds, direction: mistakes.direction, mistakeSessionId: mistakes.id, mistakes: mistakes.results } : list);
 }
