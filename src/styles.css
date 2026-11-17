@@ -1341,3 +1341,11 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .pinyin-tone-toolbar button { flex: 1; min-width: 0; border: 1px solid #ddd8d2; border-radius: 10px; background: #fffdfa; color: inherit; padding: 10px 4px; cursor: pointer; font-size: 22px; }
 .pinyin-tone-toolbar button small { display: block; font-size: 11px; color: #6d6863; }
 .pinyin-tone-toolbar button:focus-visible { outline: 2px solid #a66a57; outline-offset: 2px; }
+
+.pinyin-feedback-error { width: 100%; text-align: left; border: 2px solid #b03c32; background: #fff1ef; color: #78261f; border-radius: 14px; padding: 16px; margin-bottom: 16px; }
+.pinyin-feedback-error > strong { font-size: 20px; }
+.pinyin-feedback-error p { margin: 10px 0; }
+.pinyin-feedback-error b { font-size: 19px; }
+.pinyin-feedback-error ul { padding-left: 22px; margin: 12px 0 0; }
+.pinyin-feedback-error li + li { margin-top: 6px; }
+.pinyin-feedback-correct { color: #39705d; font-weight: 700; }

@@ -1,5 +1,5 @@
 import { applyPinyinTone } from "./lib/pinyinInput";
-import { directions, directionLabels, promptValue, matchingPromptWords, checkPinyinAnswer } from "./lib/practiceDirections";
+import { directions, directionLabels, promptValue, matchingPromptWords, checkPinyinAnswer, pinyinFeedback } from "./lib/practiceDirections";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { wordsData } from "./data/words";
@@ -774,6 +774,7 @@ function Learn({
 
   const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
   const promptMatches = matchingPromptWords(word, exercise.direction, words);
+  const feedback = pinyinCorrect === false ? pinyinFeedback(pinyinInput, promptMatches.map(candidate => candidate.pinyin)) : null;
   const literal = literalMeaning(word);
   const showLiteral = [...word.hanzi].length > 1 &&
     literal.trim().toLocaleLowerCase("nl-BE") !== word.meaningNl.trim().toLocaleLowerCase("nl-BE");
@@ -846,7 +847,13 @@ function Learn({
             </>
           ) : (
             <div className="answer-block">
-              {pinyinCorrect !== null && <p role="status">{pinyinCorrect ? "Correct!" : "Nog niet correct. Let ook op de tonen."}</p>}
+              {pinyinCorrect === true && <p className="pinyin-feedback-correct" role="status">✓ Correct!</p>}
+              {feedback && <section className="pinyin-feedback-error" role="status" aria-label="Antwoord verbeteren">
+                <strong>✕ Fout antwoord</strong>
+                <p>Jouw antwoord: <b>{pinyinInput}</b></p>
+                <p>Juiste antwoord: <b>{feedback.expected}</b></p>
+                <ul>{feedback.details.map((detail,index) => <li key={index}>{detail}</li>)}</ul>
+              </section>}
               {promptMatches.length > 1 && <details><summary>Geldige opgeslagen antwoorden</summary>{promptMatches.map(candidate => <p key={candidate.id}>{candidate.hanzi} · {candidate.pinyin} · {candidate.meaningNl}</p>)}</details>}
               {session.promptMode === "strokes"
                 ? <StrokeOrderPreview hanzi={word.hanzi} />

@@ -55,3 +55,13 @@ for (const [input, cursor, selectedTone, expected] of [
 ]) assert.equal(tone(input,cursor,cursor,selectedTone).value,expected,input);
 assert.deepEqual(tone('ni hao',3,6,3), {value:'ni hǎo',cursor:6});
 console.log('Tone editing: caret, selection, placement, replacement, neutral tone and keyboard aliases passed.');
+
+const { pinyinFeedback: feedback } = await import('../src/lib/practiceDirections.ts');
+assert.deepEqual(feedback('ni2 hao3',['nǐ hǎo']).details, ['Lettergreep 1 (ni): toon 2 → toon 3.']);
+assert.match(feedback('liang2',['líng']).details[0], /spelling.*liang.*ling/);
+assert.equal(feedback('ni hao',['nǐ hǎo']).details.length,2);
+assert.match(feedback('ni3',['nǐ hǎo']).details[0], /1 lettergrepen.*2/);
+assert.match(feedback('???',['nǐ']).details[0], /geen herkenbare pinyin/);
+assert.equal(feedback('zai2',['shì','zài']).expected,'zài');
+assert.equal(feedback('ma1',['mā']).details.length,0);
+console.log('Specific feedback: tone, spelling, missing tones, syllable count and alternatives passed.');

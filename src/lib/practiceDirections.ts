@@ -44,3 +44,27 @@ export function checkPinyinAnswer(input: string, word: Word, direction: Directio
  const answer = normalizePinyin(input);
  return !!answer && matchingPromptWords(word,direction,stored).some(w => normalizePinyin(w.pinyin) === answer);
 }
+
+export function pinyinFeedback(input: string, expected: string[]): { expected: string; details: string[] } {
+  const syllables = (text: string) => [...normalizePinyin(text).matchAll(/([a-zü]+)([1-5])/g)].map(match => ({ spelling: match[1], tone: match[2] }));
+  const entered = syllables(input);
+  // Prefer an alternative with matching spelling before explaining tone differences.
+  const ranked = expected.map(text => {
+    const target = syllables(text);
+    const score = Math.abs(target.length - entered.length) * 10
+      + target.reduce((sum, part, index) => sum + (part.spelling !== entered[index]?.spelling ? 3 : part.tone !== entered[index]?.tone ? 1 : 0), 0);
+    return { text, target, score };
+  }).sort((a,b) => a.score - b.score);
+  const best = ranked[0];
+  if (!best) return { expected: "", details: ["Bekijk het juiste antwoord hieronder."] };
+  if (!normalizePinyin(input)) return { expected: best.text, details: ["Je invoer is geen herkenbare pinyin. Vergelijk de spelling met het juiste antwoord."] };
+  if (entered.length !== best.target.length) return { expected: best.text, details: [`Je antwoord heeft ${entered.length} lettergrepen; het juiste antwoord heeft er ${best.target.length}.`] };
+  const toneName = (tone: string) => tone === "5" ? "neutrale toon" : `toon ${tone}`;
+  const details: string[] = [];
+  best.target.forEach((part,index) => {
+    const actual = entered[index];
+    if (actual.spelling !== part.spelling) details.push(`Lettergreep ${index + 1}: spelling ‘${actual.spelling}’ → ‘${part.spelling}’.`);
+    if (actual.tone !== part.tone) details.push(`Lettergreep ${index + 1} (${part.spelling}): ${toneName(actual.tone)} → ${toneName(part.tone)}.`);
+  });
+  return { expected: best.text, details };
+}
