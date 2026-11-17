@@ -13,7 +13,6 @@ export interface LearningExercise {
 export interface LearningSession {
   id?: string;
   results?: Record<number, PracticeResult>;
-  repeatedIndices?: number[];
   date: string;
   title?: string;
   direction: Direction;
@@ -64,7 +63,7 @@ export function loadLearningSession(): LearningSession | null {
     if (!isDirection(session.direction) || session.queue.some((exercise) => (
       !exercise.skill || exercise.direction !== session.direction
     ))) return null;
-    return session;
+    return removePendingRepeats(session);
   } catch {
     return null;
   }
@@ -88,4 +87,28 @@ export function sessionMatches(
     && session.direction === direction
     && session.wordIds.length === wordIds.length
     && session.wordIds.every((wordId, index) => wordId === wordIds[index]);
+}
+
+export function advanceLearningSession(session: LearningSession): LearningSession {
+  return { ...session, index: session.index + 1, revealed: false, promptMode: "character", ratings: {} };
+}
+
+// Older sessions may still contain automatically inserted repeats. Keep past
+// results, but remove those repeats from the remaining questions on resume.
+export function removePendingRepeats(session: LearningSession): LearningSession {
+  const seen = new Set(session.queue.slice(0,session.index).map(exercise => exercise.wordId));
+  const queue = session.queue.slice(0,session.index);
+  const results = { ...session.results };
+  Object.keys(results).forEach(index => { if (Number(index) >= session.index) delete results[Number(index)]; });
+  let currentRemoved = false;
+  session.queue.slice(session.index).forEach((exercise,offset) => {
+    if (seen.has(exercise.wordId)) { if (offset === 0) currentRemoved = true; return; }
+    seen.add(exercise.wordId);
+    const newIndex = queue.length;
+    queue.push(exercise);
+    const result = session.results?.[session.index + offset];
+    if (result) results[newIndex] = result;
+  });
+  if (queue.length === session.queue.length) return session;
+  return { ...session, queue, results, ...(currentRemoved ? { revealed:false, ratings:{} } : {}) };
 }

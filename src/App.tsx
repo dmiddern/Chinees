@@ -12,7 +12,7 @@ import { loadArticleProgress, recordArticleQuiz, saveArticleProgress, updateArti
 import { createCustomList, saveMistakesAsList, loadCustomLists, saveCustomLists, toggleWordInList, type CustomWordList } from "./lib/customLists";
 import { exercisesForArticle, relatedWordsForArticle } from "./lib/course";
 import { clearDailySets, createDailySet, loadDailySets, localDateKey, saveDailySets, type DailySet, type DailySetMap } from "./lib/dailySets";
-import { createLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
+import { createLearningSession, advanceLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
 import { searchWords } from "./lib/search";
 import { addCustomWord, loadCustomWords, type NewCustomWord } from "./lib/customWords";
@@ -775,13 +775,7 @@ function Learn({
     const evaluated = activeSession.results?.[activeSession.index];
     const updated = evaluated ? activeSession : recordOutcome(false, "skipped");
     if (!updated) return;
-    const queue = [...updated.queue];
-    const repeatedIndices = [...(updated.repeatedIndices || [])];
-    if (evaluated && !evaluated.correct && (evaluated.reason === "pinyin" || evaluated.reason === "writing") && !repeatedIndices.includes(updated.index)) {
-      queue.splice(Math.min(queue.length, updated.index + 4), 0, { ...exercise });
-      repeatedIndices.push(updated.index);
-    }
-    onSessionChange({ ...updated, queue, repeatedIndices, index: updated.index + 1, revealed: false, promptMode: "character", ratings: {} });
+    onSessionChange(advanceLearningSession(updated));
   }
 
   function switchDirection(direction: Direction) {

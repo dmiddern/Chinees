@@ -114,3 +114,17 @@ saveCustomLists(savedLists);
 assert.deepEqual(loadCustomLists(),savedLists);
 assert.equal(saveMistakesAsList([],sessionMistakes(createLearningSession('none',[1],undefined,'zh-nl'))).length,0);
 console.log('Automatic mistakes: per-character tolerance, immediate/persisted outcomes, skips, reveal, deduplication, later success, saved lists and remembered direction passed.');
+
+const { advanceLearningSession, removePendingRepeats } = await import('../src/lib/learningSession.ts');
+let once = createLearningSession('once',[1,2,3],'Test','zh-pinyin');
+once = recordPracticeResult(once,false,'pinyin');
+once = advanceLearningSession(once);
+assert.equal(once.queue.length,3);
+assert.equal(once.index,1);
+assert.equal(sessionMistakes(once).wordIds.length,1);
+const legacy = {...once, queue:[once.queue[0],once.queue[0],once.queue[1],once.queue[2],once.queue[0]]};
+const cleaned = removePendingRepeats(legacy);
+assert.equal(cleaned.queue.length,3);
+assert.equal(cleaned.queue[cleaned.index].wordId,once.queue[1].wordId);
+assert.equal(sessionMistakes(cleaned).wordIds.length,1);
+console.log('No automatic repeats: wrong answers keep the queue unchanged; pending legacy repeats are removed.');
