@@ -1,4 +1,4 @@
-import { applyPinyinTone } from "./lib/pinyinInput";
+import { applyPinyinTone, applyPinyinUmlaut } from "./lib/pinyinInput";
 import { directions, directionLabels, promptValue, matchingPromptWords, checkPinyinAnswer, pinyinFeedback } from "./lib/practiceDirections";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal, flushSync } from "react-dom";
@@ -635,7 +635,7 @@ function Learn({
     const start = input.selectionStart ?? pinyinInput.length;
     const end = input.selectionEnd ?? start;
     const edit = tone === "ü"
-      ? { value: pinyinInput.slice(0, start) + "ü" + pinyinInput.slice(end), cursor: start + 1 }
+      ? applyPinyinUmlaut(pinyinInput, start, end)
       : applyPinyinTone(pinyinInput, start, end, tone);
     setPinyinInput(edit.value);
     input.focus({ preventScroll: true });
@@ -843,8 +843,9 @@ function Learn({
               }}>
                 <input autoFocus ref={pinyinInputRef} aria-label="Pinyinantwoord" id="pinyin-answer" value={pinyinInput} onChange={event => setPinyinInput(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} />
                 <div className="pinyin-tone-toolbar" role="group" aria-label="Toon toepassen">
-                  {["ā", "á", "ǎ", "à", "a"].map((mark, index) => <button key={index} type="button" aria-label={index === 4 ? "Neutrale toon" : `Toon ${index + 1}`} onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(index + 1)}><span>{mark}</span><small>{index + 1}</small></button>)}
-                  <button type="button" aria-label="ü invoegen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin("ü")}>ü</button>
+                  {["¯", "´", "ˇ", "`"].map((mark, index) => <button key={index} type="button" aria-label={`Toon ${index + 1}`} title={`Toon ${index + 1}`} onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(index + 1)}>{mark}</button>)}
+                  <button type="button" aria-label="Trema toepassen" title="Trema toepassen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin("ü")}>¨</button>
+                  <button type="button" className="pinyin-neutral-button" aria-label="Neutrale toon" title="Toon verwijderen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(5)}>∅</button>
                 </div>
                 <button className="button primary-button" type="submit" disabled={!pinyinInput.trim()}>Controleer antwoord</button>
               </form>}

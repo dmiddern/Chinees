@@ -65,3 +65,10 @@ assert.match(feedback('???',['nǐ']).details[0], /geen herkenbare pinyin/);
 assert.equal(feedback('zai2',['shì','zài']).expected,'zài');
 assert.equal(feedback('ma1',['mā']).details.length,0);
 console.log('Specific feedback: tone, spelling, missing tones, syllable count and alternatives passed.');
+
+const { applyPinyinUmlaut: umlaut } = await import('../src/lib/pinyinInput.ts');
+assert.equal(umlaut('lu',2,2).value,'lü');
+assert.equal(umlaut('lǔ',2,2).value,'lǚ');
+assert.equal(umlaut('nu3',3,3).value,'nü3');
+assert.equal(umlaut('',0,0).value,'ü');
+console.log('Trema application passed.');

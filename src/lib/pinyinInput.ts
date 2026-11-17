@@ -45,3 +45,18 @@ export function applyPinyinTone(value: string, start: number, end: number, tone:
   else if (original[0] === original[0].toUpperCase()) syllable = syllable[0].toUpperCase() + syllable.slice(1);
   return { value: value.slice(0, token.start) + syllable + value.slice(token.end), cursor: token.start + syllable.length };
 }
+
+export function applyPinyinUmlaut(value: string, start: number, end: number): PinyinEdit {
+  const vowels: Record<string,string> = { u: "ü", ū: "ǖ", ú: "ǘ", ǔ: "ǚ", ù: "ǜ", U: "Ü", Ū: "Ǖ", Ú: "Ǘ", Ǔ: "Ǚ", Ù: "Ǜ" };
+  const selected = start !== end;
+  const segmentStart = selected ? start : start - (value.slice(0,start).match(/[\p{L}\p{M}0-5]*$/u)?.[0].length || 0);
+  const segment = value.slice(segmentStart, selected ? end : start);
+  for (let index = segment.length - 1; index >= 0; index--) {
+    const replacement = vowels[segment[index]];
+    if (replacement) {
+      const position = segmentStart + index;
+      return { value: value.slice(0,position) + replacement + value.slice(position + 1), cursor: selected ? end : start };
+    }
+  }
+  return { value: value.slice(0,start) + "ü" + value.slice(end), cursor: start + 1 };
+}
