@@ -1,3 +1,4 @@
+import { directionSkill, isDirection } from "./practiceDirections";
 import type { Direction, Skill } from "../types";
 
 const STORAGE_KEY = "chinees.learning-session.v1";
@@ -35,9 +36,7 @@ export function createLearningSession(
   title: string | undefined,
   direction: Direction,
 ): LearningSession {
-  const exercises: LearningExercise[] = direction === "zh-nl"
-    ? wordIds.map((wordId) => ({ wordId, direction, skill: "meaning" as const }))
-    : wordIds.map((wordId) => ({ wordId, direction, skill: "writing" as const }));
+  const exercises: LearningExercise[] = wordIds.map(wordId => ({ wordId, direction, skill: directionSkill(direction) }));
   const queue = shuffle(exercises);
 
   return {
@@ -57,7 +56,7 @@ export function loadLearningSession(): LearningSession | null {
   try {
     const session = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") as LearningSession | null;
     if (!session || !Array.isArray(session.queue) || !Array.isArray(session.wordIds)) return null;
-    if (!session.direction || session.queue.some((exercise) => (
+    if (!isDirection(session.direction) || session.queue.some((exercise) => (
       !exercise.skill || exercise.direction !== session.direction
     ))) return null;
     return session;

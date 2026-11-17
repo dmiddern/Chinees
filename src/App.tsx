@@ -1,3 +1,4 @@
+import { directions, directionLabels, promptValue, matchingPromptWords, checkPinyinAnswer } from "./lib/practiceDirections";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { wordsData } from "./data/words";
@@ -188,8 +189,8 @@ function App() {
     setInstallPrompt(null);
   }
 
-  function rate(wordId: number, skill: Skill, correct: boolean) {
-    setProgress((current) => updateSkill(current, wordId, skill, correct));
+  function rate(wordId: number, skill: Skill, correct: boolean, direction?: Direction) {
+    setProgress((current) => updateSkill(current, wordId, skill, correct, direction));
   }
 
   function generateDailySet() {
@@ -264,6 +265,7 @@ function App() {
         )}
         {tab === "learn" && (
           <Learn
+            progress={progress}
             session={learningSession}
             settings={settings}
             onSessionChange={setLearningSession}
@@ -594,20 +596,14 @@ function PracticeDirectionButtons({
         )}
       </div>
       <div>
-        <button className="button primary-button" onClick={() => onChoose("zh-nl")}>
-          <strong>中文 → NL</strong>
-          <span>Chinees naar Nederlands</span>
-        </button>
-        <button className="button secondary-button" onClick={() => onChoose("nl-zh")}>
-          <strong>NL → 中文</strong>
-          <span>Nederlands naar Chinees</span>
-        </button>
+        {directions.map(direction => <button key={direction} className="button secondary-button" onClick={() => onChoose(direction)}><strong>{directionLabels[direction]}</strong></button>)}
       </div>
     </div>
   );
 }
 
 function Learn({
+  progress,
   session,
   settings,
   onSessionChange,
@@ -616,14 +612,18 @@ function Learn({
   onSaveBookmarkChanges,
   onExit,
 }: {
+  progress: ProgressMap;
   session: LearningSession | null;
   settings: Settings;
   onSessionChange: (session: LearningSession) => void;
-  onRate: (id: number, skill: Skill, correct: boolean) => void;
+  onRate: (id: number, skill: Skill, correct: boolean, direction?: Direction) => void;
   lists: CustomWordList[];
   onSaveBookmarkChanges: (wordId: number, selectedIds: string[], pendingLists: CustomWordList[]) => void;
   onExit: () => void;
 }) {
+  const [pinyinInput, setPinyinInput] = useState("");
+  const [pinyinCorrect, setPinyinCorrect] = useState<boolean | null>(null);
+  useEffect(() => { if (!session?.revealed) { setPinyinInput(""); setPinyinCorrect(null); } }, [session?.index, session?.direction, session?.date, session?.revealed]);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [showSelfRating, setShowSelfRating] = useState(() => localStorage.getItem("chinees.show-self-rating.v1") === "true");
   function updateSelfRating(visible: boolean) {
@@ -677,7 +677,7 @@ function Learn({
         <h1>Goed gewerkt</h1>
         <p>
           Je hebt {session.wordIds.length} woorden uit {session.title || "deze reeks"} geoefend van{" "}
-          {session.direction === "zh-nl" ? "Chinees naar Nederlands" : "Nederlands naar Chinees"}.
+          {directionLabels[session.direction]}.
         </p>
         <button className="button primary-button" onClick={restart}>Oefen deze lijst opnieuw</button>
         <button className="button secondary-button" onClick={onExit}>Terug naar Leren</button>
@@ -690,7 +690,7 @@ function Learn({
   const activeWord: Word = word;
 
   function answerAndAdvance(correct: boolean) {
-    onRate(activeWord.id, exercise.skill, correct);
+    onRate(activeWord.id, exercise.skill, correct, exercise.direction);
     const queue = [...activeSession.queue];
     if (!correct) {
       // Space a missed word among later cards instead of repeating it immediately.
@@ -718,8 +718,9 @@ function Learn({
   }
 
   function next() {
-    const rating = activeSession.ratings[exercise.skill];
-    if (rating !== undefined) onRate(activeWord.id, exercise.skill, rating);
+    if (pinyinCorrect !== null) { answerAndAdvance(pinyinCorrect); return; }
+    const rating = pinyinCorrect ?? activeSession.ratings[exercise.skill];
+    if (rating !== undefined) onRate(activeWord.id, exercise.skill, rating, exercise.direction);
     onSessionChange({
       ...activeSession,
       index: activeSession.index + 1,
@@ -758,7 +759,7 @@ function Learn({
     : null;
 
   const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
-  const meaningLanguageLabel = word.meaningLanguage === "en" ? "Engels" : "Nederlands";
+  const promptMatches = matchingPromptWords(word, exercise.direction, words);
   const literal = literalMeaning(word);
   const showLiteral = [...word.hanzi].length > 1 &&
     literal.trim().toLocaleLowerCase("nl-BE") !== word.meaningNl.trim().toLocaleLowerCase("nl-BE");
@@ -799,7 +800,7 @@ function Learn({
           <span className="flashcard-hsk-tag">{levelLabel(word.level, word.custom)}</span>
         </div>
         <div className="flashcard-scroll">
-          {(session.revealed || exercise.direction === "zh-nl") && (
+          {(session.revealed || exercise.direction.startsWith("zh-")) && (
             <div className="prompt-mode-toggle" aria-label="Weergave van het Chinese woord">
               <button type="button" className={session.promptMode === "character" ? "active" : ""}
                 onClick={() => onSessionChange({ ...session, promptMode: "character" })}>Karakter</button>
@@ -809,15 +810,27 @@ function Learn({
           )}
           {!session.revealed ? (
             <>
-              {exercise.skill !== "writing" && <p className="card-instruction">{exercise.skill === "meaning" ? "Wat betekent dit woord?" : "Spreek het Chinese woord hardop uit."}</p>}
-              {exercise.direction === "zh-nl"
+              <p className="card-instruction">{directionLabels[exercise.direction]}</p>
+              {exercise.direction.startsWith("zh-")
                 ? (session.promptMode === "character" ? <div className="prompt-hanzi" style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
-                : <div className="prompt-meaning">{word.meaningNl}</div>}
-              {exercise.skill === "pronunciation" && <PronunciationRecorder />}
+                : <div className="prompt-meaning">{promptValue(word, exercise.direction)}</div>}
+              {promptMatches.length > 1 && <p>Meerdere opgeslagen antwoorden passen bij deze opgave.</p>}
+              {exercise.direction.endsWith("pinyin") && <form onSubmit={event => {
+                event.preventDefault();
+                if (!pinyinInput.trim()) return;
+                setPinyinCorrect(checkPinyinAnswer(pinyinInput, word, exercise.direction, words));
+                onSessionChange({ ...session, revealed: true });
+              }}>
+                <label htmlFor="pinyin-answer">Pinyin met tonen</label>
+                <input id="pinyin-answer" value={pinyinInput} onChange={event => setPinyinInput(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} placeholder="nǐ hǎo of ni3 hao3" />
+                <button className="button primary-button" type="submit" disabled={!pinyinInput.trim()}>Controleer antwoord</button>
+              </form>}
               <button className="button primary-button reveal-button" onClick={() => onSessionChange({ ...session, revealed: true })}>Toon het antwoord</button>
             </>
           ) : (
             <div className="answer-block">
+              {pinyinCorrect !== null && <p role="status">{pinyinCorrect ? "Correct!" : "Nog niet correct. Let ook op de tonen."}</p>}
+              {promptMatches.length > 1 && <details><summary>Geldige opgeslagen antwoorden</summary>{promptMatches.map(candidate => <p key={candidate.id}>{candidate.hanzi} · {candidate.pinyin} · {candidate.meaningNl}</p>)}</details>}
               {session.promptMode === "strokes"
                 ? <StrokeOrderPreview hanzi={word.hanzi} />
                 : <div className="answer-hanzi" style={hanziStyle}>{word.hanzi}</div>}
@@ -833,10 +846,10 @@ function Learn({
         </div>
       </section>
 
-      {session.revealed && showSelfRating && (
+      {session.revealed && showSelfRating && pinyinCorrect === null && (
         <div className="session-rating-bar" role="group" aria-label="Zelfbeoordeling">
-          <button type="button" className="session-rate-missed" onClick={() => answerAndAdvance(false)}>Wist ik niet</button>
-          <button type="button" className="session-rate-known" onClick={() => answerAndAdvance(true)}>Wist ik</button>
+          <button type="button" className="session-rate-missed" onClick={() => answerAndAdvance(pinyinCorrect ?? false)}>Wist ik niet</button>
+          <button type="button" className="session-rate-known" onClick={() => answerAndAdvance(pinyinCorrect ?? true)}>Wist ik</button>
         </div>
       )}
 
@@ -906,10 +919,17 @@ function Learn({
               <h2 id="session-sheet-title">Sessie-instellingen</h2>
               <button className="session-icon-button" type="button" aria-label="Sluit instellingen" onClick={() => setSettingsOpen(false)}>✕</button>
             </div>
+            <details><summary>Resultaten per richting in deze reeks</summary>
+              {directions.map(direction => {
+                const scores = session.wordIds.map(id => progress[id]?.directions?.[direction]);
+                const correct = scores.reduce((sum, score) => sum + (score?.correct || 0), 0);
+                const incorrect = scores.reduce((sum, score) => sum + (score?.incorrect || 0), 0);
+                return <p key={direction}>{directionLabels[direction]}: {correct} goed · {incorrect} fout</p>;
+              })}
+            </details>
             <p className="session-sheet-label">Oefenrichting</p>
             <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">
-              <button type="button" className={exercise.direction === "zh-nl" ? "active" : ""} onClick={() => switchDirection("zh-nl")}>Chinees → {meaningLanguageLabel}</button>
-              <button type="button" className={exercise.direction === "nl-zh" ? "active" : ""} onClick={() => switchDirection("nl-zh")}>{meaningLanguageLabel} → Chinees</button>
+              {directions.map(direction => <button key={direction} type="button" className={exercise.direction === direction ? "active" : ""} onClick={() => switchDirection(direction)}>{directionLabels[direction]}</button>)}
             </div>
             <label className="session-rating-setting">
               <span><strong>Zelfbeoordeling</strong><small>Toon ‘Wist ik’ en ‘Wist ik niet’ na elk antwoord</small></span>

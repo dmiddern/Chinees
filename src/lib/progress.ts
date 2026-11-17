@@ -1,4 +1,4 @@
-import type { ProgressMap, Skill, SkillProgress, WordProgress } from "../types";
+import type { Direction, ProgressMap, Skill, SkillProgress, WordProgress } from "../types";
 
 const STORAGE_KEY = "chinees.progress.v1";
 const SETTINGS_KEY = "chinees.settings.v1";
@@ -63,18 +63,16 @@ export function reviewSkill(current: SkillProgress, correct: boolean): SkillProg
   };
 }
 
-export function updateSkill(progress: ProgressMap, wordId: number, skill: Skill, correct: boolean): ProgressMap {
+export function updateSkill(progress: ProgressMap, wordId: number, skill: Skill, correct: boolean, direction?: Direction): ProgressMap {
   const word = progress[wordId] || emptyWordProgress();
   return {
     ...progress,
     [wordId]: {
       ...word,
+      ...(direction ? { directions: { ...word.directions, [direction]: reviewSkill(word.directions?.[direction] || emptySkill(), correct) } } : {}),
       [skill]: reviewSkill(word[skill], correct),
     },
   };
 }
 
-export function skillForDirection(direction: "zh-nl" | "nl-zh"): Skill {
-  return direction === "zh-nl" ? "meaning" : "writing";
-}
-
+export { directionSkill as skillForDirection } from "./practiceDirections";
