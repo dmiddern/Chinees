@@ -832,7 +832,7 @@ function Learn({
             <>
               <p className="card-instruction">{directionLabels[exercise.direction]}</p>
               {exercise.direction.startsWith("zh-")
-                ? (session.promptMode === "character" ? <div className="prompt-hanzi" style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
+                ? (session.promptMode === "character" ? <div key={exercise.direction} className="prompt-hanzi" data-tone-colors={exercise.direction === "zh-pinyin" ? "off" : undefined} style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
                 : <div className="prompt-meaning">{promptValue(word, exercise.direction)}</div>}
               {promptMatches.length > 1 && <p>Meerdere opgeslagen antwoorden passen bij deze opgave.</p>}
               {exercise.direction.endsWith("pinyin") && <form onSubmit={event => {

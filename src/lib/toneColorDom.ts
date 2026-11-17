@@ -92,7 +92,7 @@ function resetOldToneStyling(element: HTMLElement) {
 }
 
 function paint(element: HTMLElement | null, hanzi: string, pinyin: string) {
-  if (!element || !PURE_HANZI.test(hanzi)) return;
+  if (!element || element.closest('[data-tone-colors="off"]') || !PURE_HANZI.test(hanzi)) return;
   const tones = tonesFor(hanzi, pinyin);
   if (!tones) return;
 
