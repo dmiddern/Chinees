@@ -213,6 +213,7 @@ function App() {
     const sortedSets = [...sets].sort((a, b) => a.date.localeCompare(b.date));
     const wordIds = [...new Set(sortedSets.flatMap((set) => set.wordIds))];
     if (!wordIds.length) return;
+    updateSettings({ direction });
     const setIds = sortedSets.map((set) => `${set.date}:${set.createdAt}`);
     const title = sortedSets.length === 1
       ? formatDailyDate(sortedSets[0].date).toLocaleLowerCase("nl-BE")
@@ -486,9 +487,9 @@ function Home({
             <strong>{percentage}%</strong>
           </div>
         </div>
-        {todayWords.length ? (
+        {todayWords.length || selectedSets.length ? (
           <PracticeDirectionButtons
-            onChoose={onStart}
+            onChoose={(direction) => selectedSets.length > 0 ? onPracticeDays(selectedSets, direction) : onStart(direction)}
             onGenerate={onGenerate}
             onPracticeSelected={selectedSets.length > 0 ? () => onPracticeDays(selectedSets, settings.direction) : undefined}
             selectedWordCount={selectedWordCount}
