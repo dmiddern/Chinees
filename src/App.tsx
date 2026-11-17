@@ -835,7 +835,7 @@ function Learn({
                 ? (session.promptMode === "character" ? <div key={exercise.direction} className="prompt-hanzi" data-tone-colors={exercise.direction === "zh-pinyin" ? "off" : undefined} style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
                 : <div className="prompt-meaning">{promptValue(word, exercise.direction)}</div>}
               {promptMatches.length > 1 && <p>Meerdere opgeslagen antwoorden passen bij deze opgave.</p>}
-              {exercise.direction.endsWith("pinyin") && <form onSubmit={event => {
+              {exercise.direction.endsWith("pinyin") && <form className="pinyin-answer-form" onSubmit={event => {
                 event.preventDefault();
                 if (!pinyinInput.trim()) return;
                 setPinyinCorrect(checkPinyinAnswer(pinyinInput, word, exercise.direction, words));
@@ -843,9 +843,9 @@ function Learn({
               }}>
                 <input autoFocus ref={pinyinInputRef} aria-label="Pinyinantwoord" id="pinyin-answer" value={pinyinInput} onChange={event => setPinyinInput(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} />
                 <div className="pinyin-tone-toolbar" role="group" aria-label="Toon toepassen">
-                  {["¯", "´", "ˇ", "`"].map((mark, index) => <button key={index} type="button" aria-label={`Toon ${index + 1}`} title={`Toon ${index + 1}`} onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(index + 1)}>{mark}</button>)}
-                  <button type="button" aria-label="Trema toepassen" title="Trema toepassen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin("ü")}>¨</button>
-                  <button type="button" className="pinyin-neutral-button" aria-label="Neutrale toon" title="Toon verwijderen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(5)}>∅</button>
+                  {["M5 12H23", "M7 19L21 5", "M5 7L14 21L23 7", "M7 5L21 19"].map((path, index) => <button key={index} type="button" aria-label={`Toon ${index + 1}`} title={`Toon ${index + 1}`} onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(index + 1)}><svg className="pinyin-tone-icon" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={path} /></svg></button>)}
+                  <button type="button" aria-label="Trema toepassen" title="Trema toepassen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin("ü")}><svg className="pinyin-tone-icon" viewBox="0 0 28 28" fill="currentColor" aria-hidden="true"><circle cx="8" cy="14" r="3.5" /><circle cx="20" cy="14" r="3.5" /></svg></button>
+                  <button type="button" className="pinyin-neutral-button" aria-label="Neutrale toon" title="Toon verwijderen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(5)}><svg className="pinyin-tone-icon" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true"><circle cx="14" cy="14" r="8" /><path d="M5 23L23 5" /></svg></button>
                 </div>
                 <button className="button primary-button" type="submit" disabled={!pinyinInput.trim()}>Controleer antwoord</button>
               </form>}

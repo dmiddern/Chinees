@@ -1349,3 +1349,7 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .pinyin-feedback-error ul { padding-left: 22px; margin: 12px 0 0; }
 .pinyin-feedback-error li + li { margin-top: 6px; }
 .pinyin-feedback-correct { color: #39705d; font-weight: 700; }
+
+.pinyin-answer-form { width: min(100%, 380px); margin-inline: auto; }
+.pinyin-tone-toolbar button { display: flex; align-items: center; justify-content: center; min-height: 54px; padding: 10px 4px; }
+.pinyin-tone-icon { display: block; width: 28px; height: 28px; flex: 0 0 auto; }
