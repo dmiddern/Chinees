@@ -16,7 +16,7 @@ function currentWord(): Word | null {
   try {
     const session = JSON.parse(localStorage.getItem("chinees.learning-session.v1") || "null");
     const exercise = session?.queue?.[session.index];
-    if (session?.direction !== "nl-zh" || !exercise) return null;
+    if ((session?.direction !== "nl-zh" && session?.direction !== "pinyin-zh") || !exercise) return null;
     const allWords = [...builtInWords, ...loadCustomWords()];
     return allWords.find((word) => word.id === exercise.wordId) || null;
   } catch {
