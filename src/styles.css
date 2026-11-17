@@ -1333,3 +1333,6 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .sentence-practice-fieldset input[type="number"] { width: 90px; padding: 9px; }
 .sentence-practice-fieldset select { max-width: 100%; padding: 9px; }
 .sentence-practice-fieldset small { flex-basis: 100%; }
+/* Six practice directions remain usable on narrow screens. */
+.practice-direction-choice > div:last-child, .session-sheet .direction-indicator { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; flex-wrap: wrap; }
+#pinyin-answer { display: block; width: 100%; margin: 12px 0; padding: 12px; font-size: 18px; }
