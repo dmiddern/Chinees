@@ -1,7 +1,7 @@
 import { applyPinyinTone } from "./lib/pinyinInput";
 import { directions, directionLabels, promptValue, matchingPromptWords, checkPinyinAnswer, pinyinFeedback } from "./lib/practiceDirections";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 import { wordsData } from "./data/words";
 import { literalGlosses } from "./data/literalGlosses";
 import { articleKinds, articleLevels, articleSources, articles, type Article, type ArticleKind, type ArticleLevel } from "./data/articles";
@@ -623,6 +623,11 @@ function Learn({
   onExit: () => void;
 }) {
   const pinyinInputRef = useRef<HTMLInputElement>(null);
+  function navigateWithInputFocus(action: () => void) {
+    // Mount the next input within the tap handler so mobile browsers can open the keyboard.
+    flushSync(action);
+    pinyinInputRef.current?.focus({ preventScroll: true });
+  }
   const [pinyinInput, setPinyinInput] = useState("");
   function editPinyin(tone: number | "ü") {
     const input = pinyinInputRef.current;
@@ -836,7 +841,7 @@ function Learn({
                 setPinyinCorrect(checkPinyinAnswer(pinyinInput, word, exercise.direction, words));
                 onSessionChange({ ...session, revealed: true });
               }}>
-                <input ref={pinyinInputRef} aria-label="Pinyinantwoord" id="pinyin-answer" value={pinyinInput} onChange={event => setPinyinInput(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} />
+                <input autoFocus ref={pinyinInputRef} aria-label="Pinyinantwoord" id="pinyin-answer" value={pinyinInput} onChange={event => setPinyinInput(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} />
                 <div className="pinyin-tone-toolbar" role="group" aria-label="Toon toepassen">
                   {["ā", "á", "ǎ", "à", "a"].map((mark, index) => <button key={index} type="button" aria-label={index === 4 ? "Neutrale toon" : `Toon ${index + 1}`} onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(index + 1)}><span>{mark}</span><small>{index + 1}</small></button>)}
                   <button type="button" aria-label="ü invoegen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin("ü")}>ü</button>
@@ -872,15 +877,15 @@ function Learn({
 
       {session.revealed && showSelfRating && pinyinCorrect === null && (
         <div className="session-rating-bar" role="group" aria-label="Zelfbeoordeling">
-          <button type="button" className="session-rate-missed" onClick={() => answerAndAdvance(pinyinCorrect ?? false)}>Wist ik niet</button>
-          <button type="button" className="session-rate-known" onClick={() => answerAndAdvance(pinyinCorrect ?? true)}>Wist ik</button>
+          <button type="button" className="session-rate-missed" onClick={() => navigateWithInputFocus(() => answerAndAdvance(pinyinCorrect ?? false))}>Wist ik niet</button>
+          <button type="button" className="session-rate-known" onClick={() => navigateWithInputFocus(() => answerAndAdvance(pinyinCorrect ?? true))}>Wist ik</button>
         </div>
       )}
 
       <nav className="session-bottom-nav" aria-label="Kaartnavigatie">
-        <button className="session-nav-button session-nav-prev" type="button" onClick={previous} disabled={session.index === 0} aria-label="Vorige kaart" title="Vorige kaart">‹</button>
+        <button className="session-nav-button session-nav-prev" type="button" onClick={() => navigateWithInputFocus(previous)} disabled={session.index === 0} aria-label="Vorige kaart" title="Vorige kaart">‹</button>
         <span className="session-bottom-counter">{session.index + 1} / {session.queue.length}</span>
-        <button className="session-nav-button session-nav-next" type="button" onClick={next} aria-label="Volgende kaart" title="Volgende kaart">›</button>
+        <button className="session-nav-button session-nav-next" type="button" onClick={() => navigateWithInputFocus(next)} aria-label="Volgende kaart" title="Volgende kaart">›</button>
       </nav>
 
       {bookmarkOpen && (
