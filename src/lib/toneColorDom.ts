@@ -54,6 +54,25 @@ function pinyinSyllables(pinyin: string, expected: number): string[] {
 
 function tonesFor(hanzi: string, pinyin: string): Tone[] | null {
   const characters = [...hanzi].filter((character) => HANZI.test(character));
+  // A final 儿 may be its own syllable (女儿) or an -r suffix (好玩儿).
+  if (characters.length > 1 && /[儿兒]/u.test(characters[characters.length - 1])) {
+    const reading = pinyin.trim().normalize("NFC");
+    const separateEr = reading.match(/(?:[\s'’·-]+(er|[ēéěè]r)|(ér|ěr|èr|ēr))([1-5]?)$/i);
+    if (separateEr && separateEr.index !== undefined && /[aeiouüvngr1-5]$/i.test(reading.slice(0, separateEr.index).normalize("NFD").replace(/\p{M}/gu, ""))) {
+      const base = tonesFor(characters.slice(0, -1).join(""), reading.slice(0, separateEr.index));
+      if (base) return [...base, toneOfSyllable(separateEr[0].trim())];
+    }
+
+    const fullSyllables = pinyinSyllables(reading, characters.length);
+    if (fullSyllables.length === characters.length) return fullSyllables.map(toneOfSyllable);
+
+    const suffix = reading.match(/r([1-5]?)$/i);
+    if (suffix && suffix.index !== undefined) {
+      const baseReading = reading.slice(0, suffix.index) + suffix[1];
+      const base = tonesFor(characters.slice(0, -1).join(""), baseReading);
+      if (base) return [...base, base[base.length - 1]];
+    }
+  }
   const syllables = pinyinSyllables(pinyin, characters.length);
   if (!characters.length || syllables.length !== characters.length) return null;
   return syllables.map(toneOfSyllable);
