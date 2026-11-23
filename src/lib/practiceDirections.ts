@@ -14,7 +14,8 @@ export function normalizePinyin(value: string): string {
    else if (marks[c]) toneAt.set(plain.length - 1, marks[c]);
    else plain += c;
  }
- const syllable = /(?:zh|ch|sh|[bpmfdtnlgkhjqxrzcsyw])?(?:iang|iong|uang|ueng|ang|eng|ing|ong|iao|ian|uai|uan|uen|üe|üan|ün|ai|ei|ao|ou|an|en|ia|ie|iu|in|ua|uo|ui|un|[aeiouü])|[mn](?=[0-5\s'’·-]|$)/gy;
+ // A final r belongs to the syllable unless it starts the next one (as in gèrén).
+ const syllable = /(?:zh|ch|sh|[bpmfdtnlgkhjqxrzcsyw])?(?:iang|iong|uang|ueng|ang|eng|ing|ong|iao|ian|uai|uan|uen|üe|üan|ün|ai|ei|ao|ou|an|en|ia|ie|iu|in|ua|uo|ui|un|[aeiouü])(?:r(?![aeiouü]))?|[mn](?=[0-5\s'’·-]|$)/gy;
  let result = "", offset = 0;
  while (offset < plain.length) {
    if (/[\s'’·-]/.test(plain[offset])) { offset++; continue; }
