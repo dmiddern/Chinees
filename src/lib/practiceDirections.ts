@@ -40,16 +40,20 @@ export function matchingPromptWords(word: Word, direction: Direction, stored: Wo
  const key = (w: Word) => direction.startsWith("pinyin-") ? normalizePinyin(w.pinyin) : promptValue(w,direction).trim().toLocaleLowerCase("nl");
  return stored.filter(w => key(w) === key(word));
 }
+function pinyinVariants(text: string): string[] {
+  return text.split("/").map(variant => variant.trim()).filter(Boolean);
+}
+
 export function checkPinyinAnswer(input: string, word: Word, direction: Direction, stored: Word[]): boolean {
  const answer = normalizePinyin(input);
- return !!answer && matchingPromptWords(word,direction,stored).some(w => normalizePinyin(w.pinyin) === answer);
+ return !!answer && matchingPromptWords(word,direction,stored).some(w => pinyinVariants(w.pinyin).some(variant => normalizePinyin(variant) === answer));
 }
 
 export function pinyinFeedback(input: string, expected: string[]): { expected: string; details: string[] } {
   const syllables = (text: string) => [...normalizePinyin(text).matchAll(/([a-zü]+)([1-5])/g)].map(match => ({ spelling: match[1], tone: match[2] }));
   const entered = syllables(input);
   // Prefer an alternative with matching spelling before explaining tone differences.
-  const ranked = expected.map(text => {
+  const ranked = expected.flatMap(pinyinVariants).map(text => {
     const target = syllables(text);
     const score = Math.abs(target.length - entered.length) * 10
       + target.reduce((sum, part, index) => sum + (part.spelling !== entered[index]?.spelling ? 3 : part.tone !== entered[index]?.tone ? 1 : 0), 0);
