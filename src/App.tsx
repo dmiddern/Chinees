@@ -226,14 +226,18 @@ function App() {
     const title = sortedSets.length === 1
       ? formatDailyDate(sortedSets[0].date).toLocaleLowerCase("nl-BE")
       : `${sortedSets.length} geselecteerde lijsten`;
-    setLearningSession(createLearningSession(`review:${setIds.join(",")}`, wordIds, title, direction));
+    openListSession(`review:${setIds.join(",")}`, wordIds, title, direction);
     setSelectedDay(null);
-    setTab("learn");
   }
 
-  function startWordList(wordIds: number[], title: string, direction: Direction = settings.direction) {
+  function openListSession(key: string, wordIds: number[], title: string, direction: Direction = settings.direction) {
     if (!wordIds.length) return;
-    setLearningSession(createLearningSession(`list:${Date.now()}`, wordIds, title, direction));
+    setLearningSession(current => {
+      if (current && current.index < current.queue.length && sessionMatches(current, key, wordIds, direction)) {
+        return current;
+      }
+      return createLearningSession(key, wordIds, title, direction);
+    });
     setTab("learn");
   }
 
@@ -260,8 +264,10 @@ function App() {
       <main>
         {tab === "home" && (
           <Home
+            session={learningSession}
+            onResume={() => setTab("learn")}
             lastMistakesCount={lastMistakes?.wordIds.length || 0}
-            onRetryMistakes={() => { if (lastMistakes) startWordList(lastMistakes.wordIds, "Nog oefenen", lastMistakes.direction); }}
+            onRetryMistakes={() => { if (lastMistakes) openListSession(`mistakes:${lastMistakes.id}`, lastMistakes.wordIds, "Nog oefenen", lastMistakes.direction); }}
             stats={stats}
             settings={settings}
             todayWords={todayWords}
@@ -310,7 +316,7 @@ function App() {
           <ArticleGuide
             progress={articleProgress}
             speechRate={settings.speechRate}
-            onPractice={(wordIds, title) => startWordList(wordIds, title)}
+            onPractice={(wordIds, title) => openListSession(`article:${title}`, wordIds, title)}
             onProgress={(articleId, patch) => (
               setArticleProgress((current) => updateArticleProgress(current, articleId, patch))
             )}
@@ -337,7 +343,7 @@ function App() {
             onDelete={(listId) => setCustomLists((current) => current.filter((list) => list.id !== listId))}
             onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
             onReplaceWords={(listId, wordIds) => setCustomLists((current) => current.map((list) => list.id === listId ? { ...list, wordIds: [...new Set(wordIds)], updatedAt: Date.now() } : list))}
-            onPractice={(list) => startWordList(list.wordIds, list.name, list.direction)}
+            onPractice={(list) => openListSession(`custom:${list.id}`, list.wordIds, list.name, list.direction)}
           />
         )}
         {tab === "write" && (
@@ -425,6 +431,8 @@ function App() {
 }
 
 function Home({
+  session,
+  onResume,
   lastMistakesCount,
   onRetryMistakes,
   stats,
@@ -439,6 +447,8 @@ function Home({
   onToggleLevel,
   onOpenDay,
 }: {
+  session: LearningSession | null;
+  onResume: () => void;
   lastMistakesCount: number;
   onRetryMistakes: () => void;
   stats: { total: number; known: number; learning: number; newCount: number; reviews: number };
@@ -491,6 +501,12 @@ function Home({
           </button>
         ))}
       </section>
+
+      {session && session.index < session.queue.length && (
+        <button className="button secondary-button full-button" onClick={onResume}>
+          Ga verder met {session.title || "je woordenlijst"} · {session.index + 1} / {session.queue.length}
+        </button>
+      )}
 
       <section className="today-card">
         <div className="section-heading">
