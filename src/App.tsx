@@ -844,7 +844,6 @@ function Learn({
         </p>
         {mistakes.wordIds.length > 0 ? <section className="session-mistakes">
           <h2>Nog oefenen · {mistakes.wordIds.length} woorden</h2>
-          <p>Ook woorden die je later juist had, blijven hier staan.</p>
           <ul className="session-mistake-words">{mistakes.wordIds.map(id => {
             const word = words.find(word => word.id === id);
             const labels = { meaning: "Betekenis opnieuw oefenen", combined: "Dubbel antwoord opnieuw oefenen", pinyin: "Pinyin fout", writing: "Tekenfouten", revealed: "Antwoord getoond", skipped: "Overgeslagen" };
@@ -904,7 +903,7 @@ function Learn({
   const hanziStyle = { "--characters": Math.max([...word.hanzi].length, 1) } as React.CSSProperties;
   const promptMatches = matchingPromptWords(word, exercise.direction, words);
   const feedbackInput = currentResult?.input ?? pinyinInput;
-  const feedback = pinyinCorrect === false ? pinyinFeedback(feedbackInput, promptMatches.map(candidate => candidate.pinyin)) : null;
+  const feedback = currentResult?.reason !== "revealed" && pinyinCorrect === false ? pinyinFeedback(feedbackInput, promptMatches.map(candidate => candidate.pinyin)) : null;
   const literal = literalMeaning(word);
   const showLiteral = [...word.hanzi].length > 1 &&
     literal.trim().toLocaleLowerCase("nl-BE") !== word.meaningNl.trim().toLocaleLowerCase("nl-BE");
@@ -959,7 +958,6 @@ function Learn({
               {exercise.direction.startsWith("zh-")
                 ? (session.promptMode === "character" ? <div key={exercise.direction} className="prompt-hanzi" data-tone-colors={needsPinyin ? "off" : undefined} style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
                 : <div className="prompt-meaning">{promptValue(word, exercise.direction)}</div>}
-              {promptMatches.length > 1 && <p>Meerdere opgeslagen antwoorden passen bij deze opgave.</p>}
               {(needsPinyin || needsMeaning) && <form id="practice-answer-form" className="pinyin-answer-form" onSubmit={event => {
                 event.preventDefault();
                 if ((needsPinyin && !pinyinInput.trim()) || (needsMeaning && !meaningInput.trim())) return;
@@ -1001,7 +999,7 @@ function Learn({
                 {needsWriting && <div className="combined-writing" onPointerDown={() => pinyinInputRef.current?.blur()}>
                   <strong>汉字</strong>
                   {pending?.writingMistakes
-                    ? <p role="status">✓ Geschreven: {word.hanzi}</p>
+                    ? <p role="status">✓ {word.hanzi}</p>
                     : <div className="combined-writing-target" />}
                 </div>}
                 <button className="button primary-button" type="submit" form="practice-answer-form"
@@ -1015,13 +1013,11 @@ function Learn({
                 {currentResult.meaningCorrect ? "✓ NL correct" : `✕ NL: ${currentResult.meaning} · verwacht: ${word.meaningNl}`}
               </p>}
               {currentResult?.reason === "combined" && needsWriting && <p role="status">
-                {writingIsAccepted(currentResult.writingMistakes || []) ? "✓ Karakters correct" : "✕ Karakters opnieuw oefenen"}
+                {writingIsAccepted(currentResult.writingMistakes || []) ? "✓ 汉字 correct" : "✕ 汉字 fout"}
               </p>}
-              {currentResult?.reason === "writing" && <p role="status">{currentResult.correct ? "✓ Schrijfoefening geslaagd — maximaal één fout per karakter." : "✕ Nog oefenen — minstens één karakter had twee of meer fouten."}</p>}
-              {currentResult?.reason === "revealed" && <p role="status">Antwoord getoond — toegevoegd aan Nog oefenen.</p>}
-              {pinyinCorrect === true && <p className="pinyin-feedback-correct" role="status">{combined ? "✓ Pinyin correct" : "✓ Correct!"}</p>}
+              {currentResult?.reason === "writing" && <p role="status">{currentResult.correct ? "✓ 汉字 correct" : "✕ 汉字 fout"}</p>}
+              {currentResult?.reason !== "revealed" && pinyinCorrect === true && <p className="pinyin-feedback-correct" role="status">{combined ? "✓ Pinyin correct" : "✓ Correct!"}</p>}
               {feedback && <section className="pinyin-feedback-error" role="status" aria-label="Antwoord verbeteren">
-                <strong>✕ Fout antwoord</strong>
                 <p>Jouw antwoord: <b>{feedbackInput}</b></p>
                 <p>Juiste antwoord: <b>{feedback.expected}</b></p>
                 <ul>{feedback.details.map((detail,index) => <li key={index}>{detail}</li>)}</ul>
