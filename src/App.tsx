@@ -12,7 +12,7 @@ import { loadArticleProgress, recordArticleQuiz, saveArticleProgress, updateArti
 import { createCustomList, saveMistakesAsList, loadCustomLists, saveCustomLists, toggleWordInList, type CustomWordList } from "./lib/customLists";
 import { exercisesForArticle, relatedWordsForArticle } from "./lib/course";
 import { clearDailySets, createDailySet, loadDailySets, localDateKey, saveDailySets, type DailySet, type DailySetMap } from "./lib/dailySets";
-import { createLearningSession, advanceLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
+import { changeLearningDirection, createLearningSession, advanceLearningSession, loadLearningSession, saveLearningSession, sessionMatches, type LearningSession } from "./lib/learningSession";
 import { emptyWordProgress, loadProgress, loadSettings, saveProgress, saveSettings, updateSkill } from "./lib/progress";
 import { searchWords } from "./lib/search";
 import { addCustomWord, loadCustomWords, type NewCustomWord } from "./lib/customWords";
@@ -210,8 +210,9 @@ function App() {
     if (!todaySet?.wordIds.length) return;
     updateSettings({ direction });
     setLearningSession((current) => (
-      sessionMatches(current, todaySet.date, todaySet.wordIds, direction)
-        ? current
+      current && sessionMatches(current, todaySet.date, todaySet.wordIds) &&
+        (current.index < current.queue.length || current.direction === direction)
+        ? changeLearningDirection(current, direction)
         : createLearningSession(todaySet.date, todaySet.wordIds, "vandaag", direction)
     ));
     setTab("learn");
@@ -233,8 +234,8 @@ function App() {
   function openListSession(key: string, wordIds: number[], title: string, direction: Direction = settings.direction) {
     if (!wordIds.length) return;
     setLearningSession(current => {
-      if (current && current.index < current.queue.length && sessionMatches(current, key, wordIds, direction)) {
-        return current;
+      if (current && current.index < current.queue.length && sessionMatches(current, key, wordIds)) {
+        return changeLearningDirection(current, direction);
       }
       return createLearningSession(key, wordIds, title, direction);
     });
@@ -751,8 +752,8 @@ function Learn({
         <p className="eyebrow">Daglijst voltooid</p>
         <h1>Goed gewerkt</h1>
         <p>
-          Je hebt {session.wordIds.length} woorden uit {session.title || "deze reeks"} geoefend van{" "}
-          {directionLabels[session.direction]}.
+          Je hebt {session.wordIds.length} woorden uit {session.title || "deze reeks"} geoefend in{" "}
+          {[...new Set(session.queue.map(exercise => directionLabels[exercise.direction]))].join(", ")}.
         </p>
         {mistakes.wordIds.length > 0 ? <section className="session-mistakes">
           <h2>Nog oefenen · {mistakes.wordIds.length} woorden</h2>
@@ -796,13 +797,7 @@ function Learn({
 
   function switchDirection(direction: Direction) {
     if (direction === activeSession.direction) return;
-    if (activeSession.index > 0 && !window.confirm("De richting wijzigen start de oefensessie opnieuw. Doorgaan?")) return;
-    onSessionChange(createLearningSession(
-      activeSession.date,
-      activeSession.wordIds,
-      activeSession.title,
-      direction,
-    ));
+    onSessionChange(changeLearningDirection(activeSession, direction));
     setSettingsOpen(false);
   }
 
@@ -1000,7 +995,7 @@ function Learn({
             </details>
             <p className="session-sheet-label">Oefenrichting</p>
             <div className="direction-indicator" aria-label="Vertaalrichting van deze oefening">
-              {directions.map(direction => <button key={direction} type="button" className={exercise.direction === direction ? "active" : ""} onClick={() => switchDirection(direction)}>{directionLabels[direction]}</button>)}
+              {directions.map(direction => <button key={direction} type="button" className={session.direction === direction ? "active" : ""} onClick={() => switchDirection(direction)}>{directionLabels[direction]}</button>)}
             </div>
             <div className="session-sheet-info">
               <span>{selectedListCount !== null ? "Geselecteerde daglijsten" : "Reeks"}</span>

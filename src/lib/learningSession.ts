@@ -61,7 +61,7 @@ export function loadLearningSession(): LearningSession | null {
     const session = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null") as LearningSession | null;
     if (!session || !Array.isArray(session.queue) || !Array.isArray(session.wordIds)) return null;
     if (!isDirection(session.direction) || session.queue.some((exercise) => (
-      !exercise.skill || exercise.direction !== session.direction
+      !exercise.skill || !isDirection(exercise.direction)
     ))) return null;
     return removePendingRepeats(session);
   } catch {
@@ -81,12 +81,25 @@ export function sessionMatches(
   session: LearningSession | null,
   date: string,
   wordIds: number[],
-  direction: Direction,
+  direction?: Direction,
 ) {
   return session?.date === date
-    && session.direction === direction
+    && (direction === undefined || session.direction === direction)
     && session.wordIds.length === wordIds.length
     && session.wordIds.every((wordId, index) => wordId === wordIds[index]);
+}
+
+export function changeLearningDirection(session: LearningSession, direction: Direction): LearningSession {
+  if (session.direction === direction) return session;
+
+  let index = session.index;
+  while (index < session.queue.length && session.results?.[index]) index += 1;
+  const queue = session.queue.map((exercise, position) =>
+    position < index || session.results?.[position]
+      ? exercise
+      : { ...exercise, direction, skill: directionSkill(direction) }
+  );
+  return { ...session, direction, queue, index, revealed: false, promptMode: "character", ratings: {} };
 }
 
 export function advanceLearningSession(session: LearningSession): LearningSession {
