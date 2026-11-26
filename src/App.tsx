@@ -267,7 +267,7 @@ function App() {
           <Home
             session={learningSession}
             onResume={() => setTab("learn")}
-            lastMistakesCount={lastMistakes?.wordIds.length || 0}
+            lastMistakes={lastMistakes}
             onRetryMistakes={() => { if (lastMistakes) openListSession(`mistakes:${lastMistakes.id}`, lastMistakes.wordIds, "Nog oefenen", lastMistakes.direction); }}
             stats={stats}
             settings={settings}
@@ -434,7 +434,7 @@ function App() {
 function Home({
   session,
   onResume,
-  lastMistakesCount,
+  lastMistakes,
   onRetryMistakes,
   stats,
   settings,
@@ -450,7 +450,7 @@ function Home({
 }: {
   session: LearningSession | null;
   onResume: () => void;
-  lastMistakesCount: number;
+  lastMistakes: ReturnType<typeof loadLastMistakes>;
   onRetryMistakes: () => void;
   stats: { total: number; known: number; learning: number; newCount: number; reviews: number };
   settings: Settings;
@@ -465,6 +465,27 @@ function Home({
   onOpenDay: (set: DailySet) => void;
 }) {
   const [selectedSetKeys, setSelectedSetKeys] = useState<string[]>([]);
+  const [hiddenResume, setHiddenResume] = useState(() => localStorage.getItem("chinees.hidden-resume"));
+  const [hiddenRetry, setHiddenRetry] = useState(() => localStorage.getItem("chinees.hidden-retry"));
+  const active = session && session.index < session.queue.length ? session : null;
+  const resumeId = active?.id || active?.date;
+  const retryInProgress = active?.date.startsWith("mistakes:");
+  const showResume = active && resumeId !== hiddenResume;
+  const showRetry = lastMistakes && lastMistakes.wordIds.length > 0 && !retryInProgress && lastMistakes.id !== hiddenRetry;
+
+  function hideRetry() {
+    if (!lastMistakes) return;
+    localStorage.setItem("chinees.hidden-retry", lastMistakes.id);
+    setHiddenRetry(lastMistakes.id);
+  }
+
+  function hideResume() {
+    if (!resumeId) return;
+    localStorage.setItem("chinees.hidden-resume", resumeId);
+    setHiddenResume(resumeId);
+    if (retryInProgress) hideRetry();
+  }
+
   const percentage = todayWords.length ? Math.round((todayCompleted / todayWords.length) * 100) : 0;
   const setKey = (set: DailySet) => `${set.date}:${set.createdAt}`;
   const selectedSets = history.filter((set) => selectedSetKeys.includes(setKey(set)));
@@ -503,11 +524,16 @@ function Home({
         ))}
       </section>
 
-      {session && session.index < session.queue.length && (
-        <button className="button secondary-button full-button" onClick={onResume}>
-          Ga verder met {session.title || "je woordenlijst"} · {session.index + 1} / {session.queue.length}
-        </button>
-      )}
+      {(showResume || showRetry) && <section className="practice-shortcuts" aria-label="Laatste oefeningen">
+        {showResume && <div>
+          <button onClick={onResume}><strong>{retryInProgress ? "Hervat je foutenoefening" : `Hervat ${active.title || "je woordenlijst"}`}</strong><small>Woord {active.index + 1} van {active.queue.length}</small></button>
+          <button onClick={hideResume} aria-label="Hervatten verbergen">×</button>
+        </div>}
+        {showRetry && <div>
+          <button onClick={onRetryMistakes}><strong>Oefen je laatste fouten</strong><small>{lastMistakes.wordIds.length} {lastMistakes.wordIds.length === 1 ? "woord" : "woorden"}</small></button>
+          <button onClick={hideRetry} aria-label="Laatste fouten verbergen">×</button>
+        </div>}
+      </section>}
 
       <section className="today-card">
         <div className="section-heading">
@@ -522,6 +548,7 @@ function Home({
         {todayWords.length || selectedSets.length ? (
           <PracticeDirectionButtons
             onChoose={(direction) => selectedSets.length > 0 ? onPracticeDays(selectedSets, direction) : onStart(direction)}
+            initialDirection={settings.direction}
             onGenerate={onGenerate}
             onPracticeSelected={selectedSets.length > 0 ? () => onPracticeDays(selectedSets, settings.direction) : undefined}
             selectedWordCount={selectedWordCount}
@@ -538,7 +565,6 @@ function Home({
         <button className="text-button" onClick={onWrite}>Of oefen eerst je schrijfwijze</button>
       </section>
 
-      {lastMistakesCount > 0 && <button className="button secondary-button" onClick={onRetryMistakes}>Oefen fouten laatste oefening ({lastMistakesCount})</button>}
       <section className="stats-grid" aria-label="Voortgang">
         <StatCard value={stats.known} label="Gekend" tone="success" />
         <StatCard value={stats.learning} label="Bezig" tone="warning" />
@@ -608,21 +634,23 @@ function StatCard({ value, label, tone }: { value: number; label: string; tone: 
 
 function PracticeDirectionButtons({
   onChoose,
-  compact = false,
+  initialDirection,
   onGenerate,
   onPracticeSelected,
   selectedWordCount = 0,
 }: {
   onChoose: (direction: Direction) => void;
-  compact?: boolean;
+  initialDirection: Direction;
   onGenerate?: () => void;
   onPracticeSelected?: () => void;
   selectedWordCount?: number;
 }) {
+  const sources = { nl: "Nederlands", zh: "Karakters", pinyin: "Pinyin" } as const;
+  const [source, setSource] = useState(() => initialDirection.split("-")[0]);
   return (
-    <div className={`practice-direction-choice ${compact ? "compact" : ""}`}>
-      <div className="practice-direction-heading">
-        <p>Kies je oefenrichting</p>
+    <div className="home-directions">
+      <div className="direction-toolbar">
+        <h2>{onPracticeSelected ? "Selectie oefenen" : "Daglijst oefenen"}</h2>
         {onPracticeSelected && (
           <button className="icon-action daily-selected-play" type="button" onClick={onPracticeSelected} aria-label={`Oefen ${selectedWordCount} geselecteerde woorden`} title={`Oefen ${selectedWordCount} geselecteerde woorden`}>▶</button>
         )}
@@ -630,9 +658,20 @@ function PracticeDirectionButtons({
           <button className="icon-action primary daily-generate-button" type="button" onClick={onGenerate} aria-label="Nieuwe daglijst" title="Nieuwe daglijst">＋</button>
         )}
       </div>
-      <div>
-        {directions.map(direction => <button key={direction} className="button secondary-button" onClick={() => onChoose(direction)}><strong>{directionLabels[direction]}</strong></button>)}
-      </div>
+      <fieldset>
+        <legend>Vertrek van</legend>
+        <div className="source-options">{Object.entries(sources).map(([key, label]) => (
+          <button key={key} aria-pressed={source === key} onClick={() => setSource(key)}>{label}</button>
+        ))}</div>
+      </fieldset>
+      <fieldset>
+        <legend>Antwoord in</legend>
+        <div className="target-options">{directions.filter(direction => direction.startsWith(source + "-")).map(direction => (
+          <button key={direction} className="button secondary-button" aria-label={directionLabels[direction]} onClick={() => onChoose(direction)}>
+            {directionLabels[direction].split(" → ")[1]}
+          </button>
+        ))}</div>
+      </fieldset>
     </div>
   );
 }

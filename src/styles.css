@@ -1375,3 +1375,30 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .combined-writing .stroke-quiz-box { max-width: 148px; }
 .combined-card button[form="practice-answer-form"] { width: min(100%, 380px); margin-inline: auto; }
 .learn-page .combined-card .flashcard-scroll .reveal-button { position: static; margin-top: 4px; background: transparent; color: var(--secondary); box-shadow: none; }
+
+.practice-shortcuts { display: grid; gap: 6px; margin-bottom: 16px; }
+.practice-shortcuts > div, .source-options {
+  display: flex;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.practice-shortcuts button, .source-options button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  min-height: 44px;
+  border-radius: 10px;
+}
+.practice-shortcuts button:first-child { flex: 1; text-align: left; padding: 8px 12px; }
+.practice-shortcuts small { display: block; color: var(--secondary); }
+.practice-shortcuts button:last-child { width: 44px; font-size: 22px; }
+.direction-toolbar { display: flex; align-items: center; gap: 8px; }
+.direction-toolbar h2 { margin: 0 auto 0 0; font-size: 19px; }
+.home-directions fieldset { margin: 10px 0 0; padding: 0; border: 0; min-width: 0; }
+.home-directions legend { padding: 0 0 4px; font-size: 13px; font-weight: 650; }
+.source-options { padding: 2px; }
+.source-options button { flex: 1; font-weight: 650; }
+.source-options button[aria-pressed="true"] { background: var(--primary); color: var(--surface); }
+.target-options { display: flex; flex-wrap: wrap; gap: 6px; }
+.target-options .button { flex: 1 1 auto; min-height: 44px; padding: 6px 10px; font-size: 14px; }
