@@ -706,7 +706,7 @@ function Learn({
     const writingMistakes = details.writingMistakes ?? pending?.writingMistakes;
     const combinedCorrect = reason === "combined" && pronunciationCorrect && writingIsAccepted(writingMistakes || []);
     const updated = recordPracticeResult(session, combined ? combinedCorrect : correct, reason, combined ? {
-      ...details, writingMistakes, input: pinyinInput, pinyinCorrect: pronunciationCorrect, answerWordId: target ? target.id : exercise.wordId,
+      ...details, writingMistakes, input: pinyinInput, pinyinCorrect: pinyinInput.trim() ? pronunciationCorrect : undefined, answerWordId: target ? target.id : exercise.wordId,
     } : details);
     if (updated !== session) {
       if (combined) {
@@ -785,7 +785,7 @@ function Learn({
         <p className="eyebrow">Daglijst voltooid</p>
         <h1>Goed gewerkt</h1>
         <p>
-          Je hebt {session.wordIds.length} woorden uit {session.title || "deze reeks"} geoefend in{" "}
+          Je hebt {Object.keys(session.results || {}).length} van {session.wordIds.length} woorden uit {session.title || "deze reeks"} geoefend in{" "}
           {[...new Set(session.queue.map(exercise => directionLabels[exercise.direction]))].join(", ")}.
         </p>
         {mistakes.wordIds.length > 0 ? <section className="session-mistakes">
@@ -822,10 +822,7 @@ function Learn({
   }
 
   function next() {
-    const evaluated = activeSession.results?.[activeSession.index];
-    const updated = evaluated ? activeSession : recordOutcome(false, "skipped");
-    if (!updated) return;
-    onSessionChange(advanceLearningSession(updated));
+    onSessionChange(advanceLearningSession(activeSession));
   }
 
   function switchDirection(direction: Direction) {

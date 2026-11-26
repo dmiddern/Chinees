@@ -64,6 +64,14 @@ export function loadLearningSession(): LearningSession | null {
     if (!isDirection(session.direction) || session.queue.some((exercise) => (
       !exercise.skill || !isDirection(exercise.direction)
     ))) return null;
+    // Older versions graded moving past an unanswered card as an incorrect attempt.
+    if (session.results) {
+      for (const index of Object.keys(session.results).map(Number)) {
+        if (session.results[index].reason !== "skipped") continue;
+        delete session.results[index];
+        if (index === session.index) session.revealed = false;
+      }
+    }
     return removePendingRepeats(session);
   } catch {
     return null;
