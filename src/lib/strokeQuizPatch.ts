@@ -158,7 +158,9 @@ function enhancePractice() {
 
   const reveal = card.querySelector(".reveal-button");
   const answer = card.querySelector(".answer-block");
-  if (reveal) reveal.before(wrapper);
+  const host = card.querySelector(".combined-writing-target");
+  if (host) host.append(wrapper);
+  else if (reveal) reveal.before(wrapper);
   else if (answer) answer.before(wrapper);
   else card.append(wrapper);
 }

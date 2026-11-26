@@ -19,7 +19,7 @@ export interface LearningSession {
   wordIds: number[];
   queue: LearningExercise[];
   index: number;
-  pendingPinyin?: { key: string; input: string; correct: boolean; answerWordId: number };
+  pendingPinyin?: { key: string; input: string; writingMistakes?: number[]; answerWordId: number };
   revealed: boolean;
   promptMode: "character" | "strokes";
   ratings: Partial<Record<Skill, boolean>>;
