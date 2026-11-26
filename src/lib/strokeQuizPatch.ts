@@ -1,26 +1,9 @@
 import HanziWriter from "hanzi-writer";
-import { wordsData } from "../data/words";
-import { loadCustomWords } from "./customWords";
-import type { Word } from "../types";
-
 const HANZI = /[\u3400-\u9fff]/;
-const builtInWords = wordsData as Word[];
 
 declare global {
   interface Window {
     __strokeQuizPatchInstalled?: boolean;
-  }
-}
-
-function currentWord(): Word | null {
-  try {
-    const session = JSON.parse(localStorage.getItem("chinees.learning-session.v1") || "null");
-    const exercise = session?.queue?.[session.index];
-    if ((session?.direction !== "nl-zh" && session?.direction !== "pinyin-zh") || !exercise || session.revealed) return null;
-    const allWords = [...builtInWords, ...loadCustomWords()];
-    return allWords.find((word) => word.id === exercise.wordId) || null;
-  } catch {
-    return null;
   }
 }
 
@@ -113,17 +96,17 @@ function installQuiz(
 
 function enhancePractice() {
   const card = document.querySelector(".flashcard") as HTMLElement | null;
-  const word = currentWord();
+  const hanzi = card?.dataset.writingHanzi;
   const existing = document.querySelector(".stroke-quiz-practice") as HTMLElement | null;
 
   document.querySelectorAll(".blank-practice").forEach((element) => element.remove());
 
-  if (!card || !word) {
+  if (!card || !hanzi) {
     existing?.remove();
     return;
   }
 
-  const wordKey = card.dataset.exerciseKey || String(word.id);
+  const wordKey = card.dataset.exerciseKey || hanzi;
   if (existing?.dataset.wordId === wordKey && card.contains(existing)) {
     return;
   }
@@ -137,7 +120,7 @@ function enhancePractice() {
   wrapper.dataset.wordId = wordKey;
   wrapper.setAttribute("aria-label", "Interactieve schrijfoefening");
 
-  const characters = [...word.hanzi].filter((character) => HANZI.test(character));
+  const characters = [...hanzi].filter((character) => HANZI.test(character));
 
   const row = document.createElement("div");
   row.className = "stroke-quiz-row";
@@ -195,7 +178,7 @@ export function installStrokeQuizPatch() {
       });
   };
 
-  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-exercise-key"] });
+  new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["data-exercise-key", "data-writing-hanzi"] });
   window.addEventListener("storage", schedule);
   schedule();
 }

@@ -198,8 +198,8 @@ function App() {
     setInstallPrompt(null);
   }
 
-  function rate(wordId: number, skill: Skill, correct: boolean, direction?: Direction) {
-    setProgress((current) => updateSkill(current, wordId, skill, correct, direction));
+  function rate(wordId: number, skill: Skill, correct: boolean, direction?: Direction, directionCorrect = correct) {
+    setProgress((current) => updateSkill(current, wordId, skill, correct, direction, directionCorrect));
   }
 
   function generateDailySet() {
@@ -653,7 +653,7 @@ function Learn({
   session: LearningSession | null;
   settings: Settings;
   onSessionChange: (session: LearningSession) => void;
-  onRate: (id: number, skill: Skill, correct: boolean, direction?: Direction) => void;
+  onRate: (id: number, skill: Skill, correct: boolean, direction?: Direction, directionCorrect?: boolean) => void;
   lists: CustomWordList[];
   onSaveBookmarkChanges: (wordId: number, selectedIds: string[], pendingLists: CustomWordList[]) => void;
   onExit: () => void;
@@ -678,15 +678,24 @@ function Learn({
     requestAnimationFrame(() => input.setSelectionRange(edit.cursor, edit.cursor));
   }
   const currentResult = session?.results?.[session.index];
-  const pinyinCorrect = currentResult?.reason === "pinyin" ? currentResult.correct : null;
+  const pending = session && session.pendingPinyin?.key === exerciseKey(session) ? session.pendingPinyin : undefined;
+  const pinyinCorrect = currentResult?.pinyinCorrect ?? (currentResult?.reason === "pinyin" ? currentResult.correct : null);
   const [mistakesSaved, setMistakesSaved] = useState(false);
   useEffect(() => setMistakesSaved(false), [session?.id]);
   function recordOutcome(correct: boolean, reason: ResultReason, details: Pick<PracticeResult,"input" | "writingMistakes"> = {}) {
     if (!session) return session;
-    const updated = recordPracticeResult(session, correct, reason, details);
+    const exercise = session.queue[session.index];
+    const combined = exercise.direction === "nl-pinyin-zh";
+    const updated = recordPracticeResult(session, correct, reason, combined && pending ? {
+      ...details, input: pending.input, pinyinCorrect: pending.correct, answerWordId: pending.answerWordId,
+    } : details);
     if (updated !== session) {
-      const exercise = session.queue[session.index];
-      onRate(exercise.wordId, exercise.skill, correct, exercise.direction);
+      if (combined) {
+        onRate(exercise.wordId, "pronunciation", pending?.correct ?? false);
+        onRate(exercise.wordId, "writing", writingIsAccepted(details.writingMistakes || []), exercise.direction, correct);
+      } else {
+        onRate(exercise.wordId, exercise.skill, correct, exercise.direction);
+      }
     }
     return updated;
   }
@@ -694,9 +703,12 @@ function Learn({
     const listener = (event: Event) => {
       const detail = (event as CustomEvent<{ key: string; mistakes: number[] }>).detail;
       if (!session || session.revealed || !detail || detail.key !== exerciseKey(session)) return;
-      const count = [...(words.find(word => word.id === session.queue[session.index]?.wordId)?.hanzi || "")].filter(char => /[\u3400-\u9fff]/.test(char)).length;
+      const count = [...(words.find(word => word.id === (pending?.answerWordId ?? session.queue[session.index]?.wordId))?.hanzi || "")].filter(char => /[\u3400-\u9fff]/.test(char)).length;
       if (!Array.isArray(detail.mistakes) || detail.mistakes.length !== count) return;
-      const updated = recordOutcome(writingIsAccepted(detail.mistakes), "writing", { writingMistakes: detail.mistakes });
+      const combined = session.queue[session.index]?.direction === "nl-pinyin-zh";
+      if (combined && !pending) return;
+      const correct = writingIsAccepted(detail.mistakes) && (!combined || pending?.correct === true);
+      const updated = recordOutcome(correct, combined ? "combined" : "writing", { writingMistakes: detail.mistakes });
       if (updated) onSessionChange({ ...updated, revealed: true });
     };
     window.addEventListener("chinees:writing-result", listener);
@@ -760,7 +772,7 @@ function Learn({
           <p>Ook woorden die je later juist had, blijven hier staan.</p>
           <ul className="session-mistake-words">{mistakes.wordIds.map(id => {
             const word = words.find(word => word.id === id);
-            const labels = { pinyin: "Pinyin fout", writing: "Tekenfouten", revealed: "Antwoord getoond", skipped: "Overgeslagen" };
+            const labels = { combined: "Pinyin of karakters opnieuw oefenen", pinyin: "Pinyin fout", writing: "Tekenfouten", revealed: "Antwoord getoond", skipped: "Overgeslagen" };
             const reasons = [...new Set(mistakes.results.filter(result => result.wordId === id).map(result => labels[result.reason]))];
             return <li key={id}><strong>{word?.hanzi}</strong><span>{word?.pinyin} · {word?.meaningNl}</span><small>{reasons.join(" · ")}</small></li>;
           })}</ul>
@@ -772,7 +784,8 @@ function Learn({
       </div>
     );
   }
-  const word = words.find((item) => item.id === exercise.wordId);
+  const word = words.find((item) => item.id === (currentResult?.answerWordId ?? pending?.answerWordId ?? exercise.wordId));
+  const combined = exercise.direction === "nl-pinyin-zh";
   if (!word) return <EmptyState title="Dit woord is niet beschikbaar" text="Start de daglijst opnieuw om verder te oefenen." />;
   const activeSession: LearningSession = session;
   const activeWord: Word = word;
@@ -782,7 +795,7 @@ function Learn({
     onSessionChange({
       ...activeSession,
       index: activeSession.index - 1,
-      revealed: false,
+      revealed: activeSession.results?.[activeSession.index - 1]?.direction === "nl-pinyin-zh",
       promptMode: "character",
       ratings: {},
     });
@@ -853,7 +866,7 @@ function Learn({
         </button>
       </header>
 
-      <section data-exercise-key={exerciseKey(session)} className={`flashcard ${session.revealed ? "revealed" : ""}`}>
+      <section data-exercise-key={exerciseKey(session)} data-writing-hanzi={!session.revealed && exercise.direction.endsWith("zh") && (!combined || pending) ? word.hanzi : undefined} className={`flashcard ${session.revealed ? "revealed" : ""}`}>
         <div className="flashcard-meta">
           <button className="card-bookmark-button" type="button" aria-label="Bewaren in lijst" title="Bewaren in lijst" aria-pressed={storedInLists} onClick={openBookmarkSheet}>
             <MonoIcon name={storedInLists ? "bookmark-filled" : "bookmark"} size={20} />
@@ -876,9 +889,17 @@ function Learn({
                 ? (session.promptMode === "character" ? <div key={exercise.direction} className="prompt-hanzi" data-tone-colors={exercise.direction === "zh-pinyin" ? "off" : undefined} style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
                 : <div className="prompt-meaning">{promptValue(word, exercise.direction)}</div>}
               {promptMatches.length > 1 && <p>Meerdere opgeslagen antwoorden passen bij deze opgave.</p>}
-              {exercise.direction.endsWith("pinyin") && <form className="pinyin-answer-form" onSubmit={event => {
+              {(exercise.direction.endsWith("pinyin") || (combined && !pending)) && <form className="pinyin-answer-form" onSubmit={event => {
                 event.preventDefault();
                 if (!pinyinInput.trim()) return;
+                if (combined) {
+                  const accepted = [word, ...promptMatches].find(candidate =>
+                    checkPinyinAnswer(pinyinInput, candidate, exercise.direction, [candidate]));
+                  onSessionChange({ ...activeSession, pendingPinyin: {
+                    key: exerciseKey(activeSession), input: pinyinInput, correct: Boolean(accepted), answerWordId: (accepted ?? word).id,
+                  } });
+                  return;
+                }
                 const updated = recordOutcome(checkPinyinAnswer(pinyinInput, word, exercise.direction, words), "pinyin", { input: pinyinInput });
                 if (updated) onSessionChange({ ...updated, revealed: true });
               }}>
@@ -888,15 +909,19 @@ function Learn({
                   <button type="button" aria-label="Trema toepassen" title="Trema toepassen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin("ü")}><svg className="pinyin-tone-icon" viewBox="0 0 28 28" fill="currentColor" aria-hidden="true"><circle cx="8" cy="14" r="3.5" /><circle cx="20" cy="14" r="3.5" /></svg></button>
                   <button type="button" className="pinyin-neutral-button" aria-label="Neutrale toon" title="Toon verwijderen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(5)}><svg className="pinyin-tone-icon" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true"><circle cx="14" cy="14" r="8" /><path d="M5 23L23 5" /></svg></button>
                 </div>
-                <button className="button primary-button" type="submit" disabled={!pinyinInput.trim()}>Controleer antwoord</button>
+                <button className="button primary-button" type="submit" disabled={!pinyinInput.trim()}>{combined ? "Verder naar karakters" : "Controleer antwoord"}</button>
               </form>}
+              {combined && pending && <p>Jouw pinyin: {pending.input}. Schrijf nu de karakters.</p>}
               <button className="button primary-button reveal-button" onClick={() => { const updated = recordOutcome(false, "revealed"); if (updated) onSessionChange({ ...updated, revealed: true }); }}>Toon het antwoord</button>
             </>
           ) : (
             <div className="answer-block">
+              {currentResult?.reason === "combined" && <p role="status">
+                {writingIsAccepted(currentResult.writingMistakes || []) ? "✓ Karakters correct" : "✕ Karakters opnieuw oefenen"}
+              </p>}
               {currentResult?.reason === "writing" && <p role="status">{currentResult.correct ? "✓ Schrijfoefening geslaagd — maximaal één fout per karakter." : "✕ Nog oefenen — minstens één karakter had twee of meer fouten."}</p>}
               {currentResult?.reason === "revealed" && <p role="status">Antwoord getoond — toegevoegd aan Nog oefenen.</p>}
-              {pinyinCorrect === true && <p className="pinyin-feedback-correct" role="status">✓ Correct!</p>}
+              {pinyinCorrect === true && <p className="pinyin-feedback-correct" role="status">{combined ? "✓ Pinyin correct" : "✓ Correct!"}</p>}
               {feedback && <section className="pinyin-feedback-error" role="status" aria-label="Antwoord verbeteren">
                 <strong>✕ Fout antwoord</strong>
                 <p>Jouw antwoord: <b>{feedbackInput}</b></p>

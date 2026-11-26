@@ -63,13 +63,13 @@ export function reviewSkill(current: SkillProgress, correct: boolean): SkillProg
   };
 }
 
-export function updateSkill(progress: ProgressMap, wordId: number, skill: Skill, correct: boolean, direction?: Direction): ProgressMap {
+export function updateSkill(progress: ProgressMap, wordId: number, skill: Skill, correct: boolean, direction?: Direction, directionCorrect = correct): ProgressMap {
   const word = progress[wordId] || emptyWordProgress();
   return {
     ...progress,
     [wordId]: {
       ...word,
-      ...(direction ? { directions: { ...word.directions, [direction]: reviewSkill(word.directions?.[direction] || emptySkill(), correct) } } : {}),
+      ...(direction ? { directions: { ...word.directions, [direction]: reviewSkill(word.directions?.[direction] || emptySkill(), directionCorrect) } } : {}),
       [skill]: reviewSkill(word[skill], correct),
     },
   };

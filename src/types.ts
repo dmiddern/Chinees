@@ -1,7 +1,7 @@
 export type HskLevel = 1 | 2 | 3 | 4 | 5 | 6 | "7-9";
 export type Skill = "meaning" | "pronunciation" | "writing";
 export type LearningStatus = "new" | "learning" | "known";
-export type Direction = "zh-nl" | "nl-zh" | "zh-pinyin" | "pinyin-zh" | "nl-pinyin" | "pinyin-nl";
+export type Direction = "zh-nl" | "nl-zh" | "zh-pinyin" | "pinyin-zh" | "nl-pinyin" | "pinyin-nl" | "nl-pinyin-zh";
 
 export interface Word {
   id: number;

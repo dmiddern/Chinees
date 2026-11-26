@@ -1,13 +1,15 @@
 import type { Direction } from "../types";
 import type { LearningSession } from "./learningSession";
 
-export type ResultReason = "pinyin" | "writing" | "revealed" | "skipped";
+export type ResultReason = "pinyin" | "combined" | "writing" | "revealed" | "skipped";
 export interface PracticeResult {
   wordId: number;
   direction: Direction;
   correct: boolean;
   reason: ResultReason;
   input?: string;
+  pinyinCorrect?: boolean;
+  answerWordId?: number;
   writingMistakes?: number[];
 }
 export interface PracticeMistakes {
@@ -23,7 +25,7 @@ export function exerciseKey(session: LearningSession): string {
 export function writingIsAccepted(mistakes: number[]): boolean {
   return mistakes.length > 0 && mistakes.every(count => Number.isInteger(count) && count >= 0 && count <= 1);
 }
-export function recordPracticeResult(session: LearningSession, correct: boolean, reason: ResultReason, details: Pick<PracticeResult,"input" | "writingMistakes"> = {}): LearningSession {
+export function recordPracticeResult(session: LearningSession, correct: boolean, reason: ResultReason, details: Partial<Pick<PracticeResult, "input" | "writingMistakes" | "pinyinCorrect" | "answerWordId">> = {}): LearningSession {
   const exercise = session.queue[session.index];
   if (!exercise || session.results?.[session.index]) return session;
   return { ...session, results: { ...session.results, [session.index]: { wordId: exercise.wordId, direction: exercise.direction, correct, reason, ...details } } };

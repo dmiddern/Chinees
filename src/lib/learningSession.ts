@@ -19,6 +19,7 @@ export interface LearningSession {
   wordIds: number[];
   queue: LearningExercise[];
   index: number;
+  pendingPinyin?: { key: string; input: string; correct: boolean; answerWordId: number };
   revealed: boolean;
   promptMode: "character" | "strokes";
   ratings: Partial<Record<Skill, boolean>>;
@@ -99,11 +100,11 @@ export function changeLearningDirection(session: LearningSession, direction: Dir
       ? exercise
       : { ...exercise, direction, skill: directionSkill(direction) }
   );
-  return { ...session, direction, queue, index, revealed: false, promptMode: "character", ratings: {} };
+  return { ...session, pendingPinyin: undefined, direction, queue, index, revealed: false, promptMode: "character", ratings: {} };
 }
 
 export function advanceLearningSession(session: LearningSession): LearningSession {
-  return { ...session, index: session.index + 1, revealed: false, promptMode: "character", ratings: {} };
+  return { ...session, pendingPinyin: undefined, index: session.index + 1, revealed: false, promptMode: "character", ratings: {} };
 }
 
 // Older sessions may still contain automatically inserted repeats. Keep past

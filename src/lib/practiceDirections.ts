@@ -1,6 +1,6 @@
 import type { Direction, Skill, Word } from "../types";
-export const directions: Direction[] = ["zh-nl", "nl-zh", "zh-pinyin", "pinyin-zh", "nl-pinyin", "pinyin-nl"];
-export const directionLabels: Record<Direction, string> = { "zh-nl": "Karakters → Nederlands", "nl-zh": "Nederlands → Karakters", "zh-pinyin": "Karakters → Pinyin", "pinyin-zh": "Pinyin → Karakters", "nl-pinyin": "Nederlands → Pinyin", "pinyin-nl": "Pinyin → Nederlands" };
+export const directions: Direction[] = ["zh-nl", "nl-zh", "zh-pinyin", "pinyin-zh", "nl-pinyin", "pinyin-nl", "nl-pinyin-zh"];
+export const directionLabels: Record<Direction, string> = { "zh-nl": "Karakters → Nederlands", "nl-zh": "Nederlands → Karakters", "zh-pinyin": "Karakters → Pinyin", "pinyin-zh": "Pinyin → Karakters", "nl-pinyin": "Nederlands → Pinyin", "pinyin-nl": "Pinyin → Nederlands", "nl-pinyin-zh": "Nederlands → Pinyin en karakters" };
 export const isDirection = (value: unknown): value is Direction => directions.includes(value as Direction);
 export function directionSkill(direction: Direction): Skill { return direction.endsWith("pinyin") ? "pronunciation" : direction.endsWith("zh") ? "writing" : "meaning"; }
 export function promptValue(word: Word, direction: Direction): string { return direction.startsWith("zh-") ? word.hanzi : direction.startsWith("pinyin-") ? word.pinyin : word.meaningNl; }
