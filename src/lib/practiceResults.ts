@@ -1,7 +1,7 @@
 import type { Direction } from "../types";
 import type { LearningSession } from "./learningSession";
 
-export type ResultReason = "pinyin" | "combined" | "writing" | "revealed" | "skipped";
+export type ResultReason = "meaning" | "pinyin" | "combined" | "writing" | "revealed" | "skipped";
 export interface PracticeResult {
   wordId: number;
   direction: Direction;

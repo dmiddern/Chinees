@@ -697,23 +697,24 @@ function Learn({
   onExit: () => void;
 }) {
   const pinyinInputRef = useRef<HTMLInputElement>(null);
+  const meaningInputRef = useRef<HTMLInputElement>(null);
   function navigateWithInputFocus(action: () => void) {
     // Mount the next input within the tap handler so mobile browsers can open the keyboard.
     flushSync(action);
-    const input = pinyinInputRef.current;
+    const input = pinyinInputRef.current ?? meaningInputRef.current;
     if (input && !input.closest(".combined-card")) input.focus({ preventScroll: true });
   }
   const [singlePinyin, setSinglePinyin] = useState("");
   const pending = session && session.pendingPinyin?.key === exerciseKey(session) ? session.pendingPinyin : undefined;
   const direction = session?.queue[session.index]?.direction;
   const combined = isCombined(direction);
-  const needsMeaning = direction === "zh-nl-pinyin" || direction === "pinyin-nl-zh";
+  const needsMeaning = direction?.split("-").slice(1).includes("nl");
   const needsPinyin = direction?.endsWith("pinyin") || direction === "nl-pinyin-zh";
   const needsWriting = direction?.endsWith("zh");
   const meaningInput = pending?.meaning ?? "";
   const pinyinInput = combined ? pending?.input ?? "" : singlePinyin;
 
-  function saveCombinedDraft(input: string, writingMistakes = pending?.writingMistakes, meaning = meaningInput) {
+  function saveAnswerDraft(input: string, writingMistakes = pending?.writingMistakes, meaning = meaningInput) {
     if (!session) return;
     const answerWordId = pending?.answerWordId ?? session.queue[session.index].wordId;
     onSessionChange({ ...session, pendingPinyin: {
@@ -722,7 +723,7 @@ function Learn({
   }
 
   function setPinyinInput(input: string) {
-    if (combined) saveCombinedDraft(input);
+    if (combined) saveAnswerDraft(input);
     else setSinglePinyin(input);
   }
   function editPinyin(tone: number | "ü") {
@@ -741,7 +742,7 @@ function Learn({
   const pinyinCorrect = currentResult?.pinyinCorrect ?? (currentResult?.reason === "pinyin" ? currentResult.correct : null);
   const [mistakesSaved, setMistakesSaved] = useState(false);
   useEffect(() => setMistakesSaved(false), [session?.id]);
-  function recordOutcome(correct: boolean, reason: ResultReason, details: Pick<PracticeResult,"input" | "writingMistakes"> = {}) {
+  function recordOutcome(correct: boolean, reason: ResultReason, details: Pick<PracticeResult,"input" | "writingMistakes" | "meaning" | "meaningCorrect" | "answerWordId"> = {}) {
     if (!session) return session;
     const exercise = session.queue[session.index];
     const promptWord = words.find(candidate => candidate.id === exercise.wordId);
@@ -779,7 +780,7 @@ function Learn({
       const count = [...(words.find(word => word.id === (pending?.answerWordId ?? session.queue[session.index]?.wordId))?.hanzi || "")].filter(char => /[\u3400-\u9fff]/.test(char)).length;
       if (!Array.isArray(detail.mistakes) || detail.mistakes.length !== count) return;
       if (combined) {
-        saveCombinedDraft(pinyinInput, detail.mistakes);
+        saveAnswerDraft(pinyinInput, detail.mistakes);
         return;
       }
       const updated = recordOutcome(writingIsAccepted(detail.mistakes), "writing", { writingMistakes: detail.mistakes });
@@ -846,7 +847,7 @@ function Learn({
           <p>Ook woorden die je later juist had, blijven hier staan.</p>
           <ul className="session-mistake-words">{mistakes.wordIds.map(id => {
             const word = words.find(word => word.id === id);
-            const labels = { combined: "Dubbel antwoord opnieuw oefenen", pinyin: "Pinyin fout", writing: "Tekenfouten", revealed: "Antwoord getoond", skipped: "Overgeslagen" };
+            const labels = { meaning: "Betekenis opnieuw oefenen", combined: "Dubbel antwoord opnieuw oefenen", pinyin: "Pinyin fout", writing: "Tekenfouten", revealed: "Antwoord getoond", skipped: "Overgeslagen" };
             const reasons = [...new Set(mistakes.results.filter(result => result.wordId === id).map(result => labels[result.reason]))];
             return <li key={id}><strong>{word?.hanzi}</strong><span>{word?.pinyin} · {word?.meaningNl}</span><small>{reasons.join(" · ")}</small></li>;
           })}</ul>
@@ -868,7 +869,7 @@ function Learn({
     onSessionChange({
       ...activeSession,
       index: activeSession.index - 1,
-      revealed: isCombined(activeSession.results?.[activeSession.index - 1]?.direction),
+      revealed: isCombined(activeSession.results?.[activeSession.index - 1]?.direction) || activeSession.results?.[activeSession.index - 1]?.reason === "meaning",
       promptMode: "character",
       ratings: {},
     });
@@ -971,13 +972,19 @@ function Learn({
                   if (updated) onSessionChange({ ...updated, revealed: true });
                   return;
                 }
+                if (needsMeaning) {
+                  const match = promptMatches.find(candidate => checkMeaning(meaningInput, candidate));
+                  const updated = recordOutcome(!!match, "meaning", { meaning: meaningInput, meaningCorrect: !!match, answerWordId: match?.id });
+                  if (updated) onSessionChange({ ...updated, revealed: true });
+                  return;
+                }
                 const updated = recordOutcome(checkPinyinAnswer(pinyinInput, word, exercise.direction, words), "pinyin", { input: pinyinInput });
                 if (updated) onSessionChange({ ...updated, revealed: true });
               }}>
                 {needsMeaning && <>
                   <label htmlFor="meaning-answer">NL</label>
-                  <input id="meaning-answer" lang="nl" aria-label="Nederlandse betekenis" value={meaningInput}
-                    onChange={event => saveCombinedDraft(pinyinInput, pending?.writingMistakes, event.target.value)} autoComplete="off" />
+                  <input id="meaning-answer" ref={meaningInputRef} autoFocus={!combined} placeholder="Typ de Nederlandse betekenis" lang="nl" aria-label="Nederlandse betekenis" value={meaningInput}
+                    onChange={event => saveAnswerDraft(pinyinInput, pending?.writingMistakes, event.target.value)} autoComplete="off" />
                 </>}
                 {needsPinyin && <>
                 {combined && <label htmlFor="pinyin-answer">拼音</label>}
@@ -988,7 +995,7 @@ function Learn({
                   <button type="button" className="pinyin-neutral-button" aria-label="Neutrale toon" title="Toon verwijderen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(5)}><svg className="pinyin-tone-icon" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true"><circle cx="14" cy="14" r="8" /><path d="M5 23L23 5" /></svg></button>
                 </div>
                 </>}
-                {!combined && <button className="button primary-button" type="submit" disabled={!pinyinInput.trim()}>Controleer antwoord</button>}
+                {!combined && <button className="button primary-button" type="submit" disabled={!(needsMeaning ? meaningInput : pinyinInput).trim()}>Controleer antwoord</button>}
               </form>}
               {combined && <>
                 {needsWriting && <div className="combined-writing" onPointerDown={() => pinyinInputRef.current?.blur()}>
@@ -1004,7 +1011,7 @@ function Learn({
             </>
           ) : (
             <div className="answer-block">
-              {currentResult?.reason === "combined" && needsMeaning && <p role="status">
+              {(currentResult?.reason === "meaning" || currentResult?.reason === "combined") && needsMeaning && <p role="status">
                 {currentResult.meaningCorrect ? "✓ NL correct" : `✕ NL: ${currentResult.meaning} · verwacht: ${word.meaningNl}`}
               </p>}
               {currentResult?.reason === "combined" && needsWriting && <p role="status">
