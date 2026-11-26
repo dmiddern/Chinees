@@ -23,6 +23,7 @@ import type { Direction, HskLevel, ProgressMap, Skill, Word } from "./types";
 type Tab = "home" | "learn" | "guide" | "words" | "lists" | "write" | "sentences" | "settings";
 
 interface Settings {
+  toneHints: boolean;
   levels: HskLevel[];
   direction: Direction;
   speechRate: number;
@@ -46,6 +47,7 @@ function literalMeaning(word: Word) {
     .join(" + ");
 }
 const defaultSettings: Settings = {
+  toneHints: false,
   levels: [1],
   direction: "zh-nl",
   speechRate: 0.72,
@@ -103,7 +105,10 @@ function App() {
   const [installPrompt, setInstallPrompt] = useState<Event | null>(null);
 
   useEffect(() => saveProgress(progress), [progress]);
-  useEffect(() => saveSettings(settings), [settings]);
+  useEffect(() => {
+    saveSettings(settings);
+    document.documentElement.dataset.toneHints = settings.toneHints ? "on" : "off";
+  }, [settings]);
   useEffect(() => saveDailySets(dailySets), [dailySets]);
   useEffect(() => saveArticleProgress(articleProgress), [articleProgress]);
   useEffect(() => saveCustomLists(customLists), [customLists]);
@@ -956,7 +961,7 @@ function Learn({
             <>
               <p className="card-instruction">{directionLabels[exercise.direction]}</p>
               {exercise.direction.startsWith("zh-")
-                ? (session.promptMode === "character" ? <div key={exercise.direction} className="prompt-hanzi" data-tone-colors={needsPinyin ? "off" : undefined} style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
+                ? (session.promptMode === "character" ? <div key={exercise.direction} className="prompt-hanzi" data-tone-colors={needsPinyin && !settings.toneHints ? "off" : undefined} style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
                 : <div className="prompt-meaning">{promptValue(word, exercise.direction)}</div>}
               {(needsPinyin || needsMeaning) && <form id="practice-answer-form" className="pinyin-answer-form" onSubmit={event => {
                 event.preventDefault();
@@ -2054,7 +2059,12 @@ function SettingsView({
   return (
     <div className="page settings-page">
       <div className="page-title-row"><div><p className="eyebrow">Persoonlijk</p><h1>Instellingen</h1></div></div>
-      <section className="settings-card"><h2>Weergave</h2><div className="appearance-choices"><button type="button" className={theme === "light" ? "active" : ""} onClick={() => onThemeChange("light")}>Licht</button><button type="button" className={theme === "dark" ? "active" : ""} onClick={() => onThemeChange("dark")}>Donker</button></div></section>
+      <section className="settings-card"><h2>Weergave</h2><div className="appearance-choices"><button type="button" className={theme === "light" ? "active" : ""} onClick={() => onThemeChange("light")}>Licht</button><button type="button" className={theme === "dark" ? "active" : ""} onClick={() => onThemeChange("dark")}>Donker</button></div>
+        <label className="tone-hint-setting">
+          <strong>Toonhint</strong>
+          <input type="checkbox" role="switch" checked={settings.toneHints} onChange={event => onChange({ toneHints: event.target.checked })} />
+        </label>
+      </section>
       <section className="settings-card">
         <h2>Actieve niveaus</h2>
         <div className="level-selector left">

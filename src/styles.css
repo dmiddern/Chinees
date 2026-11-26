@@ -1402,3 +1402,54 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 .source-options button[aria-pressed="true"] { background: var(--primary); color: var(--surface); }
 .target-options { display: flex; flex-wrap: wrap; gap: 6px; }
 .target-options .button { flex: 1 1 auto; min-height: 44px; padding: 6px 10px; font-size: 14px; }
+
+.settings-card label.tone-hint-setting {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0 0;
+  cursor: pointer;
+}
+.tone-hint-setting input {
+  appearance: none;
+  flex: 0 0 46px;
+  height: 28px;
+  margin: 0;
+  border-radius: 20px;
+  background: var(--secondary);
+  padding: 3px;
+  cursor: pointer;
+}
+.tone-hint-setting input::before {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: white;
+}
+.tone-hint-setting input:checked { background: var(--accent); }
+.tone-hint-setting input:checked::before { transform: translateX(18px); }
+
+[data-tone-hints="on"] [data-tone-char][data-tone] {
+  display: inline-block !important;
+  position: relative;
+  padding-top: .28em;
+}
+[data-tone-hints="on"] [data-tone-char][data-tone]::before {
+  content: "";
+  position: absolute;
+  width: .42em;
+  height: .21em;
+  top: .03em;
+  left: 50%;
+  transform: translateX(-50%);
+  background: currentColor;
+  clip-path: var(--tone-contour);
+  pointer-events: none;
+}
+[data-tone="1"] { --tone-contour: inset(39% 0 39%); }
+[data-tone="2"] { --tone-contour: polygon(0 78%, 94% 0, 100% 22%, 6% 100%); }
+[data-tone="3"] { --tone-contour: polygon(0 20%, 7% 0, 50% 73%, 93% 0, 100% 20%, 50% 100%); }
+[data-tone="4"] { --tone-contour: polygon(6% 0, 100% 78%, 94% 100%, 0 22%); }
+[data-tone="5"] { --tone-contour: circle(.065em at center); }
