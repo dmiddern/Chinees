@@ -1,6 +1,6 @@
 import { exerciseKey, writingIsAccepted, recordPracticeResult, sessionMistakes, saveLastMistakes, loadLastMistakes, type ResultReason, type PracticeResult } from "./lib/practiceResults";
 import { applyPinyinTone, applyPinyinUmlaut } from "./lib/pinyinInput";
-import { directions, directionLabels, promptValue, matchingPromptWords, checkPinyinAnswer, pinyinFeedback } from "./lib/practiceDirections";
+import { formLabels, isCombined, checkMeaning, directions, directionLabels, promptValue, matchingPromptWords, checkPinyinAnswer, pinyinFeedback } from "./lib/practiceDirections";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal, flushSync } from "react-dom";
 import { wordsData } from "./data/words";
@@ -645,7 +645,6 @@ function PracticeDirectionButtons({
   onPracticeSelected?: () => void;
   selectedWordCount?: number;
 }) {
-  const sources = { nl: "Nederlands", zh: "Karakters", pinyin: "Pinyin" } as const;
   const [source, setSource] = useState(() => initialDirection.split("-")[0]);
   return (
     <div className="home-directions">
@@ -660,7 +659,7 @@ function PracticeDirectionButtons({
       </div>
       <fieldset>
         <legend>Vertrek van</legend>
-        <div className="source-options">{Object.entries(sources).map(([key, label]) => (
+        <div className="source-options">{Object.entries(formLabels).map(([key, label]) => (
           <button key={key} aria-pressed={source === key} onClick={() => setSource(key)}>{label}</button>
         ))}</div>
       </fieldset>
@@ -706,14 +705,19 @@ function Learn({
   }
   const [singlePinyin, setSinglePinyin] = useState("");
   const pending = session && session.pendingPinyin?.key === exerciseKey(session) ? session.pendingPinyin : undefined;
-  const combined = session?.queue[session.index]?.direction === "nl-pinyin-zh";
+  const direction = session?.queue[session.index]?.direction;
+  const combined = isCombined(direction);
+  const needsMeaning = direction === "zh-nl-pinyin" || direction === "pinyin-nl-zh";
+  const needsPinyin = direction?.endsWith("pinyin") || direction === "nl-pinyin-zh";
+  const needsWriting = direction?.endsWith("zh");
+  const meaningInput = pending?.meaning ?? "";
   const pinyinInput = combined ? pending?.input ?? "" : singlePinyin;
 
-  function saveCombinedDraft(input: string, writingMistakes = pending?.writingMistakes) {
+  function saveCombinedDraft(input: string, writingMistakes = pending?.writingMistakes, meaning = meaningInput) {
     if (!session) return;
     const answerWordId = pending?.answerWordId ?? session.queue[session.index].wordId;
     onSessionChange({ ...session, pendingPinyin: {
-      key: exerciseKey(session), input, answerWordId, writingMistakes,
+      key: exerciseKey(session), input, meaning, answerWordId, writingMistakes,
     } });
   }
 
@@ -740,17 +744,28 @@ function Learn({
   function recordOutcome(correct: boolean, reason: ResultReason, details: Pick<PracticeResult,"input" | "writingMistakes"> = {}) {
     if (!session) return session;
     const exercise = session.queue[session.index];
-    const target = combined && words.find(candidate => candidate.id === (pending?.answerWordId ?? exercise.wordId));
-    const pronunciationCorrect = Boolean(target && checkPinyinAnswer(pinyinInput, target, exercise.direction, words));
+    const promptWord = words.find(candidate => candidate.id === exercise.wordId);
+    const candidates = combined && promptWord ? matchingPromptWords(promptWord, exercise.direction, words) : [];
+    // The stroke quiz fixes the written word. With two text answers, accept any matching reading and meaning of the same word.
+    const choices = needsWriting ? [promptWord].filter((w): w is Word => !!w) : candidates;
+    const pronunciationMatches = (candidate: Word) => !needsPinyin || checkPinyinAnswer(pinyinInput, candidate, exercise.direction, [candidate]);
+    const target = choices.find(w => pronunciationMatches(w) && (!needsMeaning || checkMeaning(meaningInput, w)))
+      ?? choices.find(w => needsMeaning && checkMeaning(meaningInput, w)) ?? promptWord;
+    const pronunciationCorrect = !!target && pronunciationMatches(target);
+    const meaningCorrect = !!target && checkMeaning(meaningInput, target);
     const writingMistakes = details.writingMistakes ?? pending?.writingMistakes;
-    const combinedCorrect = reason === "combined" && pronunciationCorrect && writingIsAccepted(writingMistakes || []);
+    const writingCorrect = writingIsAccepted(writingMistakes || []);
+    const combinedCorrect = reason === "combined" && (!needsPinyin || pronunciationCorrect)
+      && (!needsWriting || writingCorrect) && (!needsMeaning || meaningCorrect);
     const updated = recordPracticeResult(session, combined ? combinedCorrect : correct, reason, combined ? {
-      ...details, writingMistakes, input: pinyinInput, pinyinCorrect: pinyinInput.trim() ? pronunciationCorrect : undefined, answerWordId: target ? target.id : exercise.wordId,
+      ...details, writingMistakes, input: pinyinInput, pinyinCorrect: needsPinyin && pinyinInput.trim() ? pronunciationCorrect : undefined,
+      meaning: needsMeaning ? meaningInput : undefined, meaningCorrect: needsMeaning ? meaningCorrect : undefined, answerWordId: target?.id,
     } : details);
     if (updated !== session) {
       if (combined) {
-        onRate(exercise.wordId, "pronunciation", pronunciationCorrect);
-        onRate(exercise.wordId, "writing", writingIsAccepted(writingMistakes || []), exercise.direction, combinedCorrect);
+        if (needsMeaning) onRate(exercise.wordId, "meaning", meaningCorrect);
+        if (needsPinyin) onRate(exercise.wordId, "pronunciation", pronunciationCorrect, needsWriting ? undefined : exercise.direction, combinedCorrect);
+        if (needsWriting) onRate(exercise.wordId, "writing", writingCorrect, exercise.direction, combinedCorrect);
       } else {
         onRate(exercise.wordId, exercise.skill, correct, exercise.direction);
       }
@@ -763,7 +778,6 @@ function Learn({
       if (!session || session.revealed || !detail || detail.key !== exerciseKey(session)) return;
       const count = [...(words.find(word => word.id === (pending?.answerWordId ?? session.queue[session.index]?.wordId))?.hanzi || "")].filter(char => /[\u3400-\u9fff]/.test(char)).length;
       if (!Array.isArray(detail.mistakes) || detail.mistakes.length !== count) return;
-      const combined = session.queue[session.index]?.direction === "nl-pinyin-zh";
       if (combined) {
         saveCombinedDraft(pinyinInput, detail.mistakes);
         return;
@@ -832,7 +846,7 @@ function Learn({
           <p>Ook woorden die je later juist had, blijven hier staan.</p>
           <ul className="session-mistake-words">{mistakes.wordIds.map(id => {
             const word = words.find(word => word.id === id);
-            const labels = { combined: "Pinyin of karakters opnieuw oefenen", pinyin: "Pinyin fout", writing: "Tekenfouten", revealed: "Antwoord getoond", skipped: "Overgeslagen" };
+            const labels = { combined: "Dubbel antwoord opnieuw oefenen", pinyin: "Pinyin fout", writing: "Tekenfouten", revealed: "Antwoord getoond", skipped: "Overgeslagen" };
             const reasons = [...new Set(mistakes.results.filter(result => result.wordId === id).map(result => labels[result.reason]))];
             return <li key={id}><strong>{word?.hanzi}</strong><span>{word?.pinyin} · {word?.meaningNl}</span><small>{reasons.join(" · ")}</small></li>;
           })}</ul>
@@ -854,7 +868,7 @@ function Learn({
     onSessionChange({
       ...activeSession,
       index: activeSession.index - 1,
-      revealed: activeSession.results?.[activeSession.index - 1]?.direction === "nl-pinyin-zh",
+      revealed: isCombined(activeSession.results?.[activeSession.index - 1]?.direction),
       promptMode: "character",
       ratings: {},
     });
@@ -942,14 +956,14 @@ function Learn({
             <>
               <p className="card-instruction">{directionLabels[exercise.direction]}</p>
               {exercise.direction.startsWith("zh-")
-                ? (session.promptMode === "character" ? <div key={exercise.direction} className="prompt-hanzi" data-tone-colors={exercise.direction === "zh-pinyin" ? "off" : undefined} style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
+                ? (session.promptMode === "character" ? <div key={exercise.direction} className="prompt-hanzi" data-tone-colors={needsPinyin ? "off" : undefined} style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
                 : <div className="prompt-meaning">{promptValue(word, exercise.direction)}</div>}
               {promptMatches.length > 1 && <p>Meerdere opgeslagen antwoorden passen bij deze opgave.</p>}
-              {(exercise.direction.endsWith("pinyin") || combined) && <form id="practice-answer-form" className="pinyin-answer-form" onSubmit={event => {
+              {(needsPinyin || needsMeaning) && <form id="practice-answer-form" className="pinyin-answer-form" onSubmit={event => {
                 event.preventDefault();
-                if (!pinyinInput.trim()) return;
+                if ((needsPinyin && !pinyinInput.trim()) || (needsMeaning && !meaningInput.trim())) return;
                 if (combined) {
-                  if (!pending?.writingMistakes) {
+                  if (needsWriting && !pending?.writingMistakes) {
                     pinyinInputRef.current?.blur();
                     return;
                   }
@@ -960,30 +974,40 @@ function Learn({
                 const updated = recordOutcome(checkPinyinAnswer(pinyinInput, word, exercise.direction, words), "pinyin", { input: pinyinInput });
                 if (updated) onSessionChange({ ...updated, revealed: true });
               }}>
-                {combined && <label htmlFor="pinyin-answer">Pinyin</label>}
+                {needsMeaning && <>
+                  <label htmlFor="meaning-answer">NL</label>
+                  <input id="meaning-answer" lang="nl" aria-label="Nederlandse betekenis" value={meaningInput}
+                    onChange={event => saveCombinedDraft(pinyinInput, pending?.writingMistakes, event.target.value)} autoComplete="off" />
+                </>}
+                {needsPinyin && <>
+                {combined && <label htmlFor="pinyin-answer">拼音</label>}
                 <input autoFocus={!combined} ref={pinyinInputRef} aria-label="Pinyinantwoord" id="pinyin-answer" value={pinyinInput} onChange={event => setPinyinInput(event.target.value)} autoComplete="off" autoCapitalize="none" spellCheck={false} />
                 <div className="pinyin-tone-toolbar" role="group" aria-label="Toon toepassen">
                   {["M5 12H23", "M7 19L21 5", "M5 7L14 21L23 7", "M7 5L21 19"].map((path, index) => <button key={index} type="button" aria-label={`Toon ${index + 1}`} title={`Toon ${index + 1}`} onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(index + 1)}><svg className="pinyin-tone-icon" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={path} /></svg></button>)}
                   <button type="button" aria-label="Trema toepassen" title="Trema toepassen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin("ü")}><svg className="pinyin-tone-icon" viewBox="0 0 28 28" fill="currentColor" aria-hidden="true"><circle cx="8" cy="14" r="3.5" /><circle cx="20" cy="14" r="3.5" /></svg></button>
                   <button type="button" className="pinyin-neutral-button" aria-label="Neutrale toon" title="Toon verwijderen" onMouseDown={event => event.preventDefault()} onClick={() => editPinyin(5)}><svg className="pinyin-tone-icon" viewBox="0 0 28 28" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true"><circle cx="14" cy="14" r="8" /><path d="M5 23L23 5" /></svg></button>
                 </div>
+                </>}
                 {!combined && <button className="button primary-button" type="submit" disabled={!pinyinInput.trim()}>Controleer antwoord</button>}
               </form>}
               {combined && <>
-                <div className="combined-writing" onPointerDown={() => pinyinInputRef.current?.blur()}>
-                  <strong>Karakters</strong>
+                {needsWriting && <div className="combined-writing" onPointerDown={() => pinyinInputRef.current?.blur()}>
+                  <strong>汉字</strong>
                   {pending?.writingMistakes
                     ? <p role="status">✓ Geschreven: {word.hanzi}</p>
                     : <div className="combined-writing-target" />}
-                </div>
+                </div>}
                 <button className="button primary-button" type="submit" form="practice-answer-form"
-                  disabled={!pinyinInput.trim() || !pending?.writingMistakes}>Controleer beide antwoorden</button>
+                  disabled={Boolean((needsPinyin && !pinyinInput.trim()) || (needsMeaning && !meaningInput.trim()) || (needsWriting && !pending?.writingMistakes))}>Controleer beide antwoorden</button>
               </>}
               <button className="button primary-button reveal-button" onClick={() => { const updated = recordOutcome(false, "revealed"); if (updated) onSessionChange({ ...updated, revealed: true }); }}>Toon het antwoord</button>
             </>
           ) : (
             <div className="answer-block">
-              {currentResult?.reason === "combined" && <p role="status">
+              {currentResult?.reason === "combined" && needsMeaning && <p role="status">
+                {currentResult.meaningCorrect ? "✓ NL correct" : `✕ NL: ${currentResult.meaning} · verwacht: ${word.meaningNl}`}
+              </p>}
+              {currentResult?.reason === "combined" && needsWriting && <p role="status">
                 {writingIsAccepted(currentResult.writingMistakes || []) ? "✓ Karakters correct" : "✕ Karakters opnieuw oefenen"}
               </p>}
               {currentResult?.reason === "writing" && <p role="status">{currentResult.correct ? "✓ Schrijfoefening geslaagd — maximaal één fout per karakter." : "✕ Nog oefenen — minstens één karakter had twee of meer fouten."}</p>}

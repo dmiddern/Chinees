@@ -1,6 +1,23 @@
 import type { Direction, Skill, Word } from "../types";
-export const directions: Direction[] = ["zh-nl", "nl-zh", "zh-pinyin", "pinyin-zh", "nl-pinyin", "pinyin-nl", "nl-pinyin-zh"];
-export const directionLabels: Record<Direction, string> = { "zh-nl": "Karakters → Nederlands", "nl-zh": "Nederlands → Karakters", "zh-pinyin": "Karakters → Pinyin", "pinyin-zh": "Pinyin → Karakters", "nl-pinyin": "Nederlands → Pinyin", "pinyin-nl": "Pinyin → Nederlands", "nl-pinyin-zh": "Nederlands → Pinyin en karakters" };
+export const formLabels = { nl: "NL", zh: "汉字", pinyin: "拼音" } as const;
+export const directions: Direction[] = ["zh-nl", "nl-zh", "zh-pinyin", "pinyin-zh", "nl-pinyin", "pinyin-nl", "nl-pinyin-zh", "zh-nl-pinyin", "pinyin-nl-zh"];
+export const directionLabels: Record<Direction, string> = {
+  "zh-nl": "汉字 → NL", "nl-zh": "NL → 汉字",
+  "zh-pinyin": "汉字 → 拼音", "pinyin-zh": "拼音 → 汉字",
+  "nl-pinyin": "NL → 拼音", "pinyin-nl": "拼音 → NL",
+  "nl-pinyin-zh": "NL → 拼音 + 汉字", "zh-nl-pinyin": "汉字 → NL + 拼音",
+  "pinyin-nl-zh": "拼音 → NL + 汉字",
+};
+
+export function isCombined(direction?: Direction) {
+  return direction?.split("-").length === 3;
+}
+
+export function checkMeaning(input: string, word: Word): boolean {
+  const normalize = (value: string) => value.trim().toLocaleLowerCase("nl").replace(/\s+/g, " ");
+  const answer = normalize(input);
+  return !!answer && [word.meaningNl, ...word.meaningNl.split(/[;,]/)].some(value => normalize(value) === answer);
+}
 export const isDirection = (value: unknown): value is Direction => directions.includes(value as Direction);
 export function directionSkill(direction: Direction): Skill { return direction.endsWith("pinyin") ? "pronunciation" : direction.endsWith("zh") ? "writing" : "meaning"; }
 export function promptValue(word: Word, direction: Direction): string { return direction.startsWith("zh-") ? word.hanzi : direction.startsWith("pinyin-") ? word.pinyin : word.meaningNl; }

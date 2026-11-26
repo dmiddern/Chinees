@@ -8,6 +8,8 @@ export interface PracticeResult {
   correct: boolean;
   reason: ResultReason;
   input?: string;
+  meaning?: string;
+  meaningCorrect?: boolean;
   pinyinCorrect?: boolean;
   answerWordId?: number;
   writingMistakes?: number[];
@@ -25,7 +27,7 @@ export function exerciseKey(session: LearningSession): string {
 export function writingIsAccepted(mistakes: number[]): boolean {
   return mistakes.length > 0 && mistakes.every(count => Number.isInteger(count) && count >= 0 && count <= 1);
 }
-export function recordPracticeResult(session: LearningSession, correct: boolean, reason: ResultReason, details: Partial<Pick<PracticeResult, "input" | "writingMistakes" | "pinyinCorrect" | "answerWordId">> = {}): LearningSession {
+export function recordPracticeResult(session: LearningSession, correct: boolean, reason: ResultReason, details: Partial<Pick<PracticeResult, "input" | "meaning" | "meaningCorrect" | "writingMistakes" | "pinyinCorrect" | "answerWordId">> = {}): LearningSession {
   const exercise = session.queue[session.index];
   if (!exercise || session.results?.[session.index]) return session;
   return { ...session, results: { ...session.results, [session.index]: { wordId: exercise.wordId, direction: exercise.direction, correct, reason, ...details } } };
