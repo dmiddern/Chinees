@@ -1453,3 +1453,14 @@ h2 { font-size: 20px; letter-spacing: -0.025em; }
 [data-tone="3"] { --tone-contour: polygon(0 20%, 7% 0, 50% 73%, 93% 0, 100% 20%, 50% 100%); }
 [data-tone="4"] { --tone-contour: polygon(6% 0, 100% 78%, 94% 100%, 0 22%); }
 [data-tone="5"] { --tone-contour: circle(.065em at center); }
+
+.flashcard-meta .tone-hint-setting {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: auto;
+  min-height: 44px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.flashcard-meta .tone-hint-setting input { width: 46px; }

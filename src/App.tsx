@@ -289,6 +289,7 @@ function App() {
         )}
         {tab === "learn" && (
           <Learn
+            onToneHintsChange={toneHints => updateSettings({ toneHints })}
             onSaveMistakes={(completed) => setCustomLists(current => saveMistakesAsList(current, sessionMistakes(completed)))}
             progress={progress}
             session={learningSession}
@@ -680,7 +681,15 @@ function PracticeDirectionButtons({
   );
 }
 
+function ToneHintSwitch({ enabled, onChange }: { enabled: boolean; onChange: (enabled: boolean) => void }) {
+  return <label className="tone-hint-setting">
+    <strong>Toonhint</strong>
+    <input type="checkbox" role="switch" checked={enabled} onChange={event => onChange(event.target.checked)} />
+  </label>;
+}
+
 function Learn({
+  onToneHintsChange,
   onSaveMistakes,
   progress,
   session,
@@ -691,6 +700,7 @@ function Learn({
   onSaveBookmarkChanges,
   onExit,
 }: {
+  onToneHintsChange: (enabled: boolean) => void;
   onSaveMistakes: (session: LearningSession) => void;
   progress: ProgressMap;
   session: LearningSession | null;
@@ -943,6 +953,7 @@ function Learn({
 
       <section data-exercise-key={exerciseKey(session)} data-writing-hanzi={!session.revealed && exercise.direction.endsWith("zh") && (!combined || !pending?.writingMistakes) ? word.hanzi : undefined} className={`flashcard ${combined ? "combined-card" : ""} ${session.revealed ? "revealed" : ""}`}>
         <div className="flashcard-meta">
+          <ToneHintSwitch enabled={settings.toneHints} onChange={onToneHintsChange} />
           <button className="card-bookmark-button" type="button" aria-label="Bewaren in lijst" title="Bewaren in lijst" aria-pressed={storedInLists} onClick={openBookmarkSheet}>
             <MonoIcon name={storedInLists ? "bookmark-filled" : "bookmark"} size={20} />
           </button>
@@ -961,7 +972,7 @@ function Learn({
             <>
               <p className="card-instruction">{directionLabels[exercise.direction]}</p>
               {exercise.direction.startsWith("zh-")
-                ? (session.promptMode === "character" ? <div key={exercise.direction} className="prompt-hanzi" data-tone-colors={needsPinyin && !settings.toneHints ? "off" : undefined} style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
+                ? (session.promptMode === "character" ? <div key={exercise.direction + String(settings.toneHints)} className="prompt-hanzi" data-tone-colors={needsPinyin && !settings.toneHints ? "off" : undefined} style={hanziStyle}>{word.hanzi}</div> : <StrokeOrderPreview hanzi={word.hanzi} />)
                 : <div className="prompt-meaning">{promptValue(word, exercise.direction)}</div>}
               {(needsPinyin || needsMeaning) && <form id="practice-answer-form" className="pinyin-answer-form" onSubmit={event => {
                 event.preventDefault();
@@ -2060,10 +2071,7 @@ function SettingsView({
     <div className="page settings-page">
       <div className="page-title-row"><div><p className="eyebrow">Persoonlijk</p><h1>Instellingen</h1></div></div>
       <section className="settings-card"><h2>Weergave</h2><div className="appearance-choices"><button type="button" className={theme === "light" ? "active" : ""} onClick={() => onThemeChange("light")}>Licht</button><button type="button" className={theme === "dark" ? "active" : ""} onClick={() => onThemeChange("dark")}>Donker</button></div>
-        <label className="tone-hint-setting">
-          <strong>Toonhint</strong>
-          <input type="checkbox" role="switch" checked={settings.toneHints} onChange={event => onChange({ toneHints: event.target.checked })} />
-        </label>
+        <ToneHintSwitch enabled={settings.toneHints} onChange={toneHints => onChange({ toneHints })} />
       </section>
       <section className="settings-card">
         <h2>Actieve niveaus</h2>
