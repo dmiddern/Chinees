@@ -1,0 +1,5453 @@
+{
+  "301": [
+    {
+      "chinese": "啊，你也在这儿！",
+      "pinyin": "ā, nǐ yě zài zhèr!",
+      "dutch": "Hé, jij bent hier ook!",
+      "meaning": "verwondering",
+      "toneNumbers": [
+        1,
+        3,
+        3,
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "chinese": "今天真冷啊！",
+      "pinyin": "jīntiān zhēn lěng a!",
+      "dutch": "Wat is het koud vandaag!",
+      "meaning": "uitroep versterken",
+      "toneNumbers": [
+        1,
+        1,
+        1,
+        3,
+        5
+      ]
+    }
+  ],
+  "302": [
+    {
+      "chinese": "你有什么爱好？",
+      "pinyin": "nǐ yǒu shénme àihào?",
+      "dutch": "Welke hobby’s heb je?",
+      "meaning": "hobby",
+      "grammar": "好 klinkt hier hào (vierde toon), niet hǎo zoals in 你好.",
+      "toneNumbers": [
+        3,
+        3,
+        2,
+        5,
+        4,
+        4
+      ]
+    },
+    {
+      "chinese": "我爸爸爱好运动，经常去游泳。",
+      "pinyin": "wǒ bàba àihào yùndòng, jīngcháng qù yóuyǒng.",
+      "dutch": "Mijn vader sport graag. Hij gaat vaak zwemmen.",
+      "meaning": "graag doen",
+      "grammar": "Als werkwoord klinkt 爱好 wat formeel. In de spreektaal zeg je eerder 喜欢.",
+      "toneNumbers": [
+        3,
+        4,
+        5,
+        4,
+        4,
+        4,
+        4,
+        1,
+        2,
+        4,
+        2,
+        3
+      ]
+    }
+  ],
+  "303": [
+    {
+      "chinese": "我想买白色的，不要黑色的。",
+      "pinyin": "wǒ xiǎng mǎi báisè de, búyào hēisè de.",
+      "dutch": "Ik wil de witte kopen. De zwarte hoef ik niet.",
+      "meaning": "wit",
+      "toneNumbers": [
+        3,
+        3,
+        3,
+        2,
+        4,
+        5,
+        2,
+        4,
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "304": [
+    {
+      "chinese": "我们班有两个新同学。",
+      "pinyin": "wǒmen bān yǒu liǎng ge xīn tóngxué.",
+      "dutch": "We hebben twee nieuwe leerlingen in de klas.",
+      "meaning": "klas",
+      "toneNumbers": [
+        3,
+        5,
+        1,
+        3,
+        3,
+        5,
+        1,
+        2,
+        2
+      ]
+    },
+    {
+      "chinese": "你今天上什么班？",
+      "pinyin": "nǐ jīntiān shàng shénme bān?",
+      "dutch": "Welke dienst werk je vandaag?",
+      "meaning": "werkdienst",
+      "toneNumbers": [
+        3,
+        1,
+        1,
+        4,
+        2,
+        5,
+        1
+      ]
+    },
+    {
+      "chinese": "下一班公交车几点来？",
+      "pinyin": "xià yì bān gōngjiāochē jǐ diǎn lái?",
+      "dutch": "Hoe laat komt de volgende bus?",
+      "meaning": "maatwoord voor een rit",
+      "grammar": "班 telt hier ritten volgens een dienstregeling: bussen, treinen, vluchten.",
+      "toneNumbers": [
+        4,
+        4,
+        1,
+        1,
+        1,
+        1,
+        3,
+        3,
+        2
+      ]
+    }
+  ],
+  "305": [
+    {
+      "chinese": "能帮我拿一下书包吗？",
+      "pinyin": "néng bāng wǒ ná yíxià shūbāo ma?",
+      "dutch": "Kun je mijn schooltas even voor me dragen?",
+      "meaning": "helpen",
+      "toneNumbers": [
+        2,
+        1,
+        3,
+        2,
+        2,
+        4,
+        1,
+        1,
+        5
+      ]
+    }
+  ],
+  "306": [
+    {
+      "chinese": "今天来我家吃饭的人多，你能来帮忙吗？",
+      "pinyin": "jīntiān lái wǒ jiā chī fàn de rén duō, nǐ néng lái bāngmáng ma?",
+      "dutch": "Er komen vandaag veel mensen bij ons eten. Kun je komen helpen?",
+      "meaning": "een handje helpen",
+      "grammar": "帮忙 is werkwoord + voorwerp (帮 + 忙). Je zegt 帮我 of 帮我的忙, nooit 帮忙我.",
+      "toneNumbers": [
+        1,
+        1,
+        2,
+        3,
+        1,
+        1,
+        4,
+        5,
+        2,
+        1,
+        3,
+        2,
+        2,
+        1,
+        2,
+        5
+      ]
+    }
+  ],
+  "307": [
+    {
+      "chinese": "我的手机在包里。",
+      "pinyin": "wǒ de shǒujī zài bāo lǐ.",
+      "dutch": "Mijn gsm zit in mijn tas.",
+      "meaning": "tas",
+      "toneNumbers": [
+        3,
+        5,
+        3,
+        1,
+        4,
+        1,
+        3
+      ]
+    },
+    {
+      "chinese": "我们一起包饺子吧！",
+      "pinyin": "wǒmen yìqǐ bāo jiǎozi ba!",
+      "dutch": "Zullen we samen dumplings maken?",
+      "meaning": "dumplings vouwen",
+      "grammar": "包饺子 is het deeg om de vulling vouwen.",
+      "toneNumbers": [
+        3,
+        5,
+        4,
+        3,
+        1,
+        3,
+        5,
+        5
+      ]
+    },
+    {
+      "chinese": "我买了一包茶。",
+      "pinyin": "wǒ mǎi le yì bāo chá.",
+      "dutch": "Ik heb een pakje thee gekocht.",
+      "meaning": "pakje als hoeveelheid",
+      "toneNumbers": [
+        3,
+        3,
+        5,
+        4,
+        1,
+        2
+      ]
+    }
+  ],
+  "308": [
+    {
+      "chinese": "这个本子是谁的？上面没有名字。",
+      "pinyin": "zhège běnzi shì shéi de? shàngmiàn méiyǒu míngzi.",
+      "dutch": "Van wie is dit schrift? Er staat geen naam op.",
+      "meaning": "schrift",
+      "toneNumbers": [
+        4,
+        5,
+        3,
+        5,
+        4,
+        2,
+        5,
+        4,
+        4,
+        2,
+        3,
+        2,
+        5
+      ]
+    }
+  ],
+  "309": [
+    {
+      "chinese": "今天比昨天冷。",
+      "pinyin": "jīntiān bǐ zuótiān lěng.",
+      "dutch": "Vandaag is het kouder dan gisteren.",
+      "meaning": "dan bij een vergelijking",
+      "grammar": "A 比 B + bijvoeglijk naamwoord. Zet er geen 很 voor: niet 今天比昨天很冷.",
+      "toneNumbers": [
+        1,
+        1,
+        3,
+        2,
+        1,
+        3
+      ]
+    },
+    {
+      "chinese": "我们比一比，谁跑得快？",
+      "pinyin": "wǒmen bǐ yi bǐ, shéi pǎo de kuài?",
+      "dutch": "Zullen we kijken wie van ons het snelst loopt?",
+      "meaning": "zich met iemand meten",
+      "toneNumbers": [
+        3,
+        5,
+        3,
+        5,
+        3,
+        2,
+        3,
+        5,
+        4
+      ]
+    }
+  ],
+  "310": [
+    {
+      "chinese": "我的笔在哪儿？我要写名字。",
+      "pinyin": "wǒ de bǐ zài nǎr? wǒ yào xiě míngzi.",
+      "dutch": "Waar is mijn pen? Ik moet mijn naam opschrijven.",
+      "meaning": "pen",
+      "toneNumbers": [
+        3,
+        5,
+        3,
+        4,
+        3,
+        5,
+        3,
+        4,
+        3,
+        2,
+        5
+      ]
+    },
+    {
+      "chinese": "这笔钱是买机票的。",
+      "pinyin": "zhè bǐ qián shì mǎi jīpiào de.",
+      "dutch": "Dit bedrag is voor de vliegtickets.",
+      "meaning": "maatwoord voor geldbedragen",
+      "grammar": "笔 telt hier een geldbedrag als één geheel.",
+      "toneNumbers": [
+        4,
+        3,
+        2,
+        4,
+        3,
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "311": [
+    {
+      "chinese": "别走，我还有一个问题。",
+      "pinyin": "bié zǒu, wǒ hái yǒu yí ge wèntí.",
+      "dutch": "Ga nog niet weg, ik heb nog een vraag.",
+      "meaning": "aansporen iets te laten",
+      "grammar": "别 betekent hetzelfde als 不要 in een verbod of vraag om iets te laten, maar is korter en spreektaliger.",
+      "toneNumbers": [
+        2,
+        3,
+        3,
+        2,
+        3,
+        2,
+        5,
+        4,
+        2
+      ]
+    }
+  ],
+  "312": [
+    {
+      "chinese": "这家饭馆不错，我们再来吧。",
+      "pinyin": "zhè jiā fànguǎn búcuò, wǒmen zài lái ba.",
+      "dutch": "Dit restaurant is best goed. Laten we nog eens komen.",
+      "meaning": "best goed",
+      "grammar": "Letterlijk ‘niet fout’. Het klinkt positiever dan het Nederlandse ‘niet slecht’.",
+      "toneNumbers": [
+        4,
+        1,
+        4,
+        3,
+        2,
+        4,
+        3,
+        5,
+        4,
+        2,
+        5
+      ]
+    }
+  ],
+  "313": [
+    {
+      "chinese": "不好意思，这儿有人坐吗？",
+      "pinyin": "bù hǎoyìsi, zhèr yǒu rén zuò ma?",
+      "dutch": "Pardon, is deze plaats bezet?",
+      "meaning": "excuseer",
+      "toneNumbers": [
+        4,
+        3,
+        4,
+        5,
+        4,
+        5,
+        3,
+        2,
+        4,
+        5
+      ]
+    },
+    {
+      "chinese": "我不好意思问老师。",
+      "pinyin": "wǒ bù hǎoyìsi wèn lǎoshī.",
+      "dutch": "Ik durf het de leraar niet goed te vragen.",
+      "meaning": "iets niet goed durven",
+      "toneNumbers": [
+        3,
+        4,
+        3,
+        4,
+        5,
+        4,
+        3,
+        1
+      ]
+    },
+    {
+      "chinese": "不好意思，我来晚了。",
+      "pinyin": "bù hǎoyìsi, wǒ lái wǎn le.",
+      "dutch": "Sorry dat ik te laat ben.",
+      "meaning": "zich verontschuldigen",
+      "toneNumbers": [
+        4,
+        3,
+        4,
+        5,
+        3,
+        2,
+        3,
+        5
+      ]
+    }
+  ],
+  "314": [
+    {
+      "chinese": "这条裤子太长了。",
+      "pinyin": "zhè tiáo kùzi tài cháng le.",
+      "dutch": "Deze broek is te lang.",
+      "meaning": "lang",
+      "toneNumbers": [
+        4,
+        2,
+        4,
+        5,
+        4,
+        2,
+        5
+      ]
+    }
+  ],
+  "315": [
+    {
+      "chinese": "我们在车站等公交车。",
+      "pinyin": "wǒmen zài chēzhàn děng gōngjiāochē.",
+      "dutch": "We wachten bij de halte op de bus.",
+      "meaning": "halte of station",
+      "toneNumbers": [
+        3,
+        5,
+        4,
+        1,
+        4,
+        3,
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "316": [
+    {
+      "chinese": "我一出教室就看见了妈妈。",
+      "pinyin": "wǒ yì chū jiàoshì jiù kànjiàn le māma.",
+      "dutch": "Zodra ik het klaslokaal uit kwam, zag ik mama.",
+      "meaning": "naar buiten gaan",
+      "toneNumbers": [
+        3,
+        4,
+        1,
+        4,
+        4,
+        4,
+        4,
+        4,
+        5,
+        1,
+        5
+      ]
+    },
+    {
+      "chinese": "我看出他不高兴了。",
+      "pinyin": "wǒ kàn chū tā bù gāoxìng le.",
+      "dutch": "Ik zag dat hij niet blij was.",
+      "meaning": "naar buiten komen als resultaat",
+      "grammar": "看出 betekent iets opmerken door ernaar te kijken.",
+      "toneNumbers": [
+        3,
+        4,
+        1,
+        1,
+        4,
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "317": [
+    {
+      "chinese": "姐姐明年要出国读书。",
+      "pinyin": "jiějie míngnián yào chūguó dúshū.",
+      "dutch": "Mijn oudere zus gaat volgend jaar in het buitenland studeren.",
+      "meaning": "naar het buitenland gaan",
+      "toneNumbers": [
+        3,
+        5,
+        2,
+        2,
+        4,
+        1,
+        2,
+        2,
+        1
+      ]
+    }
+  ],
+  "318": [
+    {
+      "chinese": "我在门口等你，你出来吧。",
+      "pinyin": "wǒ zài ménkǒu děng nǐ, nǐ chūlái ba.",
+      "dutch": "Ik wacht op je bij de ingang. Kom maar naar buiten.",
+      "meaning": "naar buiten komen",
+      "grammar": "来 is beweging naar de spreker toe, 去 ervan weg: 出来 (naar buiten, naar mij) tegenover 出去 (naar buiten, van mij weg). Zo ook 进来/进去, 上来/上去, 下来/下去, 回来/回去, 过来/过去.",
+      "toneNumbers": [
+        3,
+        4,
+        2,
+        3,
+        3,
+        3,
+        3,
+        1,
+        2,
+        5
+      ]
+    },
+    {
+      "chinese": "你听得出来是谁吗？",
+      "pinyin": "nǐ tīng de chūlai shì shéi ma?",
+      "dutch": "Kun je aan de stem horen wie het is?",
+      "meaning": "iets kunnen onderscheiden",
+      "toneNumbers": [
+        3,
+        1,
+        5,
+        1,
+        5,
+        4,
+        2,
+        5
+      ]
+    }
+  ],
+  "319": [
+    {
+      "chinese": "我每天七点出门去上班。",
+      "pinyin": "wǒ měi tiān qī diǎn chūmén qù shàngbān.",
+      "dutch": "Ik vertrek elke dag om zeven uur naar mijn werk.",
+      "meaning": "de deur uitgaan",
+      "toneNumbers": [
+        3,
+        3,
+        1,
+        1,
+        3,
+        1,
+        2,
+        4,
+        4,
+        1
+      ]
+    }
+  ],
+  "320": [
+    {
+      "chinese": "外面没有下雨，我们出去玩吧。",
+      "pinyin": "wàimiàn méiyǒu xià yǔ, wǒmen chūqù wán ba.",
+      "dutch": "Het regent niet. Zullen we buiten gaan spelen?",
+      "meaning": "naar buiten gaan",
+      "toneNumbers": [
+        4,
+        4,
+        2,
+        3,
+        4,
+        3,
+        3,
+        5,
+        1,
+        4,
+        2,
+        5
+      ]
+    }
+  ],
+  "321": [
+    {
+      "chinese": "我太累了，想在床上休息。",
+      "pinyin": "wǒ tài lèi le, xiǎng zài chuáng shàng xiūxi.",
+      "dutch": "Ik ben doodmoe. Ik wil op bed uitrusten.",
+      "meaning": "bed",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        5,
+        3,
+        4,
+        2,
+        4,
+        1,
+        5
+      ]
+    }
+  ],
+  "322": [
+    {
+      "chinese": "这个词怎么读？",
+      "pinyin": "zhège cí zěnme dú?",
+      "dutch": "Hoe spreek je dit woord uit?",
+      "meaning": "woord",
+      "grammar": "词 is een woord van één of meer karakters. 字 is één karakter.",
+      "toneNumbers": [
+        4,
+        5,
+        2,
+        3,
+        5,
+        2
+      ]
+    }
+  ],
+  "323": [
+    {
+      "chinese": "我每周上两次汉语课。",
+      "pinyin": "wǒ měi zhōu shàng liǎng cì Hànyǔ kè.",
+      "dutch": "Ik heb twee keer per week Chinese les.",
+      "meaning": "keer",
+      "grammar": "次 staat na het werkwoord en vóór het voorwerp: 上两次课.",
+      "toneNumbers": [
+        3,
+        3,
+        1,
+        4,
+        3,
+        4,
+        4,
+        3,
+        4
+      ]
+    }
+  ],
+  "324": [
+    {
+      "chinese": "从学校到车站远吗？",
+      "pinyin": "cóng xuéxiào dào chēzhàn yuǎn ma?",
+      "dutch": "Is het ver van de school naar de halte?",
+      "meaning": "vanuit een plaats",
+      "grammar": "从…到… = van… tot…, voor plaatsen en voor tijd.",
+      "toneNumbers": [
+        2,
+        2,
+        4,
+        4,
+        1,
+        4,
+        3,
+        5
+      ]
+    },
+    {
+      "chinese": "从明天开始，我走路上班。",
+      "pinyin": "cóng míngtiān kāishǐ, wǒ zǒulù shàngbān.",
+      "dutch": "Vanaf morgen ga ik te voet naar mijn werk.",
+      "meaning": "vanaf een tijdstip",
+      "toneNumbers": [
+        2,
+        2,
+        1,
+        1,
+        3,
+        3,
+        3,
+        4,
+        4,
+        1
+      ]
+    }
+  ],
+  "325": [
+    {
+      "chinese": "我从小就喜欢游泳。",
+      "pinyin": "wǒ cóngxiǎo jiù xǐhuan yóuyǒng.",
+      "dutch": "Ik zwem al graag sinds ik klein was.",
+      "meaning": "van kinds af aan",
+      "toneNumbers": [
+        3,
+        2,
+        3,
+        4,
+        3,
+        5,
+        2,
+        3
+      ]
+    }
+  ],
+  "326": [
+    {
+      "chinese": "你写错了一个字。",
+      "pinyin": "nǐ xiě cuò le yí ge zì.",
+      "dutch": "Je hebt één karakter verkeerd geschreven.",
+      "meaning": "verkeerd",
+      "grammar": "错 staat hier als resultaat na het werkwoord, zoals in 说错 en 看错.",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        5,
+        2,
+        5,
+        4
+      ]
+    }
+  ],
+  "327": [
+    {
+      "chinese": "别打狗，它会疼的。",
+      "pinyin": "bié dǎ gǒu, tā huì téng de.",
+      "dutch": "Sla de hond niet, dat doet hem pijn.",
+      "meaning": "slaan",
+      "toneNumbers": [
+        2,
+        3,
+        3,
+        1,
+        4,
+        2,
+        5
+      ]
+    },
+    {
+      "chinese": "下课后我们去打篮球。",
+      "pinyin": "xiàkè hòu wǒmen qù dǎ lánqiú.",
+      "dutch": "Na de les gaan we basketballen.",
+      "meaning": "een sport spelen",
+      "grammar": "打 gebruik je voor balsporten met de hand (打篮球). Voor voetbal is het 踢.",
+      "toneNumbers": [
+        4,
+        4,
+        4,
+        3,
+        5,
+        4,
+        3,
+        2,
+        2
+      ]
+    },
+    {
+      "chinese": "到家后给我打个电话吧。",
+      "pinyin": "dào jiā hòu gěi wǒ dǎ ge diànhuà ba.",
+      "dutch": "Bel me even zodra je thuis bent.",
+      "meaning": "telefoneren",
+      "toneNumbers": [
+        4,
+        1,
+        4,
+        3,
+        3,
+        3,
+        5,
+        4,
+        4,
+        5
+      ]
+    }
+  ],
+  "328": [
+    {
+      "chinese": "时间不多了，我们打车去吧。",
+      "pinyin": "shíjiān bù duō le, wǒmen dǎchē qù ba.",
+      "dutch": "We hebben niet veel tijd meer. Laten we een taxi nemen.",
+      "meaning": "een taxi nemen",
+      "toneNumbers": [
+        2,
+        1,
+        4,
+        1,
+        5,
+        3,
+        5,
+        3,
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "329": [
+    {
+      "chinese": "请打开书包，拿出本子。",
+      "pinyin": "qǐng dǎkāi shūbāo, ná chū běnzi.",
+      "dutch": "Open je schooltas en haal je schrift eruit.",
+      "meaning": "openen",
+      "toneNumbers": [
+        3,
+        3,
+        1,
+        1,
+        1,
+        2,
+        1,
+        3,
+        5
+      ]
+    },
+    {
+      "chinese": "我打开电视看足球比赛。",
+      "pinyin": "wǒ dǎkāi diànshì kàn zúqiú bǐsài.",
+      "dutch": "Ik zet de tv aan om naar het voetbal te kijken.",
+      "meaning": "aanzetten",
+      "gloss": "比赛 (bǐsài) · wedstrijd",
+      "toneNumbers": [
+        3,
+        3,
+        1,
+        4,
+        4,
+        4,
+        2,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "330": [
+    {
+      "chinese": "我喜欢这件衣服，但太贵了。",
+      "pinyin": "wǒ xǐhuan zhè jiàn yīfu, dàn tài guì le.",
+      "dutch": "Ik vind dit kledingstuk mooi, maar het is te duur.",
+      "meaning": "maar",
+      "grammar": "但 en 但是 betekenen hetzelfde. 但 is korter en wat schrijftaliger.",
+      "toneNumbers": [
+        3,
+        3,
+        5,
+        4,
+        4,
+        1,
+        5,
+        4,
+        4,
+        4,
+        5
+      ]
+    }
+  ],
+  "331": [
+    {
+      "chinese": "我想去看电影，但是今天没有时间。",
+      "pinyin": "wǒ xiǎng qù kàn diànyǐng, dànshì jīntiān méiyǒu shíjiān.",
+      "dutch": "Ik wil naar de film, maar vandaag heb ik geen tijd.",
+      "meaning": "maar",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        4,
+        4,
+        3,
+        4,
+        4,
+        1,
+        1,
+        2,
+        3,
+        2,
+        1
+      ]
+    }
+  ],
+  "332": [
+    {
+      "chinese": "你说得太快了。",
+      "pinyin": "nǐ shuō de tài kuài le.",
+      "dutch": "Je praat te snel.",
+      "meaning": "aangeven hoe iets gaat",
+      "grammar": "得 staat tussen de handeling en de beschrijving ervan.",
+      "toneNumbers": [
+        3,
+        1,
+        5,
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "chinese": "你看得见那个字吗？",
+      "pinyin": "nǐ kàn de jiàn nàge zì ma?",
+      "dutch": "Kun je dat karakter zien?",
+      "meaning": "aangeven of iets lukt",
+      "grammar": "看得见 drukt uit dat iets zichtbaar is voor de spreker of luisteraar.",
+      "toneNumbers": [
+        3,
+        4,
+        5,
+        4,
+        4,
+        5,
+        4,
+        5
+      ]
+    }
+  ],
+  "333": [
+    {
+      "chinese": "请慢慢地说。",
+      "pinyin": "qǐng mànmàn de shuō.",
+      "dutch": "Spreek alsjeblieft langzaam.",
+      "meaning": "de manier van handelen aangeven",
+      "grammar": "地 staat hier tussen 慢慢 en het werkwoord 说. 的, 地 en 得 klinken alle drie als de: 的 vóór een zelfstandig naamwoord, 地 vóór een werkwoord, 得 na een werkwoord.",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        5,
+        1
+      ]
+    }
+  ],
+  "334": [
+    {
+      "chinese": "你在这里等我一下。",
+      "pinyin": "nǐ zài zhèlǐ děng wǒ yíxià.",
+      "dutch": "Wacht hier even op me.",
+      "meaning": "wachten",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        3,
+        3,
+        3,
+        2,
+        4
+      ]
+    },
+    {
+      "chinese": "商店卖苹果、鸡蛋、牛奶等东西。",
+      "pinyin": "shāngdiàn mài píngguǒ, jīdàn, niúnǎi děng dōngxi.",
+      "dutch": "De winkel verkoopt onder andere appels, eieren en melk.",
+      "meaning": "onder andere",
+      "grammar": "等 sluit een opsomming af. Het klinkt eerder schrijftalig.",
+      "toneNumbers": [
+        1,
+        4,
+        4,
+        2,
+        3,
+        1,
+        4,
+        2,
+        3,
+        3,
+        1,
+        5
+      ]
+    }
+  ],
+  "335": [
+    {
+      "chinese": "坐地铁去机场快吗？",
+      "pinyin": "zuò dìtiě qù jīchǎng kuài ma?",
+      "dutch": "Ben je met de metro snel op de luchthaven?",
+      "meaning": "metro",
+      "toneNumbers": [
+        4,
+        4,
+        3,
+        4,
+        1,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "336": [
+    {
+      "chinese": "我们点了鱼和米饭。",
+      "pinyin": "wǒmen diǎn le yú hé mǐfàn.",
+      "dutch": "We hebben vis en rijst besteld.",
+      "meaning": "bestellen",
+      "toneNumbers": [
+        3,
+        5,
+        3,
+        5,
+        2,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "chinese": "生日蜡烛你来点吧。",
+      "pinyin": "shēngrì làzhú nǐ lái diǎn ba.",
+      "dutch": "Steek jij de verjaardagskaarsjes maar aan.",
+      "meaning": "aansteken",
+      "gloss": "蜡烛 (làzhú) · kaars",
+      "toneNumbers": [
+        1,
+        4,
+        4,
+        2,
+        3,
+        2,
+        3,
+        5
+      ]
+    },
+    {
+      "chinese": "在这个字下面画一个点。",
+      "pinyin": "zài zhège zì xiàmiàn huà yí ge diǎn.",
+      "dutch": "Zet een stip onder dit karakter.",
+      "meaning": "stip",
+      "toneNumbers": [
+        4,
+        4,
+        5,
+        4,
+        4,
+        4,
+        4,
+        2,
+        5,
+        3
+      ]
+    }
+  ],
+  "337": [
+    {
+      "chinese": "这个问题我懂了。",
+      "pinyin": "zhège wèntí wǒ dǒng le.",
+      "dutch": "Nu begrijp ik deze vraag.",
+      "meaning": "begrijpen",
+      "grammar": "懂 is begrijpen. 知道 is weten.",
+      "toneNumbers": [
+        4,
+        5,
+        4,
+        2,
+        3,
+        3,
+        5
+      ]
+    }
+  ],
+  "338": [
+    {
+      "chinese": "别动，我在画你。",
+      "pinyin": "bié dòng, wǒ zài huà nǐ.",
+      "dutch": "Blijf stilzitten, ik ben je aan het tekenen.",
+      "meaning": "bewegen",
+      "toneNumbers": [
+        2,
+        4,
+        3,
+        4,
+        4,
+        3
+      ]
+    }
+  ],
+  "339": [
+    {
+      "chinese": "学校旁边的饭馆有好吃的饺子。",
+      "pinyin": "xuéxiào pángbiān de fànguǎn yǒu hǎochī de jiǎozi.",
+      "dutch": "In het restaurant naast de school hebben ze lekkere dumplings.",
+      "meaning": "restaurant",
+      "toneNumbers": [
+        2,
+        4,
+        2,
+        1,
+        5,
+        4,
+        3,
+        3,
+        3,
+        1,
+        5,
+        3,
+        5
+      ]
+    }
+  ],
+  "340": [
+    {
+      "chinese": "一只鸟从我头上飞过。",
+      "pinyin": "yì zhī niǎo cóng wǒ tóu shàng fēi guò.",
+      "dutch": "Een vogel vloog over mijn hoofd.",
+      "meaning": "vliegen",
+      "toneNumbers": [
+        4,
+        1,
+        3,
+        2,
+        3,
+        2,
+        4,
+        1,
+        4
+      ]
+    }
+  ],
+  "341": [
+    {
+      "chinese": "这儿的楼都很高。",
+      "pinyin": "zhèr de lóu dōu hěn gāo.",
+      "dutch": "De gebouwen hier zijn allemaal hoog.",
+      "meaning": "hoog",
+      "toneNumbers": [
+        4,
+        5,
+        5,
+        2,
+        1,
+        3,
+        1
+      ]
+    },
+    {
+      "chinese": "弟弟已经比我高了。",
+      "pinyin": "dìdi yǐjīng bǐ wǒ gāo le.",
+      "dutch": "Mijn broertje is al groter dan ik.",
+      "meaning": "groot van gestalte",
+      "toneNumbers": [
+        4,
+        5,
+        3,
+        1,
+        3,
+        3,
+        1,
+        5
+      ]
+    }
+  ],
+  "342": [
+    {
+      "chinese": "姐姐上高中了，我还在上小学。",
+      "pinyin": "jiějie shàng gāozhōng le, wǒ hái zài shàng xiǎoxué.",
+      "dutch": "Mijn oudere zus zit al in de laatste drie jaar van het middelbaar. Ik zit nog op de lagere school.",
+      "meaning": "bovenbouw van de middelbare school",
+      "grammar": "高中 zijn de laatste drie jaar van het middelbaar.",
+      "toneNumbers": [
+        3,
+        5,
+        4,
+        1,
+        1,
+        5,
+        3,
+        2,
+        4,
+        4,
+        3,
+        2
+      ]
+    }
+  ],
+  "343": [
+    {
+      "chinese": "能告诉我你的名字吗？",
+      "pinyin": "néng gàosu wǒ nǐ de míngzi ma?",
+      "dutch": "Kun je me zeggen hoe je heet?",
+      "meaning": "vertellen",
+      "toneNumbers": [
+        2,
+        4,
+        5,
+        3,
+        3,
+        5,
+        2,
+        5,
+        5
+      ]
+    }
+  ],
+  "344": [
+    {
+      "chinese": "他个子高，可以帮我拿书。",
+      "pinyin": "tā gèzi gāo, kěyǐ bāng wǒ ná shū.",
+      "dutch": "Hij is groot en kan het boek voor me pakken.",
+      "meaning": "lichaamslengte",
+      "toneNumbers": [
+        1,
+        4,
+        5,
+        1,
+        3,
+        3,
+        1,
+        3,
+        2,
+        1
+      ]
+    }
+  ],
+  "345": [
+    {
+      "chinese": "我跟妹妹一起做饭。",
+      "pinyin": "wǒ gēn mèimei yìqǐ zuò fàn.",
+      "dutch": "Ik kook samen met mijn zusje.",
+      "meaning": "samen met",
+      "toneNumbers": [
+        3,
+        1,
+        4,
+        5,
+        4,
+        3,
+        4,
+        4
+      ]
+    },
+    {
+      "chinese": "茶跟咖啡我都喝。",
+      "pinyin": "chá gēn kāfēi wǒ dōu hē.",
+      "dutch": "Thee en koffie drink ik allebei.",
+      "meaning": "en",
+      "grammar": "跟 als ‘en’ is spreektalig. 和 is neutraler.",
+      "toneNumbers": [
+        2,
+        1,
+        1,
+        1,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "chinese": "跟着我走，车站就在前面。",
+      "pinyin": "gēn zhe wǒ zǒu, chēzhàn jiù zài qiánmiàn.",
+      "dutch": "Volg mij maar. De halte is even verderop.",
+      "meaning": "volgen",
+      "toneNumbers": [
+        1,
+        5,
+        3,
+        3,
+        1,
+        4,
+        4,
+        4,
+        2,
+        4
+      ]
+    }
+  ],
+  "346": [
+    {
+      "chinese": "这班公交车到医院吗？",
+      "pinyin": "zhè bān gōngjiāochē dào yīyuàn ma?",
+      "dutch": "Rijdt deze bus naar het ziekenhuis?",
+      "meaning": "stadsbus",
+      "toneNumbers": [
+        4,
+        1,
+        1,
+        1,
+        1,
+        4,
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "347": [
+    {
+      "chinese": "过马路时别看手机。",
+      "pinyin": "guò mǎlù shí bié kàn shǒujī.",
+      "dutch": "Kijk bij het oversteken niet op je gsm.",
+      "meaning": "oversteken",
+      "gloss": "马路 (mǎlù) · straat, rijweg",
+      "toneNumbers": [
+        4,
+        3,
+        4,
+        2,
+        2,
+        4,
+        3,
+        1
+      ]
+    },
+    {
+      "chinese": "你在哪儿过生日？",
+      "pinyin": "nǐ zài nǎr guò shēngrì?",
+      "dutch": "Waar vier jij je verjaardag?",
+      "meaning": "doorbrengen of vieren",
+      "toneNumbers": [
+        3,
+        4,
+        3,
+        5,
+        4,
+        1,
+        4
+      ]
+    }
+  ],
+  "348": [
+    {
+      "chinese": "过来看，这儿有条鱼！",
+      "pinyin": "guòlái kàn, zhèr yǒu tiáo yú!",
+      "dutch": "Kom eens kijken, hier zit een vis!",
+      "meaning": "hierheen komen",
+      "toneNumbers": [
+        4,
+        2,
+        4,
+        4,
+        5,
+        3,
+        2,
+        2
+      ]
+    }
+  ],
+  "349": [
+    {
+      "chinese": "今年我回家过年。",
+      "pinyin": "jīnnián wǒ huí jiā guònián.",
+      "dutch": "Dit jaar ga ik naar huis om Chinees Nieuwjaar te vieren.",
+      "meaning": "Chinees Nieuwjaar vieren",
+      "toneNumbers": [
+        1,
+        2,
+        3,
+        2,
+        1,
+        4,
+        2
+      ]
+    }
+  ],
+  "350": [
+    {
+      "chinese": "老师在那边，我们过去吧。",
+      "pinyin": "lǎoshī zài nàbiān, wǒmen guòqù ba.",
+      "dutch": "De leraar staat daar. Laten we naar hem toe gaan.",
+      "meaning": "daarheen gaan",
+      "toneNumbers": [
+        3,
+        1,
+        4,
+        4,
+        1,
+        3,
+        5,
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "chinese": "一个月过去了，他还没有回来。",
+      "pinyin": "yí ge yuè guòqù le, tā hái méiyǒu huílái.",
+      "dutch": "Er is een maand voorbij en hij is nog steeds niet terug.",
+      "meaning": "voorbijgaan",
+      "toneNumbers": [
+        2,
+        5,
+        4,
+        4,
+        4,
+        5,
+        1,
+        2,
+        2,
+        3,
+        2,
+        2
+      ]
+    },
+    {
+      "chinese": "过去我坐车上班，现在我走路。",
+      "pinyin": "guòqù wǒ zuò chē shàngbān, xiànzài wǒ zǒulù.",
+      "dutch": "Vroeger reed ik naar mijn werk. Nu ga ik te voet.",
+      "meaning": "vroeger",
+      "toneNumbers": [
+        4,
+        4,
+        3,
+        4,
+        1,
+        4,
+        1,
+        4,
+        4,
+        3,
+        3,
+        4
+      ]
+    }
+  ],
+  "351": [
+    {
+      "chinese": "你去过中国吗？",
+      "pinyin": "nǐ qù guo Zhōngguó ma?",
+      "dutch": "Ben je al eens in China geweest?",
+      "meaning": "iets al eens gedaan hebben",
+      "grammar": "Het onbeklemtoonde 过 staat direct na het werkwoord. De ontkenning is 没去过. 过 zegt dat je iets ooit meegemaakt hebt, 了 dat een handeling afgerond is.",
+      "toneNumbers": [
+        3,
+        4,
+        5,
+        1,
+        2,
+        5
+      ]
+    }
+  ],
+  "352": [
+    {
+      "chinese": "你坐地铁还是打车？",
+      "pinyin": "nǐ zuò dìtiě háishi dǎchē?",
+      "dutch": "Neem je de metro of een taxi?",
+      "meaning": "of in een keuzevraag",
+      "grammar": "还是 gebruik je voor ‘of’ in een vraag. In een bewering is het 或者.",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        3,
+        2,
+        5,
+        3,
+        1
+      ]
+    },
+    {
+      "chinese": "吃了药，头还是疼。",
+      "pinyin": "chī le yào, tóu háishi téng.",
+      "dutch": "Ik heb mijn medicijn genomen, maar ik heb nog steeds hoofdpijn.",
+      "meaning": "nog steeds",
+      "toneNumbers": [
+        1,
+        5,
+        4,
+        2,
+        2,
+        5,
+        2
+      ]
+    },
+    {
+      "chinese": "外面太冷了，我们还是在家吃吧。",
+      "pinyin": "wàimiàn tài lěng le, wǒmen háishi zài jiā chī ba.",
+      "dutch": "Het is buiten veel te koud. Laten we toch maar thuis eten.",
+      "meaning": "toch maar bij een keuze",
+      "toneNumbers": [
+        4,
+        4,
+        4,
+        3,
+        5,
+        3,
+        5,
+        2,
+        5,
+        4,
+        1,
+        1,
+        5
+      ]
+    }
+  ],
+  "353": [
+    {
+      "chinese": "黑色的包是我的。",
+      "pinyin": "hēisè de bāo shì wǒ de.",
+      "dutch": "De zwarte tas is van mij.",
+      "meaning": "zwart",
+      "toneNumbers": [
+        1,
+        4,
+        5,
+        1,
+        4,
+        3,
+        5
+      ]
+    }
+  ],
+  "354": [
+    {
+      "chinese": "你想喝红茶还是绿茶？",
+      "pinyin": "nǐ xiǎng hē hóngchá háishi lǜchá?",
+      "dutch": "Wil je zwarte thee of groene thee?",
+      "meaning": "zwarte thee",
+      "grammar": "Letterlijk ‘rode thee’, maar het is wat wij zwarte thee noemen.",
+      "toneNumbers": [
+        3,
+        3,
+        1,
+        2,
+        2,
+        2,
+        5,
+        4,
+        2
+      ]
+    }
+  ],
+  "355": [
+    {
+      "chinese": "生日那天，她穿了红色的裤子。",
+      "pinyin": "shēngrì nà tiān, tā chuān le hóngsè de kùzi.",
+      "dutch": "Op haar verjaardag droeg ze een rode broek.",
+      "meaning": "rood",
+      "toneNumbers": [
+        1,
+        4,
+        4,
+        1,
+        1,
+        1,
+        5,
+        2,
+        4,
+        5,
+        4,
+        5
+      ]
+    }
+  ],
+  "356": [
+    {
+      "chinese": "药店在医院后面。",
+      "pinyin": "yàodiàn zài yīyuàn hòumiàn.",
+      "dutch": "De apotheek ligt achter het ziekenhuis.",
+      "meaning": "achter",
+      "toneNumbers": [
+        4,
+        4,
+        4,
+        1,
+        4,
+        4,
+        4
+      ]
+    }
+  ],
+  "357": [
+    {
+      "chinese": "买这本书花了我三十元。",
+      "pinyin": "mǎi zhè běn shū huā le wǒ sānshí yuán.",
+      "dutch": "Ik heb dertig yuan uitgegeven aan dit boek.",
+      "meaning": "geld uitgeven",
+      "toneNumbers": [
+        3,
+        4,
+        3,
+        1,
+        1,
+        5,
+        3,
+        1,
+        2,
+        2
+      ]
+    },
+    {
+      "chinese": "做饭花了我半个小时。",
+      "pinyin": "zuò fàn huā le wǒ bàn ge xiǎoshí.",
+      "dutch": "Het koken heeft me een halfuur gekost.",
+      "meaning": "tijd besteden",
+      "toneNumbers": [
+        4,
+        4,
+        1,
+        5,
+        3,
+        4,
+        5,
+        3,
+        2
+      ]
+    }
+  ],
+  "358": [
+    {
+      "chinese": "奶奶喜欢花，我想送她一些。",
+      "pinyin": "nǎinai xǐhuan huā, wǒ xiǎng sòng tā yìxiē.",
+      "dutch": "Oma houdt van bloemen. Ik wil haar er een paar geven.",
+      "meaning": "bloem",
+      "toneNumbers": [
+        3,
+        5,
+        3,
+        5,
+        1,
+        3,
+        3,
+        4,
+        1,
+        4,
+        1
+      ]
+    }
+  ],
+  "359": [
+    {
+      "chinese": "请在这里画一条鱼。",
+      "pinyin": "qǐng zài zhèlǐ huà yì tiáo yú.",
+      "dutch": "Teken hier eens een vis.",
+      "meaning": "tekenen",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        3,
+        4,
+        4,
+        2,
+        2
+      ]
+    },
+    {
+      "chinese": "这是女儿送我的画。",
+      "pinyin": "zhè shì nǚ’ér sòng wǒ de huà.",
+      "dutch": "Dit is de tekening die mijn dochter me cadeau heeft gedaan.",
+      "meaning": "tekening of schilderij",
+      "toneNumbers": [
+        4,
+        4,
+        3,
+        2,
+        4,
+        3,
+        5,
+        4
+      ]
+    }
+  ],
+  "360": [
+    {
+      "chinese": "我的手表坏了，不走了。",
+      "pinyin": "wǒ de shǒubiǎo huài le, bù zǒu le.",
+      "dutch": "Mijn horloge is stuk. Het loopt niet meer.",
+      "meaning": "kapot",
+      "toneNumbers": [
+        3,
+        5,
+        3,
+        3,
+        4,
+        5,
+        4,
+        3,
+        5
+      ]
+    },
+    {
+      "chinese": "牛奶坏了，别喝！",
+      "pinyin": "niúnǎi huài le, bié hē!",
+      "dutch": "De melk is bedorven. Drink er niet van!",
+      "meaning": "slecht of bedorven",
+      "toneNumbers": [
+        2,
+        3,
+        4,
+        5,
+        2,
+        1
+      ]
+    },
+    {
+      "chinese": "他不是坏人，他是来帮忙的。",
+      "pinyin": "tā bú shì huài rén, tā shì lái bāngmáng de.",
+      "dutch": "Hij is geen slecht mens. Hij komt helpen.",
+      "meaning": "slecht van karakter",
+      "toneNumbers": [
+        1,
+        2,
+        4,
+        4,
+        2,
+        1,
+        4,
+        2,
+        1,
+        2,
+        5
+      ]
+    }
+  ],
+  "361": [
+    {
+      "chinese": "我在家等你，你几点回来？",
+      "pinyin": "wǒ zài jiā děng nǐ, nǐ jǐ diǎn huílái?",
+      "dutch": "Ik wacht thuis op je. Hoe laat kom je terug?",
+      "meaning": "terugkomen",
+      "toneNumbers": [
+        3,
+        4,
+        1,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2,
+        2
+      ]
+    }
+  ],
+  "362": [
+    {
+      "chinese": "我的书在教室，我要回去拿。",
+      "pinyin": "wǒ de shū zài jiàoshì, wǒ yào huíqù ná.",
+      "dutch": "Mijn boek ligt in de klas. Ik moet terug om het te halen.",
+      "meaning": "teruggaan",
+      "toneNumbers": [
+        3,
+        5,
+        1,
+        4,
+        4,
+        4,
+        3,
+        4,
+        2,
+        4,
+        2
+      ]
+    }
+  ],
+  "363": [
+    {
+      "chinese": "爸爸的飞机快到了，我要去机场了。",
+      "pinyin": "bàba de fēijī kuài dào le, wǒ yào qù jīchǎng le.",
+      "dutch": "Papa’s vliegtuig landt bijna. Ik moet naar de luchthaven.",
+      "meaning": "luchthaven",
+      "toneNumbers": [
+        4,
+        5,
+        5,
+        1,
+        1,
+        4,
+        4,
+        5,
+        3,
+        4,
+        4,
+        1,
+        3,
+        5
+      ]
+    }
+  ],
+  "364": [
+    {
+      "chinese": "明天的机票比今天的便宜。",
+      "pinyin": "míngtiān de jīpiào bǐ jīntiān de piányi.",
+      "dutch": "Een vliegticket voor morgen is goedkoper dan een voor vandaag.",
+      "meaning": "vliegticket",
+      "toneNumbers": [
+        2,
+        1,
+        5,
+        1,
+        4,
+        3,
+        1,
+        1,
+        5,
+        2,
+        5
+      ]
+    }
+  ],
+  "365": [
+    {
+      "chinese": "你还记得我的名字吗？",
+      "pinyin": "nǐ hái jìde wǒ de míngzi ma?",
+      "dutch": "Weet je mijn naam nog?",
+      "meaning": "zich herinneren",
+      "toneNumbers": [
+        3,
+        2,
+        4,
+        5,
+        3,
+        5,
+        2,
+        5,
+        5
+      ]
+    },
+    {
+      "chinese": "晚上记得给爸爸打电话。",
+      "pinyin": "wǎnshang jìde gěi bàba dǎ diànhuà.",
+      "dutch": "Denk eraan papa vanavond te bellen.",
+      "meaning": "eraan denken iets te doen",
+      "toneNumbers": [
+        3,
+        5,
+        4,
+        5,
+        3,
+        4,
+        5,
+        3,
+        4,
+        4
+      ]
+    }
+  ],
+  "366": [
+    {
+      "chinese": "这家酒店还有一间房吗？",
+      "pinyin": "zhè jiā jiǔdiàn hái yǒu yì jiān fáng ma?",
+      "dutch": "Heeft dit hotel nog een kamer vrij?",
+      "meaning": "maatwoord voor kamers",
+      "gloss": "房 (fáng) · kamer",
+      "toneNumbers": [
+        4,
+        1,
+        3,
+        4,
+        2,
+        3,
+        4,
+        1,
+        2,
+        5
+      ]
+    },
+    {
+      "chinese": "我坐在爸爸和妈妈中间。",
+      "pinyin": "wǒ zuò zài bàba hé māma zhōngjiān.",
+      "dutch": "Ik zit tussen papa en mama.",
+      "meaning": "tussen",
+      "grammar": "间 komt hier voor in het plaatswoord 中间.",
+      "gloss": "中间 (zhōngjiān) · tussen, in het midden",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        4,
+        5,
+        2,
+        1,
+        5,
+        1,
+        1
+      ]
+    }
+  ],
+  "367": [
+    {
+      "chinese": "爷爷教我写汉字。",
+      "pinyin": "yéye jiāo wǒ xiě Hànzì.",
+      "dutch": "Opa leert me Chinese karakters schrijven.",
+      "meaning": "iemand iets leren",
+      "grammar": "教 klinkt hier jiāo. In 教室 is het jiào.",
+      "toneNumbers": [
+        2,
+        5,
+        1,
+        3,
+        3,
+        4,
+        4
+      ]
+    }
+  ],
+  "368": [
+    {
+      "chinese": "下课后，教室里就我一个人。",
+      "pinyin": "xiàkè hòu, jiàoshì lǐ jiù wǒ yí ge rén.",
+      "dutch": "Na de les ben ik alleen in het klaslokaal.",
+      "meaning": "klaslokaal",
+      "toneNumbers": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        3,
+        4,
+        3,
+        2,
+        5,
+        2
+      ]
+    }
+  ],
+  "369": [
+    {
+      "chinese": "我来介绍一下，这是我妻子。",
+      "pinyin": "wǒ lái jièshào yíxià, zhè shì wǒ qīzi.",
+      "dutch": "Mag ik je voorstellen? Dit is mijn vrouw.",
+      "meaning": "iemand voorstellen",
+      "toneNumbers": [
+        3,
+        2,
+        4,
+        4,
+        2,
+        4,
+        4,
+        4,
+        3,
+        1,
+        5
+      ]
+    },
+    {
+      "chinese": "请介绍一下你的学校。",
+      "pinyin": "qǐng jièshào yíxià nǐ de xuéxiào.",
+      "dutch": "Vertel ons eens iets over je school.",
+      "meaning": "iets presenteren",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        2,
+        4,
+        3,
+        5,
+        2,
+        4
+      ]
+    }
+  ],
+  "370": [
+    {
+      "chinese": "请进教室，老师在里面等你。",
+      "pinyin": "qǐng jìn jiàoshì, lǎoshī zài lǐmiàn děng nǐ.",
+      "dutch": "Ga het klaslokaal binnen. De leraar wacht daar op je.",
+      "meaning": "binnengaan",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        4,
+        3,
+        1,
+        4,
+        3,
+        4,
+        3,
+        3
+      ]
+    }
+  ],
+  "371": [
+    {
+      "chinese": "我家离学校很近，走路五分钟就到。",
+      "pinyin": "wǒ jiā lí xuéxiào hěn jìn, zǒulù wǔ fēnzhōng jiù dào.",
+      "dutch": "Ik woon vlak bij de school. Te voet ben ik er in vijf minuten.",
+      "meaning": "dichtbij",
+      "toneNumbers": [
+        3,
+        1,
+        2,
+        2,
+        4,
+        3,
+        4,
+        3,
+        4,
+        3,
+        1,
+        1,
+        4,
+        4
+      ]
+    }
+  ],
+  "372": [
+    {
+      "chinese": "外面冷，快进来喝茶！",
+      "pinyin": "wàimiàn lěng, kuài jìnlái hē chá!",
+      "dutch": "Het is koud buiten. Kom snel binnen voor een kop thee!",
+      "meaning": "binnenkomen",
+      "toneNumbers": [
+        4,
+        4,
+        3,
+        4,
+        4,
+        2,
+        1,
+        2
+      ]
+    }
+  ],
+  "373": [
+    {
+      "chinese": "我在外面等，你进去买票吧。",
+      "pinyin": "wǒ zài wàimiàn děng, nǐ jìnqù mǎi piào ba.",
+      "dutch": "Ik wacht buiten. Ga jij maar naar binnen om kaartjes te kopen.",
+      "meaning": "naar binnen gaan",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        4,
+        3,
+        3,
+        4,
+        4,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "374": [
+    {
+      "chinese": "我们经常下班后一起吃饭。",
+      "pinyin": "wǒmen jīngcháng xiàbān hòu yìqǐ chī fàn.",
+      "dutch": "We eten na het werk vaak samen.",
+      "meaning": "regelmatig",
+      "toneNumbers": [
+        3,
+        5,
+        1,
+        2,
+        4,
+        1,
+        4,
+        4,
+        3,
+        1,
+        4
+      ]
+    }
+  ],
+  "375": [
+    {
+      "chinese": "这家酒店离机场远吗？",
+      "pinyin": "zhè jiā jiǔdiàn lí jīchǎng yuǎn ma?",
+      "dutch": "Ligt dit hotel ver van de luchthaven?",
+      "meaning": "hotel",
+      "toneNumbers": [
+        4,
+        1,
+        3,
+        4,
+        2,
+        1,
+        3,
+        3,
+        5
+      ]
+    }
+  ],
+  "376": [
+    {
+      "chinese": "我一到家就给你打电话。",
+      "pinyin": "wǒ yí dào jiā jiù gěi nǐ dǎ diànhuà.",
+      "dutch": "Zodra ik thuis ben, bel ik je.",
+      "meaning": "meteen of zodra",
+      "grammar": "一…就… = zodra… (meteen).",
+      "toneNumbers": [
+        3,
+        2,
+        4,
+        1,
+        4,
+        3,
+        3,
+        3,
+        4,
+        4
+      ]
+    },
+    {
+      "chinese": "她五点就起床了。",
+      "pinyin": "tā wǔ diǎn jiù qǐchuáng le.",
+      "dutch": "Ze stond al om vijf uur op.",
+      "meaning": "al op een vroeg tijdstip",
+      "grammar": "就 = al, vroeger dan verwacht. 才 = pas, later dan verwacht: 她十点才起床.",
+      "toneNumbers": [
+        1,
+        3,
+        3,
+        4,
+        3,
+        2,
+        5
+      ]
+    },
+    {
+      "chinese": "就你一个人来了吗？",
+      "pinyin": "jiù nǐ yí ge rén lái le ma?",
+      "dutch": "Ben jij de enige die gekomen is?",
+      "meaning": "slechts",
+      "toneNumbers": [
+        4,
+        3,
+        2,
+        5,
+        2,
+        2,
+        5,
+        5
+      ]
+    }
+  ],
+  "377": [
+    {
+      "chinese": "晚上喝咖啡，我睡不好。",
+      "pinyin": "wǎnshang hē kāfēi, wǒ shuì bu hǎo.",
+      "dutch": "Als ik ’s avonds koffie drink, slaap ik slecht.",
+      "meaning": "koffie",
+      "toneNumbers": [
+        3,
+        5,
+        1,
+        1,
+        1,
+        3,
+        4,
+        5,
+        3
+      ]
+    }
+  ],
+  "378": [
+    {
+      "chinese": "电影几点开始？",
+      "pinyin": "diànyǐng jǐ diǎn kāishǐ?",
+      "dutch": "Hoe laat begint de film?",
+      "meaning": "beginnen",
+      "toneNumbers": [
+        4,
+        3,
+        3,
+        3,
+        1,
+        3
+      ]
+    },
+    {
+      "chinese": "一开始我不懂，现在懂了。",
+      "pinyin": "yì kāishǐ wǒ bù dǒng, xiànzài dǒng le.",
+      "dutch": "In het begin begreep ik het niet. Nu wel.",
+      "meaning": "het begin",
+      "toneNumbers": [
+        4,
+        1,
+        3,
+        3,
+        4,
+        3,
+        4,
+        4,
+        3,
+        5
+      ]
+    }
+  ],
+  "379": [
+    {
+      "chinese": "明天开学，我的书包已经准备好了。",
+      "pinyin": "míngtiān kāixué, wǒ de shūbāo yǐjīng zhǔnbèi hǎo le.",
+      "dutch": "Morgen begint de school weer. Mijn schooltas staat al klaar.",
+      "meaning": "begin van de lessen na de vakantie",
+      "toneNumbers": [
+        2,
+        1,
+        1,
+        2,
+        3,
+        5,
+        1,
+        1,
+        3,
+        1,
+        3,
+        4,
+        3,
+        5
+      ]
+    }
+  ],
+  "380": [
+    {
+      "chinese": "我们明天考汉语。",
+      "pinyin": "wǒmen míngtiān kǎo Hànyǔ.",
+      "dutch": "We hebben morgen een toets Chinees.",
+      "meaning": "een toets afleggen",
+      "toneNumbers": [
+        3,
+        5,
+        2,
+        1,
+        3,
+        4,
+        3
+      ]
+    },
+    {
+      "chinese": "我考考你，这个字怎么读？",
+      "pinyin": "wǒ kǎokao nǐ, zhège zì zěnme dú?",
+      "dutch": "Ik zal je eens testen. Hoe spreek je dit karakter uit?",
+      "meaning": "iemand testen",
+      "toneNumbers": [
+        3,
+        3,
+        5,
+        3,
+        4,
+        5,
+        4,
+        3,
+        5,
+        2
+      ]
+    }
+  ],
+  "381": [
+    {
+      "chinese": "学生正在考试，请别说话。",
+      "pinyin": "xuéshēng zhèngzài kǎoshì, qǐng bié shuōhuà.",
+      "dutch": "De leerlingen zijn examen aan het doen. Wees alsjeblieft stil.",
+      "meaning": "examen doen",
+      "toneNumbers": [
+        2,
+        1,
+        4,
+        4,
+        3,
+        4,
+        3,
+        2,
+        1,
+        4
+      ]
+    },
+    {
+      "chinese": "下午的考试要两个小时。",
+      "pinyin": "xiàwǔ de kǎoshì yào liǎng ge xiǎoshí.",
+      "dutch": "Het examen deze namiddag duurt twee uur.",
+      "meaning": "een examen",
+      "toneNumbers": [
+        4,
+        3,
+        5,
+        3,
+        4,
+        4,
+        3,
+        5,
+        3,
+        2
+      ]
+    }
+  ],
+  "382": [
+    {
+      "chinese": "天阴了，下午可能下雨。",
+      "pinyin": "tiān yīn le, xiàwǔ kěnéng xià yǔ.",
+      "dutch": "Het is bewolkt geworden. Misschien regent het in de namiddag.",
+      "meaning": "misschien",
+      "toneNumbers": [
+        1,
+        1,
+        5,
+        4,
+        3,
+        3,
+        2,
+        4,
+        3
+      ]
+    },
+    {
+      "chinese": "五分钟走到机场？不可能，太远了！",
+      "pinyin": "wǔ fēnzhōng zǒu dào jīchǎng? bù kěnéng, tài yuǎn le!",
+      "dutch": "In vijf minuten naar de luchthaven lopen? Onmogelijk, dat is te ver!",
+      "meaning": "mogelijk",
+      "toneNumbers": [
+        3,
+        1,
+        1,
+        3,
+        4,
+        1,
+        3,
+        4,
+        3,
+        2,
+        4,
+        3,
+        5
+      ]
+    }
+  ],
+  "383": [
+    {
+      "chinese": "我想买条裤子，上班穿。",
+      "pinyin": "wǒ xiǎng mǎi tiáo kùzi, shàngbān chuān.",
+      "dutch": "Ik wil een broek kopen om op het werk te dragen.",
+      "meaning": "broek",
+      "toneNumbers": [
+        3,
+        3,
+        3,
+        2,
+        4,
+        5,
+        4,
+        1,
+        1
+      ]
+    }
+  ],
+  "384": [
+    {
+      "chinese": "坐地铁比走路快多了。",
+      "pinyin": "zuò dìtiě bǐ zǒulù kuài duō le.",
+      "dutch": "Met de metro gaat het veel sneller dan te voet.",
+      "meaning": "snel",
+      "toneNumbers": [
+        4,
+        4,
+        3,
+        3,
+        3,
+        4,
+        4,
+        1,
+        5
+      ]
+    },
+    {
+      "chinese": "快来，车到了！",
+      "pinyin": "kuài lái, chē dào le!",
+      "dutch": "Kom snel, de bus is er!",
+      "meaning": "schiet op",
+      "toneNumbers": [
+        4,
+        2,
+        1,
+        4,
+        5
+      ]
+    },
+    {
+      "chinese": "快八点了，我们走吧。",
+      "pinyin": "kuài bā diǎn le, wǒmen zǒu ba.",
+      "dutch": "Het is bijna acht uur. Laten we vertrekken.",
+      "meaning": "bijna",
+      "toneNumbers": [
+        4,
+        1,
+        3,
+        5,
+        3,
+        5,
+        3,
+        5
+      ]
+    }
+  ],
+  "385": [
+    {
+      "chinese": "今天是你的生日吧？生日快乐！",
+      "pinyin": "jīntiān shì nǐ de shēngrì ba? shēngrì kuàilè!",
+      "dutch": "Je bent vandaag toch jarig? Gelukkige verjaardag!",
+      "meaning": "gelukkig of vrolijk",
+      "toneNumbers": [
+        1,
+        1,
+        4,
+        3,
+        5,
+        1,
+        4,
+        5,
+        1,
+        4,
+        4,
+        4
+      ]
+    }
+  ],
+  "386": [
+    {
+      "chinese": "快要下雨了，孩子们都回家了。",
+      "pinyin": "kuàiyào xià yǔ le, háizimen dōu huí jiā le.",
+      "dutch": "Het gaat zo regenen. De kinderen zijn allemaal naar huis gegaan.",
+      "meaning": "op het punt staan",
+      "grammar": "快要…了 = bijna, zo meteen. Met een concreet tijdstip gebruik je 就要…了: 明天就要考试了, niet 明天快要考试了.",
+      "toneNumbers": [
+        4,
+        4,
+        4,
+        3,
+        5,
+        2,
+        5,
+        5,
+        1,
+        2,
+        1,
+        5
+      ]
+    }
+  ],
+  "387": [
+    {
+      "chinese": "你喜欢打篮球还是踢足球？",
+      "pinyin": "nǐ xǐhuan dǎ lánqiú háishi tī zúqiú?",
+      "dutch": "Speel je liever basketbal of voetbal?",
+      "meaning": "basketbal",
+      "toneNumbers": [
+        3,
+        3,
+        5,
+        3,
+        2,
+        2,
+        2,
+        5,
+        1,
+        2,
+        2
+      ]
+    }
+  ],
+  "388": [
+    {
+      "chinese": "今天走了很远，我有点儿累。",
+      "pinyin": "jīntiān zǒu le hěn yuǎn, wǒ yǒudiǎnr lèi.",
+      "dutch": "Ik heb vandaag ver gelopen en ben wat moe.",
+      "meaning": "moe",
+      "toneNumbers": [
+        1,
+        1,
+        3,
+        5,
+        3,
+        3,
+        3,
+        3,
+        3,
+        5,
+        4
+      ]
+    }
+  ],
+  "389": [
+    {
+      "chinese": "酒店离车站有三百米。",
+      "pinyin": "jiǔdiàn lí chēzhàn yǒu sānbǎi mǐ.",
+      "dutch": "Het hotel ligt op driehonderd meter van het station.",
+      "meaning": "op een afstand van",
+      "grammar": "A 离 B + afstand of 近/远: hoe ver A van B ligt.",
+      "gloss": "米 (mǐ) · meter",
+      "toneNumbers": [
+        3,
+        4,
+        2,
+        1,
+        4,
+        3,
+        1,
+        3,
+        3
+      ]
+    },
+    {
+      "chinese": "她十八岁就离家去上大学了。",
+      "pinyin": "tā shíbā suì jiù lí jiā qù shàng dàxué le.",
+      "dutch": "Ze ging op haar achttiende het huis uit om te studeren.",
+      "meaning": "verlaten",
+      "toneNumbers": [
+        1,
+        2,
+        1,
+        4,
+        4,
+        2,
+        1,
+        4,
+        4,
+        4,
+        2,
+        5
+      ]
+    }
+  ],
+  "390": [
+    {
+      "chinese": "书包里面还有一本书。",
+      "pinyin": "shūbāo lǐmiàn hái yǒu yì běn shū.",
+      "dutch": "Er zit nog een boek in de schooltas.",
+      "meaning": "binnenin",
+      "toneNumbers": [
+        1,
+        1,
+        3,
+        4,
+        2,
+        3,
+        4,
+        3,
+        1
+      ]
+    }
+  ],
+  "391": [
+    {
+      "chinese": "洗手间在二楼。",
+      "pinyin": "xǐshǒujiān zài èr lóu.",
+      "dutch": "Het toilet is op de eerste verdieping.",
+      "meaning": "verdieping",
+      "grammar": "In China telt de begane grond als 一楼. 二楼 ligt één verdieping hoger.",
+      "toneNumbers": [
+        3,
+        3,
+        1,
+        4,
+        4,
+        2
+      ]
+    },
+    {
+      "chinese": "前面的楼是我们的学校。",
+      "pinyin": "qiánmiàn de lóu shì wǒmen de xuéxiào.",
+      "dutch": "Dat gebouw daar voor ons is onze school.",
+      "meaning": "gebouw",
+      "toneNumbers": [
+        2,
+        4,
+        5,
+        2,
+        4,
+        3,
+        5,
+        5,
+        2,
+        4
+      ]
+    }
+  ],
+  "392": [
+    {
+      "chinese": "这条路到医院吗？",
+      "pinyin": "zhè tiáo lù dào yīyuàn ma?",
+      "dutch": "Kom ik langs deze weg bij het ziekenhuis?",
+      "meaning": "weg",
+      "toneNumbers": [
+        4,
+        2,
+        4,
+        4,
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "393": [
+    {
+      "chinese": "上班路上，我买了两个包子。",
+      "pinyin": "shàngbān lùshang, wǒ mǎi le liǎng ge bāozi.",
+      "dutch": "Onderweg naar het werk heb ik twee gestoomde broodjes gekocht.",
+      "meaning": "onderweg",
+      "toneNumbers": [
+        4,
+        1,
+        4,
+        5,
+        3,
+        3,
+        5,
+        3,
+        5,
+        1,
+        5
+      ]
+    },
+    {
+      "chinese": "下雪了，路上的车都开得很慢。",
+      "pinyin": "xià xuě le, lùshang de chē dōu kāi de hěn màn.",
+      "dutch": "Het sneeuwt. De auto’s op de weg rijden allemaal langzaam.",
+      "meaning": "op straat",
+      "toneNumbers": [
+        4,
+        3,
+        5,
+        4,
+        5,
+        5,
+        1,
+        1,
+        1,
+        5,
+        3,
+        4
+      ]
+    }
+  ],
+  "394": [
+    {
+      "chinese": "今年我们想去中国旅游。",
+      "pinyin": "jīnnián wǒmen xiǎng qù Zhōngguó lǚyóu.",
+      "dutch": "Dit jaar willen we op reis naar China.",
+      "meaning": "op reis gaan",
+      "toneNumbers": [
+        1,
+        2,
+        3,
+        5,
+        3,
+        4,
+        1,
+        2,
+        3,
+        2
+      ]
+    }
+  ],
+  "395": [
+    {
+      "chinese": "我爸爸喝绿茶，从不喝咖啡。",
+      "pinyin": "wǒ bàba hē lǜchá, cóng bù hē kāfēi.",
+      "dutch": "Mijn vader drinkt groene thee. Koffie drinkt hij nooit.",
+      "meaning": "groene thee",
+      "toneNumbers": [
+        3,
+        4,
+        5,
+        1,
+        4,
+        2,
+        2,
+        4,
+        1,
+        1,
+        1
+      ]
+    }
+  ],
+  "396": [
+    {
+      "chinese": "那个绿色的杯子是谁的？",
+      "pinyin": "nàge lǜsè de bēizi shì shéi de?",
+      "dutch": "Van wie is die groene beker?",
+      "meaning": "groen",
+      "toneNumbers": [
+        4,
+        5,
+        4,
+        4,
+        5,
+        1,
+        5,
+        4,
+        2,
+        5
+      ]
+    }
+  ],
+  "397": [
+    {
+      "chinese": "你走慢一点儿，我太累了。",
+      "pinyin": "nǐ zǒu màn yìdiǎnr, wǒ tài lèi le.",
+      "dutch": "Loop wat langzamer. Ik ben zo moe.",
+      "meaning": "langzaam",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        4,
+        3,
+        5,
+        3,
+        4,
+        4,
+        5
+      ]
+    }
+  ],
+  "398": [
+    {
+      "chinese": "今天的电影真没意思，我不想再看了。",
+      "pinyin": "jīntiān de diànyǐng zhēn méi yìsi, wǒ bù xiǎng zài kàn le.",
+      "dutch": "Wat is de film van vandaag saai. Ik wil niet verder kijken.",
+      "meaning": "saai",
+      "toneNumbers": [
+        1,
+        1,
+        5,
+        4,
+        3,
+        1,
+        2,
+        4,
+        5,
+        3,
+        4,
+        3,
+        4,
+        4,
+        5
+      ]
+    }
+  ],
+  "399": [
+    {
+      "chinese": "她每天睡前都看书。",
+      "pinyin": "tā měi tiān shuì qián dōu kàn shū.",
+      "dutch": "Ze leest elke dag voor het slapengaan.",
+      "meaning": "elke",
+      "grammar": "每 gaat vaak samen met 都: 每天都….",
+      "toneNumbers": [
+        1,
+        3,
+        1,
+        4,
+        2,
+        1,
+        4,
+        1
+      ]
+    }
+  ],
+  "400": [
+    {
+      "chinese": "我在门外，你能开门吗？",
+      "pinyin": "wǒ zài mén wài, nǐ néng kāi mén ma?",
+      "dutch": "Ik sta voor de deur. Kun je opendoen?",
+      "meaning": "deur",
+      "toneNumbers": [
+        3,
+        4,
+        2,
+        4,
+        3,
+        2,
+        1,
+        2,
+        5
+      ]
+    },
+    {
+      "chinese": "我今年上三门课。",
+      "pinyin": "wǒ jīnnián shàng sān mén kè.",
+      "dutch": "Ik volg dit jaar drie vakken.",
+      "meaning": "maatwoord voor vakken",
+      "toneNumbers": [
+        3,
+        1,
+        2,
+        4,
+        1,
+        2,
+        4
+      ]
+    }
+  ],
+  "401": [
+    {
+      "chinese": "看完电影，我们在门口见。",
+      "pinyin": "kàn wán diànyǐng, wǒmen zài ménkǒu jiàn.",
+      "dutch": "We zien elkaar bij de ingang zodra de film uit is.",
+      "meaning": "ingang",
+      "toneNumbers": [
+        4,
+        2,
+        4,
+        3,
+        3,
+        5,
+        4,
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "402": [
+    {
+      "chinese": "小孩儿也要买门票吗？",
+      "pinyin": "xiǎoháir yě yào mǎi ménpiào ma?",
+      "dutch": "Hebben kinderen ook een toegangskaartje nodig?",
+      "meaning": "toegangskaartje",
+      "toneNumbers": [
+        3,
+        2,
+        5,
+        3,
+        4,
+        3,
+        2,
+        4,
+        5
+      ]
+    }
+  ],
+  "403": [
+    {
+      "chinese": "纸的这一面可以写字。",
+      "pinyin": "zhǐ de zhè yí miàn kěyǐ xiě zì.",
+      "dutch": "Op deze kant van het papier kun je schrijven.",
+      "meaning": "zijde of kant",
+      "gloss": "纸 (zhǐ) · papier",
+      "toneNumbers": [
+        3,
+        5,
+        4,
+        2,
+        4,
+        3,
+        3,
+        3,
+        4
+      ]
+    },
+    {
+      "chinese": "我想买一面镜子。",
+      "pinyin": "wǒ xiǎng mǎi yí miàn jìngzi.",
+      "dutch": "Ik wil een spiegel kopen.",
+      "meaning": "maatwoord voor vlakke voorwerpen",
+      "grammar": "面 is onder meer het maatwoord voor spiegels en vlaggen.",
+      "gloss": "镜子 (jìngzi) · spiegel",
+      "toneNumbers": [
+        3,
+        3,
+        3,
+        2,
+        4,
+        4,
+        5
+      ]
+    }
+  ],
+  "404": [
+    {
+      "chinese": "请在这儿签个名。",
+      "pinyin": "qǐng zài zhèr qiān ge míng.",
+      "dutch": "Zet hier even je handtekening.",
+      "meaning": "naam",
+      "grammar": "签名 betekent je naam of handtekening zetten.",
+      "gloss": "签 (qiān) · ondertekenen",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        5,
+        1,
+        5,
+        2
+      ]
+    },
+    {
+      "chinese": "我们班有三名新学生。",
+      "pinyin": "wǒmen bān yǒu sān míng xīn xuéshēng.",
+      "dutch": "Er zitten drie nieuwe leerlingen in onze klas.",
+      "meaning": "maatwoord voor personen",
+      "grammar": "名 klinkt formeler dan 个.",
+      "toneNumbers": [
+        3,
+        5,
+        1,
+        3,
+        1,
+        2,
+        1,
+        2,
+        1
+      ]
+    }
+  ],
+  "405": [
+    {
+      "chinese": "等一下，我去拿手机。",
+      "pinyin": "děng yíxià, wǒ qù ná shǒujī.",
+      "dutch": "Wacht even, ik ga mijn gsm halen.",
+      "meaning": "nemen",
+      "toneNumbers": [
+        3,
+        2,
+        4,
+        3,
+        4,
+        2,
+        3,
+        1
+      ]
+    },
+    {
+      "chinese": "你手里拿着什么？",
+      "pinyin": "nǐ shǒu lǐ ná zhe shénme?",
+      "dutch": "Wat heb jij in je hand?",
+      "meaning": "vasthouden",
+      "toneNumbers": [
+        3,
+        3,
+        3,
+        2,
+        5,
+        2,
+        5
+      ]
+    }
+  ],
+  "406": [
+    {
+      "chinese": "水没有那么热了，可以喝了。",
+      "pinyin": "shuǐ méiyǒu nàme rè le, kěyǐ hē le.",
+      "dutch": "Het water is niet meer zo heet. Je kunt het nu drinken.",
+      "meaning": "zo of dermate",
+      "toneNumbers": [
+        3,
+        2,
+        3,
+        4,
+        5,
+        4,
+        5,
+        3,
+        3,
+        1,
+        5
+      ]
+    },
+    {
+      "chinese": "你想看电影？那么我们去电影院吧。",
+      "pinyin": "nǐ xiǎng kàn diànyǐng? nàme wǒmen qù diànyǐngyuàn ba.",
+      "dutch": "Wil je een film zien? Laten we dan naar de bioscoop gaan.",
+      "meaning": "in dat geval",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        4,
+        3,
+        4,
+        5,
+        3,
+        5,
+        4,
+        4,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "407": [
+    {
+      "chinese": "别那样跟奶奶说话。",
+      "pinyin": "bié nàyàng gēn nǎinai shuōhuà.",
+      "dutch": "Praat niet op die manier tegen oma.",
+      "meaning": "op die manier",
+      "toneNumbers": [
+        2,
+        4,
+        4,
+        1,
+        3,
+        5,
+        1,
+        4
+      ]
+    },
+    {
+      "chinese": "我也想像你那样说中文。",
+      "pinyin": "wǒ yě xiǎng xiàng nǐ nàyàng shuō Zhōngwén.",
+      "dutch": "Ik zou ook zo Chinees willen spreken als jij.",
+      "meaning": "zo als vergelijking",
+      "gloss": "像 (xiàng) · zoals, lijken op",
+      "toneNumbers": [
+        3,
+        3,
+        3,
+        4,
+        3,
+        4,
+        4,
+        1,
+        1,
+        2
+      ]
+    }
+  ],
+  "408": [
+    {
+      "chinese": "我想喝热的奶茶。",
+      "pinyin": "wǒ xiǎng hē rè de nǎichá.",
+      "dutch": "Ik heb zin in warme melkthee.",
+      "meaning": "melkthee",
+      "toneNumbers": [
+        3,
+        3,
+        1,
+        4,
+        5,
+        3,
+        2
+      ]
+    }
+  ],
+  "409": [
+    {
+      "chinese": "爸爸说，星期天我们去看奶奶。",
+      "pinyin": "bàba shuō, xīngqītiān wǒmen qù kàn nǎinai.",
+      "dutch": "Papa zegt dat we zondag bij oma op bezoek gaan.",
+      "meaning": "oma van vaderskant",
+      "toneNumbers": [
+        4,
+        5,
+        1,
+        1,
+        1,
+        1,
+        3,
+        5,
+        4,
+        4,
+        3,
+        5
+      ]
+    }
+  ],
+  "410": [
+    {
+      "chinese": "在门口等妈妈的男孩儿是我弟弟。",
+      "pinyin": "zài ménkǒu děng māma de nánháir shì wǒ dìdi.",
+      "dutch": "De jongen die bij de deur op mama wacht, is mijn broertje.",
+      "meaning": "jongen",
+      "toneNumbers": [
+        4,
+        2,
+        3,
+        3,
+        1,
+        5,
+        5,
+        2,
+        2,
+        5,
+        4,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "411": [
+    {
+      "chinese": "听，外面有鸟在唱歌。",
+      "pinyin": "tīng, wàimiàn yǒu niǎo zài chàng gē.",
+      "dutch": "Hoor je dat? Buiten zingen vogels.",
+      "meaning": "vogel",
+      "toneNumbers": [
+        1,
+        4,
+        4,
+        3,
+        3,
+        4,
+        4,
+        1
+      ]
+    }
+  ],
+  "412": [
+    {
+      "chinese": "老师问那个女孩儿叫什么名字。",
+      "pinyin": "lǎoshī wèn nàge nǚháir jiào shénme míngzi.",
+      "dutch": "De leraar vraagt hoe dat meisje heet.",
+      "meaning": "meisje",
+      "toneNumbers": [
+        3,
+        1,
+        4,
+        4,
+        5,
+        3,
+        2,
+        5,
+        4,
+        2,
+        5,
+        2,
+        5
+      ]
+    }
+  ],
+  "413": [
+    {
+      "chinese": "你可以坐在我旁边。",
+      "pinyin": "nǐ kěyǐ zuò zài wǒ pángbiān.",
+      "dutch": "Je mag naast me komen zitten.",
+      "meaning": "naast",
+      "toneNumbers": [
+        3,
+        3,
+        3,
+        4,
+        4,
+        3,
+        2,
+        1
+      ]
+    }
+  ],
+  "414": [
+    {
+      "chinese": "车快来了，我们跑吧！",
+      "pinyin": "chē kuài lái le, wǒmen pǎo ba!",
+      "dutch": "De bus komt eraan. Laten we rennen!",
+      "meaning": "rennen",
+      "toneNumbers": [
+        1,
+        4,
+        2,
+        5,
+        3,
+        5,
+        3,
+        5
+      ]
+    }
+  ],
+  "415": [
+    {
+      "chinese": "我早上跑步，跑完再吃早饭。",
+      "pinyin": "wǒ zǎoshang pǎobù, pǎo wán zài chī zǎofàn.",
+      "dutch": "Ik ga ’s ochtends joggen en ontbijt daarna.",
+      "meaning": "joggen",
+      "toneNumbers": [
+        3,
+        3,
+        5,
+        3,
+        4,
+        3,
+        2,
+        4,
+        1,
+        3,
+        4
+      ]
+    },
+    {
+      "chinese": "我昨天跑了半个小时的步。",
+      "pinyin": "wǒ zuótiān pǎo le bàn ge xiǎoshí de bù.",
+      "dutch": "Ik heb gisteren een halfuur gejogd.",
+      "meaning": "joggen als scheidbaar werkwoord",
+      "grammar": "Bij 跑步 kan een tijdsduur tussen 跑 en 步 komen. Zo werken ook 游泳, 跳舞, 帮忙, 上网 en 考试: werkwoord + vast voorwerp.",
+      "toneNumbers": [
+        3,
+        2,
+        1,
+        3,
+        5,
+        4,
+        5,
+        3,
+        2,
+        5,
+        4
+      ]
+    }
+  ],
+  "416": [
+    {
+      "chinese": "两张去机场的票，谢谢。",
+      "pinyin": "liǎng zhāng qù jīchǎng de piào, xièxie.",
+      "dutch": "Twee kaartjes naar de luchthaven, graag.",
+      "meaning": "kaartje",
+      "gloss": "张 (zhāng) · maatwoord voor onder meer kaartjes",
+      "toneNumbers": [
+        3,
+        1,
+        4,
+        1,
+        3,
+        5,
+        4,
+        4,
+        5
+      ]
+    }
+  ],
+  "417": [
+    {
+      "chinese": "我和妻子一起来看房间。",
+      "pinyin": "wǒ hé qīzi yìqǐ lái kàn fángjiān.",
+      "dutch": "Mijn vrouw en ik komen samen de kamer bekijken.",
+      "meaning": "echtgenote",
+      "toneNumbers": [
+        3,
+        2,
+        1,
+        5,
+        4,
+        3,
+        2,
+        4,
+        2,
+        1
+      ]
+    }
+  ],
+  "418": [
+    {
+      "chinese": "坐了两个小时了，起来走走吧。",
+      "pinyin": "zuò le liǎng ge xiǎoshí le, qǐlái zǒuzou ba.",
+      "dutch": "Je zit al twee uur. Sta eens op en loop wat rond.",
+      "meaning": "overeind komen",
+      "toneNumbers": [
+        4,
+        5,
+        3,
+        5,
+        3,
+        2,
+        5,
+        3,
+        2,
+        3,
+        5,
+        5
+      ]
+    },
+    {
+      "chinese": "看见我跳舞，弟弟笑了起来。",
+      "pinyin": "kànjiàn wǒ tiàowǔ, dìdi xiào le qǐlai.",
+      "dutch": "Toen mijn broertje me zag dansen, begon hij te lachen.",
+      "meaning": "beginnen te",
+      "grammar": "Na een werkwoord kan 起来 het begin van een handeling aangeven.",
+      "toneNumbers": [
+        4,
+        4,
+        3,
+        4,
+        3,
+        4,
+        5,
+        4,
+        5,
+        3,
+        5
+      ]
+    }
+  ],
+  "419": [
+    {
+      "chinese": "请在学校前面等我。",
+      "pinyin": "qǐng zài xuéxiào qiánmiàn děng wǒ.",
+      "dutch": "Wacht voor de school op me.",
+      "meaning": "vóór",
+      "toneNumbers": [
+        3,
+        4,
+        2,
+        4,
+        2,
+        4,
+        3,
+        3
+      ]
+    }
+  ],
+  "420": [
+    {
+      "chinese": "昨天下雨，今天天晴了。",
+      "pinyin": "zuótiān xià yǔ, jīntiān tiān qíng le.",
+      "dutch": "Gisteren regende het. Vandaag is het opgeklaard.",
+      "meaning": "helder of zonnig",
+      "toneNumbers": [
+        2,
+        1,
+        4,
+        3,
+        1,
+        1,
+        1,
+        2,
+        5
+      ]
+    }
+  ],
+  "421": [
+    {
+      "chinese": "球在桌子下面，谁能拿一下？",
+      "pinyin": "qiú zài zhuōzi xiàmiàn, shéi néng ná yíxià?",
+      "dutch": "De bal ligt onder de tafel. Wie kan hem even pakken?",
+      "meaning": "bal",
+      "toneNumbers": [
+        2,
+        4,
+        1,
+        5,
+        4,
+        4,
+        2,
+        2,
+        2,
+        2,
+        4
+      ]
+    }
+  ],
+  "422": [
+    {
+      "chinese": "妈妈让我星期天去踢球。",
+      "pinyin": "māma ràng wǒ xīngqītiān qù tī qiú.",
+      "dutch": "Ik mag zondag van mama gaan voetballen.",
+      "meaning": "toestemming geven",
+      "grammar": "让 + persoon + werkwoord: iemand iets laten doen. Afhankelijk van de zin is dat toelaten, opdragen of veroorzaken.",
+      "toneNumbers": [
+        1,
+        5,
+        4,
+        3,
+        1,
+        1,
+        1,
+        4,
+        1,
+        2
+      ]
+    },
+    {
+      "chinese": "老师让我们打开书。",
+      "pinyin": "lǎoshī ràng wǒmen dǎkāi shū.",
+      "dutch": "De leraar vraagt ons het boek open te slaan.",
+      "meaning": "iemand opdragen iets te doen",
+      "toneNumbers": [
+        3,
+        1,
+        4,
+        3,
+        5,
+        3,
+        1,
+        1
+      ]
+    },
+    {
+      "chinese": "孩子们的笑让奶奶很高兴。",
+      "pinyin": "háizimen de xiào ràng nǎinai hěn gāoxìng.",
+      "dutch": "Het gelach van de kinderen maakt oma erg blij.",
+      "meaning": "iets teweegbrengen",
+      "toneNumbers": [
+        2,
+        5,
+        5,
+        5,
+        4,
+        4,
+        3,
+        5,
+        3,
+        1,
+        4
+      ]
+    }
+  ],
+  "423": [
+    {
+      "chinese": "我不吃肉，这个菜里有肉吗？",
+      "pinyin": "wǒ bù chī ròu, zhège cài lǐ yǒu ròu ma?",
+      "dutch": "Ik eet geen vlees. Zit er vlees in dit gerecht?",
+      "meaning": "vlees",
+      "toneNumbers": [
+        3,
+        4,
+        1,
+        4,
+        4,
+        5,
+        4,
+        3,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "424": [
+    {
+      "chinese": "这家商场里有书店，也有电影院。",
+      "pinyin": "zhè jiā shāngchǎng lǐ yǒu shūdiàn, yě yǒu diànyǐngyuàn.",
+      "dutch": "In dit winkelcentrum is een boekhandel en ook een bioscoop.",
+      "meaning": "winkelcentrum",
+      "toneNumbers": [
+        4,
+        1,
+        1,
+        3,
+        3,
+        3,
+        1,
+        4,
+        3,
+        3,
+        4,
+        3,
+        4
+      ]
+    }
+  ],
+  "425": [
+    {
+      "chinese": "我在二楼，你上来吧。",
+      "pinyin": "wǒ zài èr lóu, nǐ shànglái ba.",
+      "dutch": "Ik ben op de eerste verdieping. Kom maar naar boven.",
+      "meaning": "naar boven komen",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        2,
+        3,
+        4,
+        2,
+        5
+      ]
+    }
+  ],
+  "426": [
+    {
+      "chinese": "书包在椅子上面。",
+      "pinyin": "shūbāo zài yǐzi shàngmiàn.",
+      "dutch": "De schooltas ligt boven op de stoel.",
+      "meaning": "bovenop",
+      "toneNumbers": [
+        1,
+        1,
+        4,
+        3,
+        5,
+        4,
+        4
+      ]
+    },
+    {
+      "chinese": "请再看一下上面的问题。",
+      "pinyin": "qǐng zài kàn yíxià shàngmiàn de wèntí.",
+      "dutch": "Kijk nog eens naar de vraag hierboven.",
+      "meaning": "hierboven in een tekst",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        2,
+        4,
+        4,
+        4,
+        5,
+        4,
+        2
+      ]
+    }
+  ],
+  "427": [
+    {
+      "chinese": "老师在三楼，我们上去找她吧。",
+      "pinyin": "lǎoshī zài sān lóu, wǒmen shàngqù zhǎo tā ba.",
+      "dutch": "De lerares is op de tweede verdieping. Laten we naar haar toe gaan.",
+      "meaning": "naar boven gaan",
+      "toneNumbers": [
+        3,
+        1,
+        4,
+        1,
+        2,
+        3,
+        5,
+        4,
+        4,
+        3,
+        1,
+        5
+      ]
+    }
+  ],
+  "428": [
+    {
+      "chinese": "我经常上网买机票。",
+      "pinyin": "wǒ jīngcháng shàngwǎng mǎi jīpiào.",
+      "dutch": "Ik koop mijn vliegtickets vaak online.",
+      "meaning": "internetten",
+      "grammar": "上网 is een werkwoord (internetten). 网上 is een plaats (op het internet): 在网上买.",
+      "toneNumbers": [
+        3,
+        1,
+        2,
+        4,
+        3,
+        3,
+        1,
+        4
+      ]
+    }
+  ],
+  "429": [
+    {
+      "chinese": "爷爷身体很好，每天都去跑步。",
+      "pinyin": "yéye shēntǐ hěn hǎo, měi tiān dōu qù pǎobù.",
+      "dutch": "Opa is in goede gezondheid. Hij gaat elke dag joggen.",
+      "meaning": "gezondheid",
+      "toneNumbers": [
+        2,
+        5,
+        1,
+        3,
+        3,
+        3,
+        3,
+        1,
+        1,
+        4,
+        3,
+        4
+      ]
+    },
+    {
+      "chinese": "游泳时，身体要放松。",
+      "pinyin": "yóuyǒng shí, shēntǐ yào fàngsōng.",
+      "dutch": "Ontspan je lichaam tijdens het zwemmen.",
+      "meaning": "lichaam",
+      "gloss": "放松 (fàngsōng) · ontspannen",
+      "toneNumbers": [
+        2,
+        3,
+        2,
+        1,
+        3,
+        4,
+        4,
+        1
+      ]
+    }
+  ],
+  "430": [
+    {
+      "chinese": "明天是妹妹的生日，我想送她一本书。",
+      "pinyin": "míngtiān shì mèimei de shēngrì, wǒ xiǎng sòng tā yì běn shū.",
+      "dutch": "Mijn zusje is morgen jarig. Ik wil haar een boek geven.",
+      "meaning": "verjaardag",
+      "toneNumbers": [
+        2,
+        1,
+        4,
+        4,
+        5,
+        5,
+        1,
+        4,
+        3,
+        3,
+        4,
+        1,
+        4,
+        3,
+        1
+      ]
+    }
+  ],
+  "431": [
+    {
+      "chinese": "上课时别看手机。",
+      "pinyin": "shàngkè shí bié kàn shǒujī.",
+      "dutch": "Kijk tijdens de les niet op je gsm.",
+      "meaning": "op het moment dat",
+      "toneNumbers": [
+        4,
+        4,
+        2,
+        2,
+        4,
+        3,
+        1
+      ]
+    },
+    {
+      "chinese": "飞机十五时到机场。",
+      "pinyin": "fēijī shíwǔ shí dào jīchǎng.",
+      "dutch": "Het vliegtuig komt om vijftien uur op de luchthaven aan.",
+      "meaning": "uur bij een formeel tijdstip",
+      "grammar": "In een dienstregeling kun je 时 zien waar je in een gesprek 点 zou horen.",
+      "toneNumbers": [
+        1,
+        1,
+        2,
+        3,
+        2,
+        4,
+        1,
+        3
+      ]
+    }
+  ],
+  "432": [
+    {
+      "chinese": "今天事情太多，我不能早下班。",
+      "pinyin": "jīntiān shìqing tài duō, wǒ bù néng zǎo xiàbān.",
+      "dutch": "Ik heb vandaag zoveel te doen dat ik niet vroeg naar huis kan.",
+      "meaning": "iets dat moet gebeuren",
+      "toneNumbers": [
+        1,
+        1,
+        4,
+        5,
+        4,
+        1,
+        3,
+        4,
+        2,
+        3,
+        4,
+        1
+      ]
+    }
+  ],
+  "433": [
+    {
+      "chinese": "你的手好冷，喝点热水吧。",
+      "pinyin": "nǐ de shǒu hǎo lěng, hē diǎn rè shuǐ ba.",
+      "dutch": "Wat zijn je handen koud. Drink wat warm water.",
+      "meaning": "hand",
+      "toneNumbers": [
+        3,
+        5,
+        3,
+        3,
+        3,
+        1,
+        3,
+        4,
+        3,
+        5
+      ]
+    }
+  ],
+  "434": [
+    {
+      "chinese": "看一下你的手表，现在几点？",
+      "pinyin": "kàn yíxià nǐ de shǒubiǎo, xiànzài jǐ diǎn?",
+      "dutch": "Kijk eens op je horloge. Hoe laat is het?",
+      "meaning": "polshorloge",
+      "toneNumbers": [
+        4,
+        2,
+        4,
+        3,
+        5,
+        3,
+        3,
+        4,
+        4,
+        3,
+        3
+      ]
+    }
+  ],
+  "435": [
+    {
+      "chinese": "这本书太大了，书包里放不下。",
+      "pinyin": "zhè běn shū tài dà le, shūbāo lǐ fàng bu xià.",
+      "dutch": "Dit boek is te groot. Het past niet in mijn schooltas.",
+      "meaning": "schooltas",
+      "gloss": "放 (fàng) · leggen, plaatsen",
+      "toneNumbers": [
+        4,
+        3,
+        1,
+        4,
+        4,
+        5,
+        1,
+        1,
+        3,
+        4,
+        5,
+        4
+      ]
+    }
+  ],
+  "436": [
+    {
+      "chinese": "这家酒店的床很舒服。",
+      "pinyin": "zhè jiā jiǔdiàn de chuáng hěn shūfu.",
+      "dutch": "De bedden in dit hotel liggen lekker.",
+      "meaning": "comfortabel",
+      "toneNumbers": [
+        4,
+        1,
+        3,
+        4,
+        5,
+        2,
+        3,
+        1,
+        5
+      ]
+    },
+    {
+      "chinese": "我今天身体不舒服，想回家休息。",
+      "pinyin": "wǒ jīntiān shēntǐ bù shūfu, xiǎng huí jiā xiūxi.",
+      "dutch": "Ik voel me vandaag niet goed. Ik wil thuis gaan rusten.",
+      "meaning": "zich goed voelen",
+      "toneNumbers": [
+        3,
+        1,
+        1,
+        1,
+        3,
+        4,
+        1,
+        5,
+        3,
+        2,
+        1,
+        1,
+        5
+      ]
+    }
+  ],
+  "437": [
+    {
+      "chinese": "生日那天，朋友送了我一块手表。",
+      "pinyin": "shēngrì nà tiān, péngyou sòng le wǒ yí kuài shǒubiǎo.",
+      "dutch": "Een vriend heeft me op mijn verjaardag een horloge gegeven.",
+      "meaning": "cadeau geven",
+      "toneNumbers": [
+        1,
+        4,
+        4,
+        1,
+        2,
+        5,
+        4,
+        5,
+        3,
+        2,
+        4,
+        3,
+        3
+      ]
+    },
+    {
+      "chinese": "爸爸开车送我去机场。",
+      "pinyin": "bàba kāichē sòng wǒ qù jīchǎng.",
+      "dutch": "Papa brengt me met de auto naar de luchthaven.",
+      "meaning": "iemand wegbrengen",
+      "toneNumbers": [
+        4,
+        5,
+        1,
+        1,
+        4,
+        3,
+        4,
+        1,
+        3
+      ]
+    },
+    {
+      "chinese": "这家店可以送药到家。",
+      "pinyin": "zhè jiā diàn kěyǐ sòng yào dào jiā.",
+      "dutch": "Deze winkel kan medicijnen aan huis bezorgen.",
+      "meaning": "bezorgen",
+      "toneNumbers": [
+        4,
+        1,
+        4,
+        3,
+        3,
+        4,
+        4,
+        4,
+        1
+      ]
+    }
+  ],
+  "438": [
+    {
+      "chinese": "虽然下着雨，她还是走路去了学校。",
+      "pinyin": "suīrán xià zhe yǔ, tā háishi zǒulù qù le xuéxiào.",
+      "dutch": "Hoewel het regende, is ze toch te voet naar school gegaan.",
+      "meaning": "hoewel",
+      "grammar": "虽然 krijgt in het tweede deel meestal 但是 of 还是. Anders dan in het Nederlands gebruik je beide woorden samen.",
+      "toneNumbers": [
+        1,
+        2,
+        4,
+        5,
+        3,
+        1,
+        2,
+        5,
+        3,
+        4,
+        4,
+        5,
+        2,
+        4
+      ]
+    }
+  ],
+  "439": [
+    {
+      "chinese": "今天是星期日，所以我不上班。",
+      "pinyin": "jīntiān shì xīngqīrì, suǒyǐ wǒ bú shàngbān.",
+      "dutch": "Het is zondag, dus ik hoef niet te werken.",
+      "meaning": "daarom",
+      "grammar": "因为 leidt de reden in, 所以 het gevolg. Je kunt ze samen gebruiken. Als de reden al duidelijk is, volstaat 所以.",
+      "toneNumbers": [
+        1,
+        1,
+        4,
+        1,
+        1,
+        4,
+        3,
+        3,
+        3,
+        2,
+        4,
+        1
+      ]
+    }
+  ],
+  "440": [
+    {
+      "chinese": "我的头很疼，想睡一会儿。",
+      "pinyin": "wǒ de tóu hěn téng, xiǎng shuì yíhuìr.",
+      "dutch": "Ik heb hoofdpijn en wil even slapen.",
+      "meaning": "pijn doen",
+      "toneNumbers": [
+        3,
+        5,
+        2,
+        3,
+        2,
+        3,
+        4,
+        2,
+        4,
+        5
+      ]
+    }
+  ],
+  "441": [
+    {
+      "chinese": "别往门上踢球。",
+      "pinyin": "bié wǎng mén shàng tī qiú.",
+      "dutch": "Schop de bal niet tegen de deur.",
+      "meaning": "schoppen",
+      "toneNumbers": [
+        2,
+        3,
+        2,
+        4,
+        1,
+        2
+      ]
+    }
+  ],
+  "442": [
+    {
+      "chinese": "这题我不会做，你能帮我吗？",
+      "pinyin": "zhè tí wǒ bú huì zuò, nǐ néng bāng wǒ ma?",
+      "dutch": "Ik krijg deze opgave niet opgelost. Kun je me helpen?",
+      "meaning": "opgave",
+      "toneNumbers": [
+        4,
+        2,
+        3,
+        2,
+        4,
+        4,
+        3,
+        2,
+        1,
+        3,
+        5
+      ]
+    },
+    {
+      "chinese": "今天的题目是“我的家”。",
+      "pinyin": "jīntiān de tímù shì “wǒ de jiā”.",
+      "dutch": "Het onderwerp van vandaag is ‘Mijn thuis’.",
+      "meaning": "thema of titel",
+      "grammar": "题 staat hier in 题目, het opgegeven onderwerp.",
+      "gloss": "题目 (tímù) · onderwerp, titel van een opdracht",
+      "toneNumbers": [
+        1,
+        1,
+        5,
+        2,
+        4,
+        4,
+        3,
+        5,
+        1
+      ]
+    }
+  ],
+  "443": [
+    {
+      "chinese": "请给我两条鱼，一条大的，一条小的。",
+      "pinyin": "qǐng gěi wǒ liǎng tiáo yú, yì tiáo dà de, yì tiáo xiǎo de.",
+      "dutch": "Graag twee vissen, een grote en een kleine.",
+      "meaning": "maatwoord voor langwerpige dingen",
+      "toneNumbers": [
+        3,
+        3,
+        3,
+        3,
+        2,
+        2,
+        4,
+        2,
+        4,
+        5,
+        4,
+        2,
+        3,
+        5
+      ]
+    }
+  ],
+  "444": [
+    {
+      "chinese": "奶奶晚饭后喜欢跟朋友一起跳舞。",
+      "pinyin": "nǎinai wǎnfàn hòu xǐhuan gēn péngyou yìqǐ tiàowǔ.",
+      "dutch": "Oma danst na het avondeten graag met haar vrienden.",
+      "meaning": "dansen",
+      "toneNumbers": [
+        3,
+        5,
+        3,
+        4,
+        4,
+        3,
+        5,
+        1,
+        2,
+        5,
+        4,
+        3,
+        4,
+        3
+      ]
+    }
+  ],
+  "445": [
+    {
+      "chinese": "头有点儿疼，我今天不去跑步了。",
+      "pinyin": "tóu yǒudiǎnr téng, wǒ jīntiān bú qù pǎobù le.",
+      "dutch": "Mijn hoofd doet wat pijn. Ik ga vandaag niet joggen.",
+      "meaning": "hoofd",
+      "toneNumbers": [
+        2,
+        3,
+        3,
+        5,
+        2,
+        3,
+        1,
+        1,
+        2,
+        4,
+        3,
+        4,
+        5
+      ]
+    },
+    {
+      "chinese": "那两头牛是爷爷的。",
+      "pinyin": "nà liǎng tóu niú shì yéye de.",
+      "dutch": "Die twee koeien zijn van opa.",
+      "meaning": "maatwoord voor groot vee",
+      "gloss": "牛 (niú) · koe, rund",
+      "toneNumbers": [
+        4,
+        3,
+        2,
+        2,
+        4,
+        2,
+        5,
+        5
+      ]
+    }
+  ],
+  "446": [
+    {
+      "chinese": "他是外国人，但是汉语说得很好。",
+      "pinyin": "tā shì wàiguó rén, dànshì Hànyǔ shuō de hěn hǎo.",
+      "dutch": "Hij is een buitenlander, maar hij spreekt goed Chinees.",
+      "meaning": "buitenland",
+      "grammar": "外国 betekent ‘buitenlands’ (外国人). ‘Naar het buitenland’ is eerder 去国外.",
+      "toneNumbers": [
+        1,
+        4,
+        4,
+        2,
+        2,
+        4,
+        4,
+        4,
+        3,
+        1,
+        5,
+        3,
+        3
+      ]
+    }
+  ],
+  "447": [
+    {
+      "chinese": "外面在下雪，穿件衣服再出门。",
+      "pinyin": "wàimiàn zài xià xuě, chuān jiàn yīfu zài chūmén.",
+      "dutch": "Het sneeuwt buiten. Trek nog iets aan voor je vertrekt.",
+      "meaning": "buiten",
+      "toneNumbers": [
+        4,
+        4,
+        4,
+        4,
+        3,
+        1,
+        4,
+        1,
+        5,
+        4,
+        1,
+        2
+      ]
+    }
+  ],
+  "448": [
+    {
+      "chinese": "我看完这本书就给你。",
+      "pinyin": "wǒ kàn wán zhè běn shū jiù gěi nǐ.",
+      "dutch": "Zodra ik dit boek uit heb, geef ik het aan jou.",
+      "meaning": "afmaken",
+      "grammar": "完 staat als resultaat na het werkwoord: de handeling is af. De ontkenning is 没看完.",
+      "toneNumbers": [
+        3,
+        4,
+        2,
+        4,
+        3,
+        1,
+        4,
+        3,
+        3
+      ]
+    }
+  ],
+  "449": [
+    {
+      "chinese": "这块手表要三万元。",
+      "pinyin": "zhè kuài shǒubiǎo yào sān wàn yuán.",
+      "dutch": "Dit horloge kost dertigduizend yuan.",
+      "meaning": "tienduizend",
+      "grammar": "Chinees telt per tienduizend: 30.000 is 三万, niet 三十千.",
+      "toneNumbers": [
+        4,
+        4,
+        3,
+        3,
+        4,
+        1,
+        4,
+        2
+      ]
+    }
+  ],
+  "450": [
+    {
+      "chinese": "出门往左走就到书店了。",
+      "pinyin": "chūmén wǎng zuǒ zǒu jiù dào shūdiàn le.",
+      "dutch": "Als je de deur uitgaat en naar links loopt, kom je bij de boekhandel.",
+      "meaning": "in de richting van",
+      "toneNumbers": [
+        1,
+        2,
+        3,
+        3,
+        3,
+        4,
+        4,
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "451": [
+    {
+      "chinese": "我在网上找到了一家便宜的酒店。",
+      "pinyin": "wǒ zài wǎngshang zhǎo dào le yì jiā piányi de jiǔdiàn.",
+      "dutch": "Ik heb online een goedkoop hotel gevonden.",
+      "meaning": "op internet",
+      "toneNumbers": [
+        3,
+        4,
+        3,
+        5,
+        3,
+        4,
+        5,
+        4,
+        1,
+        2,
+        5,
+        5,
+        3,
+        4
+      ]
+    }
+  ],
+  "452": [
+    {
+      "chinese": "我忘了拿书包，要回家拿。",
+      "pinyin": "wǒ wàng le ná shūbāo, yào huí jiā ná.",
+      "dutch": "Ik ben mijn schooltas vergeten en moet naar huis om hem te halen.",
+      "meaning": "vergeten",
+      "toneNumbers": [
+        3,
+        4,
+        5,
+        2,
+        1,
+        1,
+        4,
+        2,
+        1,
+        2
+      ]
+    }
+  ],
+  "453": [
+    {
+      "chinese": "这位是我的汉语老师。",
+      "pinyin": "zhè wèi shì wǒ de Hànyǔ lǎoshī.",
+      "dutch": "Dit is mijn leraar Chinees.",
+      "meaning": "beleefd maatwoord voor personen",
+      "grammar": "位 is beleefder dan 个. Je gebruikt het om iemand voor te stellen of over gasten te spreken.",
+      "toneNumbers": [
+        4,
+        4,
+        4,
+        3,
+        5,
+        4,
+        3,
+        3,
+        1
+      ]
+    }
+  ],
+  "454": [
+    {
+      "chinese": "你为什么不喝咖啡了？",
+      "pinyin": "nǐ wèi shénme bù hē kāfēi le?",
+      "dutch": "Waarom drink je geen koffie meer?",
+      "meaning": "waarom",
+      "toneNumbers": [
+        3,
+        4,
+        2,
+        5,
+        4,
+        1,
+        1,
+        1,
+        5
+      ]
+    }
+  ],
+  "455": [
+    {
+      "chinese": "我希望明天不下雨。",
+      "pinyin": "wǒ xīwàng míngtiān bú xià yǔ.",
+      "dutch": "Ik hoop dat het morgen niet regent.",
+      "meaning": "hopen",
+      "toneNumbers": [
+        3,
+        1,
+        4,
+        2,
+        1,
+        2,
+        4,
+        3
+      ]
+    },
+    {
+      "chinese": "孩子是我们的希望。",
+      "pinyin": "háizi shì wǒmen de xīwàng.",
+      "dutch": "De kinderen zijn onze hoop.",
+      "meaning": "hoop",
+      "toneNumbers": [
+        2,
+        5,
+        4,
+        3,
+        5,
+        5,
+        1,
+        4
+      ]
+    }
+  ],
+  "456": [
+    {
+      "chinese": "吃饭前要洗手。",
+      "pinyin": "chī fàn qián yào xǐ shǒu.",
+      "dutch": "Was je handen voor het eten.",
+      "meaning": "wassen",
+      "toneNumbers": [
+        1,
+        4,
+        2,
+        4,
+        3,
+        3
+      ]
+    }
+  ],
+  "457": [
+    {
+      "chinese": "请问，这儿有洗手间吗？",
+      "pinyin": "qǐngwèn, zhèr yǒu xǐshǒujiān ma?",
+      "dutch": "Pardon, is hier een toilet?",
+      "meaning": "toilet",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        5,
+        3,
+        3,
+        3,
+        1,
+        5
+      ]
+    }
+  ],
+  "458": [
+    {
+      "chinese": "我在楼下等你，你下来吧。",
+      "pinyin": "wǒ zài lóuxià děng nǐ, nǐ xiàlái ba.",
+      "dutch": "Ik wacht beneden op je. Kom maar naar beneden.",
+      "meaning": "naar beneden komen",
+      "toneNumbers": [
+        3,
+        4,
+        2,
+        4,
+        3,
+        3,
+        3,
+        4,
+        2,
+        5
+      ]
+    },
+    {
+      "chinese": "你说，我来写下来。",
+      "pinyin": "nǐ shuō, wǒ lái xiě xiàlai.",
+      "dutch": "Zeg het maar, dan schrijf ik het op.",
+      "meaning": "iets vastleggen",
+      "grammar": "写下来 betekent iets op papier vastleggen.",
+      "toneNumbers": [
+        3,
+        1,
+        3,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "459": [
+    {
+      "chinese": "猫睡在椅子下面。",
+      "pinyin": "māo shuì zài yǐzi xiàmiàn.",
+      "dutch": "De kat slaapt onder de stoel.",
+      "meaning": "onder",
+      "toneNumbers": [
+        1,
+        4,
+        4,
+        3,
+        5,
+        4,
+        4
+      ]
+    },
+    {
+      "chinese": "请读下面的三个词。",
+      "pinyin": "qǐng dú xiàmiàn de sān ge cí.",
+      "dutch": "Lees de drie woorden hieronder.",
+      "meaning": "hieronder of hierna",
+      "toneNumbers": [
+        3,
+        2,
+        4,
+        4,
+        5,
+        1,
+        5,
+        2
+      ]
+    }
+  ],
+  "460": [
+    {
+      "chinese": "他们都在楼下，我们也下去吧。",
+      "pinyin": "tāmen dōu zài lóuxià, wǒmen yě xiàqù ba.",
+      "dutch": "Ze zijn allemaal beneden. Laten we ook naar beneden gaan.",
+      "meaning": "naar beneden gaan",
+      "toneNumbers": [
+        1,
+        5,
+        1,
+        4,
+        2,
+        4,
+        3,
+        5,
+        3,
+        4,
+        4,
+        5
+      ]
+    },
+    {
+      "chinese": "你说的事很有意思，请说下去。",
+      "pinyin": "nǐ shuō de shì hěn yǒu yìsi, qǐng shuō xiàqu.",
+      "dutch": "Ik vind het interessant wat je zegt. Vertel verder.",
+      "meaning": "doorgaan met een handeling",
+      "grammar": "Na het werkwoord betekent 下去 hier ‘verdergaan’.",
+      "toneNumbers": [
+        3,
+        1,
+        5,
+        4,
+        3,
+        3,
+        4,
+        5,
+        3,
+        1,
+        4,
+        5
+      ]
+    }
+  ],
+  "461": [
+    {
+      "chinese": "小孩儿可以一个人坐飞机吗？",
+      "pinyin": "xiǎoháir kěyǐ yí ge rén zuò fēijī ma?",
+      "dutch": "Mogen kinderen alleen met het vliegtuig reizen?",
+      "meaning": "kind",
+      "toneNumbers": [
+        3,
+        2,
+        5,
+        3,
+        3,
+        2,
+        5,
+        2,
+        4,
+        1,
+        1,
+        5
+      ]
+    }
+  ],
+  "462": [
+    {
+      "chinese": "我小时候住在学校旁边。",
+      "pinyin": "wǒ xiǎoshíhou zhù zài xuéxiào pángbiān.",
+      "dutch": "Als kind woonde ik naast de school.",
+      "meaning": "als kind",
+      "toneNumbers": [
+        3,
+        3,
+        2,
+        5,
+        4,
+        4,
+        2,
+        4,
+        2,
+        1
+      ]
+    }
+  ],
+  "463": [
+    {
+      "chinese": "大家都笑了，你说了什么？",
+      "pinyin": "dàjiā dōu xiào le, nǐ shuō le shénme?",
+      "dutch": "Iedereen begon te lachen. Wat heb je gezegd?",
+      "meaning": "lachen",
+      "toneNumbers": [
+        4,
+        1,
+        1,
+        4,
+        5,
+        3,
+        1,
+        5,
+        2,
+        5
+      ]
+    }
+  ],
+  "464": [
+    {
+      "chinese": "我姓李，您姓什么？",
+      "pinyin": "wǒ xìng Lǐ, nín xìng shénme?",
+      "dutch": "Mijn familienaam is Li. Wat is uw familienaam?",
+      "meaning": "als familienaam hebben",
+      "grammar": "姓 vraagt alleen naar de familienaam. Met 叫 geef je je volledige naam of voornaam.",
+      "gloss": "李 (Lǐ) · Li, een Chinese familienaam",
+      "toneNumbers": [
+        3,
+        4,
+        3,
+        2,
+        4,
+        2,
+        5
+      ]
+    },
+    {
+      "chinese": "这个姓怎么读？",
+      "pinyin": "zhège xìng zěnme dú?",
+      "dutch": "Hoe spreek je deze familienaam uit?",
+      "meaning": "familienaam",
+      "toneNumbers": [
+        4,
+        5,
+        4,
+        3,
+        5,
+        2
+      ]
+    }
+  ],
+  "465": [
+    {
+      "chinese": "请在这儿写下您的姓名。",
+      "pinyin": "qǐng zài zhèr xiě xià nín de xìngmíng.",
+      "dutch": "Schrijf hier uw volledige naam.",
+      "meaning": "volledige naam",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        5,
+        3,
+        4,
+        2,
+        5,
+        4,
+        2
+      ]
+    }
+  ],
+  "466": [
+    {
+      "chinese": "这条裤子还有别的颜色吗？",
+      "pinyin": "zhè tiáo kùzi hái yǒu biéde yánsè ma?",
+      "dutch": "Hebben jullie deze broek nog in een andere kleur?",
+      "meaning": "kleur",
+      "gloss": "别的 (biéde) · ander, andere",
+      "toneNumbers": [
+        4,
+        2,
+        4,
+        5,
+        2,
+        3,
+        2,
+        5,
+        2,
+        4,
+        5
+      ]
+    }
+  ],
+  "467": [
+    {
+      "chinese": "看了两个小时的电脑，我的眼睛有点儿疼。",
+      "pinyin": "kàn le liǎng ge xiǎoshí de diànnǎo, wǒ de yǎnjing yǒudiǎnr téng.",
+      "dutch": "Na twee uur achter de computer doen mijn ogen wat pijn.",
+      "meaning": "ogen",
+      "toneNumbers": [
+        4,
+        5,
+        3,
+        5,
+        3,
+        2,
+        5,
+        4,
+        3,
+        3,
+        5,
+        3,
+        5,
+        3,
+        3,
+        5,
+        2
+      ]
+    }
+  ],
+  "468": [
+    {
+      "chinese": "这药要饭前吃还是饭后吃？",
+      "pinyin": "zhè yào yào fàn qián chī háishi fàn hòu chī?",
+      "dutch": "Moet ik dit medicijn voor of na het eten nemen?",
+      "meaning": "medicijn",
+      "grammar": "Een medicijn ‘eet’ je in het Chinees: 吃药.",
+      "toneNumbers": [
+        4,
+        4,
+        4,
+        4,
+        2,
+        1,
+        2,
+        5,
+        4,
+        4,
+        1
+      ]
+    }
+  ],
+  "469": [
+    {
+      "chinese": "我去药店给爷爷买药。",
+      "pinyin": "wǒ qù yàodiàn gěi yéye mǎi yào.",
+      "dutch": "Ik ga naar de apotheek om medicijnen te kopen voor opa.",
+      "meaning": "apotheek",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        4,
+        3,
+        2,
+        5,
+        3,
+        4
+      ]
+    }
+  ],
+  "470": [
+    {
+      "chinese": "爷爷经常跟我说爸爸小时候的事。",
+      "pinyin": "yéye jīngcháng gēn wǒ shuō bàba xiǎoshíhou de shì.",
+      "dutch": "Opa vertelt me vaak over papa als kind.",
+      "meaning": "opa van vaderskant",
+      "toneNumbers": [
+        2,
+        5,
+        1,
+        2,
+        1,
+        3,
+        1,
+        4,
+        5,
+        3,
+        2,
+        5,
+        5,
+        4
+      ]
+    }
+  ],
+  "471": [
+    {
+      "chinese": "我想坐一会儿再走。",
+      "pinyin": "wǒ xiǎng zuò yíhuìr zài zǒu.",
+      "dutch": "Ik wil nog even zitten voor ik vertrek.",
+      "meaning": "even of een tijdje",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        2,
+        4,
+        5,
+        4,
+        3
+      ]
+    },
+    {
+      "chinese": "我现在忙，一会儿给你打电话。",
+      "pinyin": "wǒ xiànzài máng, yíhuìr gěi nǐ dǎ diànhuà.",
+      "dutch": "Ik ben nu bezig. Ik bel je straks.",
+      "meaning": "straks",
+      "toneNumbers": [
+        3,
+        4,
+        4,
+        2,
+        2,
+        4,
+        5,
+        3,
+        3,
+        3,
+        4,
+        4
+      ]
+    }
+  ],
+  "472": [
+    {
+      "chinese": "你来晚了，电影已经开始了。",
+      "pinyin": "nǐ lái wǎn le, diànyǐng yǐjīng kāishǐ le.",
+      "dutch": "Je bent laat. De film is al begonnen.",
+      "meaning": "al",
+      "toneNumbers": [
+        3,
+        2,
+        3,
+        5,
+        4,
+        3,
+        3,
+        1,
+        1,
+        3,
+        5
+      ]
+    }
+  ],
+  "473": [
+    {
+      "chinese": "今天的晚饭我们一起做吧。",
+      "pinyin": "jīntiān de wǎnfàn wǒmen yìqǐ zuò ba.",
+      "dutch": "Zullen we vanavond samen koken?",
+      "meaning": "samen",
+      "toneNumbers": [
+        1,
+        1,
+        5,
+        3,
+        4,
+        3,
+        5,
+        4,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "474": [
+    {
+      "chinese": "这个汉字是什么意思？",
+      "pinyin": "zhège Hànzì shì shénme yìsi?",
+      "dutch": "Wat betekent dit Chinese karakter?",
+      "meaning": "betekenis",
+      "toneNumbers": [
+        4,
+        5,
+        4,
+        4,
+        4,
+        2,
+        5,
+        4,
+        5
+      ]
+    },
+    {
+      "chinese": "我的意思是，我们可以明天再来。",
+      "pinyin": "wǒ de yìsi shì, wǒmen kěyǐ míngtiān zài lái.",
+      "dutch": "Ik bedoel dat we morgen kunnen terugkomen.",
+      "meaning": "bedoeling",
+      "toneNumbers": [
+        3,
+        5,
+        4,
+        5,
+        4,
+        3,
+        5,
+        3,
+        3,
+        2,
+        1,
+        4,
+        2
+      ]
+    }
+  ],
+  "475": [
+    {
+      "chinese": "上午天气还很好，下午就阴了。",
+      "pinyin": "shàngwǔ tiānqì hái hěn hǎo, xiàwǔ jiù yīn le.",
+      "dutch": "Vanochtend was het nog mooi weer. In de namiddag werd het al bewolkt.",
+      "meaning": "bewolkt",
+      "toneNumbers": [
+        4,
+        3,
+        1,
+        4,
+        2,
+        3,
+        3,
+        4,
+        3,
+        4,
+        1,
+        5
+      ]
+    }
+  ],
+  "476": [
+    {
+      "chinese": "我想坐地铁，因为路上的车太多了。",
+      "pinyin": "wǒ xiǎng zuò dìtiě, yīnwèi lùshang de chē tài duō le.",
+      "dutch": "Ik wil de metro nemen omdat het zo druk is op de weg.",
+      "meaning": "omdat",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        4,
+        3,
+        1,
+        4,
+        4,
+        5,
+        5,
+        1,
+        4,
+        1,
+        5
+      ]
+    }
+  ],
+  "477": [
+    {
+      "chinese": "你能从这儿游到那边吗？",
+      "pinyin": "nǐ néng cóng zhèr yóu dào nàbiān ma?",
+      "dutch": "Kun jij van hier tot daar zwemmen?",
+      "meaning": "zwemmen",
+      "toneNumbers": [
+        3,
+        2,
+        2,
+        4,
+        5,
+        2,
+        4,
+        4,
+        1,
+        5
+      ]
+    },
+    {
+      "chinese": "我想坐火车游中国。",
+      "pinyin": "wǒ xiǎng zuò huǒchē yóu Zhōngguó.",
+      "dutch": "Ik wil met de trein door China reizen.",
+      "meaning": "rondreizen",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        3,
+        1,
+        2,
+        1,
+        2
+      ]
+    }
+  ],
+  "478": [
+    {
+      "chinese": "我不会游泳，你可以教我吗？",
+      "pinyin": "wǒ bú huì yóuyǒng, nǐ kěyǐ jiāo wǒ ma?",
+      "dutch": "Ik kan niet zwemmen. Wil jij het me leren?",
+      "meaning": "zwemmen als activiteit",
+      "toneNumbers": [
+        3,
+        2,
+        4,
+        2,
+        3,
+        3,
+        3,
+        3,
+        1,
+        3,
+        5
+      ]
+    }
+  ],
+  "479": [
+    {
+      "chinese": "汉字课真有意思，我明天还想来。",
+      "pinyin": "Hànzì kè zhēn yǒu yìsi, wǒ míngtiān hái xiǎng lái.",
+      "dutch": "De les over Chinese karakters was zo interessant dat ik morgen wil terugkomen.",
+      "meaning": "interessant",
+      "toneNumbers": [
+        4,
+        4,
+        4,
+        1,
+        3,
+        4,
+        5,
+        3,
+        2,
+        1,
+        2,
+        3,
+        2
+      ]
+    }
+  ],
+  "480": [
+    {
+      "chinese": "我有时自己做饭，有时去饭馆吃。",
+      "pinyin": "wǒ yǒushí zìjǐ zuò fàn, yǒushí qù fànguǎn chī.",
+      "dutch": "Soms kook ik zelf en soms ga ik uit eten.",
+      "meaning": "soms",
+      "toneNumbers": [
+        3,
+        3,
+        2,
+        4,
+        3,
+        4,
+        4,
+        3,
+        2,
+        4,
+        4,
+        3,
+        1
+      ]
+    }
+  ],
+  "481": [
+    {
+      "chinese": "出书店往右走。",
+      "pinyin": "chū shūdiàn wǎng yòu zǒu.",
+      "dutch": "Ga naar rechts wanneer je de boekhandel uitkomt.",
+      "meaning": "rechts als richting",
+      "toneNumbers": [
+        1,
+        1,
+        4,
+        3,
+        4,
+        3
+      ]
+    }
+  ],
+  "482": [
+    {
+      "chinese": "洗手间在门口的右边。",
+      "pinyin": "xǐshǒujiān zài ménkǒu de yòubian.",
+      "dutch": "Het toilet is rechts van de ingang.",
+      "meaning": "rechterkant",
+      "toneNumbers": [
+        3,
+        3,
+        1,
+        4,
+        2,
+        3,
+        5,
+        4,
+        5
+      ]
+    }
+  ],
+  "483": [
+    {
+      "chinese": "今天的鱼很好吃，你怎么做的？",
+      "pinyin": "jīntiān de yú hěn hǎochī, nǐ zěnme zuò de?",
+      "dutch": "De vis is vandaag erg lekker. Hoe heb je hem klaargemaakt?",
+      "meaning": "vis",
+      "toneNumbers": [
+        1,
+        1,
+        5,
+        2,
+        3,
+        3,
+        1,
+        3,
+        3,
+        5,
+        4,
+        5
+      ]
+    }
+  ],
+  "484": [
+    {
+      "chinese": "学校太远了，走路要一个小时。",
+      "pinyin": "xuéxiào tài yuǎn le, zǒulù yào yí ge xiǎoshí.",
+      "dutch": "De school ligt te ver. Te voet is het een uur.",
+      "meaning": "ver",
+      "toneNumbers": [
+        2,
+        4,
+        4,
+        3,
+        5,
+        3,
+        4,
+        4,
+        2,
+        5,
+        3,
+        2
+      ]
+    }
+  ],
+  "485": [
+    {
+      "chinese": "医生说我要多运动。",
+      "pinyin": "yīshēng shuō wǒ yào duō yùndòng.",
+      "dutch": "De dokter zegt dat ik meer moet bewegen.",
+      "meaning": "bewegen of sporten",
+      "toneNumbers": [
+        1,
+        1,
+        1,
+        3,
+        4,
+        1,
+        4,
+        4
+      ]
+    },
+    {
+      "chinese": "游泳是我最喜欢的运动。",
+      "pinyin": "yóuyǒng shì wǒ zuì xǐhuan de yùndòng.",
+      "dutch": "Zwemmen is mijn favoriete sport.",
+      "meaning": "sport",
+      "toneNumbers": [
+        2,
+        3,
+        4,
+        3,
+        4,
+        3,
+        5,
+        5,
+        4,
+        4
+      ]
+    }
+  ],
+  "486": [
+    {
+      "chinese": "大家都站着等公交车。",
+      "pinyin": "dàjiā dōu zhàn zhe děng gōngjiāochē.",
+      "dutch": "Iedereen staat op de bus te wachten.",
+      "meaning": "staan",
+      "toneNumbers": [
+        4,
+        1,
+        1,
+        4,
+        5,
+        3,
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "chinese": "下一站是机场吗？",
+      "pinyin": "xià yí zhàn shì jīchǎng ma?",
+      "dutch": "Is de volgende halte de luchthaven?",
+      "meaning": "halte",
+      "toneNumbers": [
+        4,
+        2,
+        4,
+        4,
+        1,
+        3,
+        5
+      ]
+    }
+  ],
+  "487": [
+    {
+      "chinese": "我丈夫在家做饭，我去买水果。",
+      "pinyin": "wǒ zhàngfu zài jiā zuò fàn, wǒ qù mǎi shuǐguǒ.",
+      "dutch": "Mijn man kookt thuis. Ik ga fruit kopen.",
+      "meaning": "echtgenoot",
+      "toneNumbers": [
+        3,
+        4,
+        5,
+        4,
+        1,
+        4,
+        4,
+        3,
+        4,
+        3,
+        3,
+        3
+      ]
+    }
+  ],
+  "488": [
+    {
+      "chinese": "今天怎么这么热？",
+      "pinyin": "jīntiān zěnme zhème rè?",
+      "dutch": "Hoe komt het dat het vandaag zo warm is?",
+      "meaning": "zo bij een graad",
+      "grammar": "这么 staat vóór een bijvoeglijk naamwoord of werkwoord. 这样 kan ook vóór een zelfstandig naamwoord: 这样的书.",
+      "toneNumbers": [
+        1,
+        1,
+        3,
+        5,
+        4,
+        5,
+        4
+      ]
+    },
+    {
+      "chinese": "这个字是这么写的吗？",
+      "pinyin": "zhège zì shì zhème xiě de ma?",
+      "dutch": "Schrijf je dit karakter zo?",
+      "meaning": "op deze manier",
+      "toneNumbers": [
+        4,
+        5,
+        4,
+        4,
+        4,
+        5,
+        3,
+        5,
+        5
+      ]
+    }
+  ],
+  "489": [
+    {
+      "chinese": "你可以这样拿笔，手就不疼了。",
+      "pinyin": "nǐ kěyǐ zhèyàng ná bǐ, shǒu jiù bù téng le.",
+      "dutch": "Als je je pen zo vasthoudt, doet je hand geen pijn meer.",
+      "meaning": "op deze manier",
+      "toneNumbers": [
+        3,
+        3,
+        3,
+        4,
+        4,
+        2,
+        3,
+        3,
+        4,
+        4,
+        2,
+        5
+      ]
+    },
+    {
+      "chinese": "你明天有考试？这样的话，我们星期天再见吧。",
+      "pinyin": "nǐ míngtiān yǒu kǎoshì? zhèyàng de huà, wǒmen xīngqītiān zài jiàn ba.",
+      "dutch": "Heb je morgen examen? Laten we dan zondag afspreken.",
+      "meaning": "zo bij het verwijzen naar een situatie",
+      "grammar": "这样的话 betekent ‘als het zo zit’.",
+      "gloss": "的话 (de huà) · als, in dat geval",
+      "toneNumbers": [
+        3,
+        2,
+        1,
+        3,
+        3,
+        4,
+        4,
+        4,
+        5,
+        4,
+        3,
+        5,
+        1,
+        1,
+        1,
+        4,
+        4,
+        5
+      ]
+    }
+  ],
+  "490": [
+    {
+      "chinese": "门开着，你可以进来。",
+      "pinyin": "mén kāi zhe, nǐ kěyǐ jìnlái.",
+      "dutch": "De deur staat open. Je kunt binnenkomen.",
+      "meaning": "voortdurende toestand",
+      "grammar": "着 geeft aan dat de open toestand voortduurt.",
+      "toneNumbers": [
+        2,
+        1,
+        5,
+        3,
+        3,
+        3,
+        4,
+        2
+      ]
+    },
+    {
+      "chinese": "她笑着跟我说再见。",
+      "pinyin": "tā xiào zhe gēn wǒ shuō zàijiàn.",
+      "dutch": "Ze nam lachend afscheid van me.",
+      "meaning": "gelijktijdige handeling",
+      "grammar": "笑着 beschrijft hoe ze afscheid nam.",
+      "toneNumbers": [
+        1,
+        4,
+        5,
+        1,
+        3,
+        1,
+        4,
+        4
+      ]
+    }
+  ],
+  "491": [
+    {
+      "chinese": "你打电话时，我正吃饭呢。",
+      "pinyin": "nǐ dǎ diànhuà shí, wǒ zhèng chī fàn ne.",
+      "dutch": "Toen je belde, was ik net aan het eten.",
+      "meaning": "net bezig zijn",
+      "grammar": "正…呢 = net bezig met iets op een bepaald moment.",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        4,
+        2,
+        3,
+        4,
+        1,
+        4,
+        5
+      ]
+    },
+    {
+      "chinese": "这正是我想买的书。",
+      "pinyin": "zhè zhèng shì wǒ xiǎng mǎi de shū.",
+      "dutch": "Dit is precies het boek dat ik wilde kopen.",
+      "meaning": "precies, juist",
+      "toneNumbers": [
+        4,
+        4,
+        4,
+        3,
+        3,
+        3,
+        5,
+        1
+      ]
+    }
+  ],
+  "492": [
+    {
+      "chinese": "下周我们有两次考试。",
+      "pinyin": "xià zhōu wǒmen yǒu liǎng cì kǎoshì.",
+      "dutch": "Volgende week hebben we twee toetsen.",
+      "meaning": "week",
+      "toneNumbers": [
+        4,
+        1,
+        3,
+        5,
+        3,
+        3,
+        4,
+        3,
+        4
+      ]
+    }
+  ],
+  "493": [
+    {
+      "chinese": "妈妈在准备晚饭，我来帮忙。",
+      "pinyin": "māma zài zhǔnbèi wǎnfàn, wǒ lái bāngmáng.",
+      "dutch": "Mama maakt het avondeten klaar. Ik kom helpen.",
+      "meaning": "voorbereiden of klaarzetten",
+      "toneNumbers": [
+        1,
+        5,
+        4,
+        3,
+        4,
+        3,
+        4,
+        3,
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "chinese": "你准备什么时候去中国？",
+      "pinyin": "nǐ zhǔnbèi shénme shíhou qù Zhōngguó?",
+      "dutch": "Wanneer ben je van plan naar China te gaan?",
+      "meaning": "van plan zijn",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        2,
+        5,
+        2,
+        5,
+        4,
+        1,
+        2
+      ]
+    }
+  ],
+  "494": [
+    {
+      "chinese": "我想自己去买票。",
+      "pinyin": "wǒ xiǎng zìjǐ qù mǎi piào.",
+      "dutch": "Ik wil zelf kaartjes gaan kopen.",
+      "meaning": "zelf of zelfstandig",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        3,
+        4,
+        3,
+        4
+      ]
+    },
+    {
+      "chinese": "请写自己的名字。",
+      "pinyin": "qǐng xiě zìjǐ de míngzi.",
+      "dutch": "Schrijf je eigen naam op.",
+      "meaning": "eigen",
+      "toneNumbers": [
+        3,
+        3,
+        4,
+        3,
+        5,
+        2,
+        5
+      ]
+    },
+    {
+      "chinese": "她在画自己。",
+      "pinyin": "tā zài huà zìjǐ.",
+      "dutch": "Ze is zichzelf aan het tekenen.",
+      "meaning": "zichzelf",
+      "toneNumbers": [
+        1,
+        4,
+        4,
+        4,
+        3
+      ]
+    }
+  ],
+  "495": [
+    {
+      "chinese": "我们走哪条路去车站？",
+      "pinyin": "wǒmen zǒu nǎ tiáo lù qù chēzhàn?",
+      "dutch": "Welke weg nemen we te voet naar het station?",
+      "meaning": "lopen",
+      "toneNumbers": [
+        3,
+        5,
+        3,
+        3,
+        2,
+        4,
+        4,
+        1,
+        4
+      ]
+    },
+    {
+      "chinese": "我要走了，明天见！",
+      "pinyin": "wǒ yào zǒu le, míngtiān jiàn!",
+      "dutch": "Ik moet vertrekken. Tot morgen!",
+      "meaning": "vertrekken",
+      "toneNumbers": [
+        3,
+        4,
+        3,
+        5,
+        2,
+        1,
+        4
+      ]
+    }
+  ],
+  "496": [
+    {
+      "chinese": "我家离公司近，我每天走路上班。",
+      "pinyin": "wǒ jiā lí gōngsī jìn, wǒ měi tiān zǒulù shàngbān.",
+      "dutch": "Ik woon vlak bij het bedrijf en ga elke dag te voet naar mijn werk.",
+      "meaning": "te voet gaan",
+      "toneNumbers": [
+        3,
+        1,
+        2,
+        1,
+        1,
+        4,
+        3,
+        3,
+        1,
+        3,
+        4,
+        4,
+        1
+      ]
+    }
+  ],
+  "497": [
+    {
+      "chinese": "孩子们在学校踢足球。",
+      "pinyin": "háizimen zài xuéxiào tī zúqiú.",
+      "dutch": "De kinderen voetballen op school.",
+      "meaning": "voetbal",
+      "toneNumbers": [
+        2,
+        5,
+        5,
+        4,
+        2,
+        4,
+        1,
+        2,
+        2
+      ]
+    }
+  ],
+  "498": [
+    {
+      "chinese": "这三件衣服里，我最喜欢白色的。",
+      "pinyin": "zhè sān jiàn yīfu lǐ, wǒ zuì xǐhuan báisè de.",
+      "dutch": "Van deze drie kledingstukken vind ik het witte het mooist.",
+      "meaning": "het meest",
+      "toneNumbers": [
+        4,
+        1,
+        4,
+        1,
+        5,
+        3,
+        3,
+        4,
+        3,
+        5,
+        2,
+        4,
+        5
+      ]
+    }
+  ],
+  "499": [
+    {
+      "chinese": "别往左走，车站在右边。",
+      "pinyin": "bié wǎng zuǒ zǒu, chēzhàn zài yòubian.",
+      "dutch": "Ga niet naar links. De halte ligt rechts.",
+      "meaning": "links als richting",
+      "toneNumbers": [
+        2,
+        3,
+        3,
+        3,
+        1,
+        4,
+        4,
+        4,
+        5
+      ]
+    }
+  ],
+  "500": [
+    {
+      "chinese": "坐在我左边的是我姐姐。",
+      "pinyin": "zuò zài wǒ zuǒbian de shì wǒ jiějie.",
+      "dutch": "Links van mij zit mijn oudere zus.",
+      "meaning": "linkerkant",
+      "toneNumbers": [
+        4,
+        4,
+        3,
+        3,
+        5,
+        5,
+        4,
+        3,
+        3,
+        5
+      ]
+    }
+  ]
+}

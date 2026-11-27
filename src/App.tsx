@@ -1463,7 +1463,7 @@ function WordExampleCard({ word, speechRate, compact = false }: { word: Word; sp
             <div className="examples-modal-body">
               {examples.map((example, index) => (
                 <section className="examples-modal-item" key={`${example.chinese}-${index}`}>
-                  {examples.length > 1 && <div className="examples-modal-number">Betekenis of gebruik {index + 1}{example.reading ? ` · ${example.reading}` : ""}</div>}
+                  {(example.meaning || examples.length > 1) && <div className="examples-modal-number">{example.meaning ?? `Betekenis of gebruik ${index + 1}`}{example.reading ? ` · ${example.reading}` : ""}</div>}
                   <div className="examples-modal-sentence">
                     <div className="examples-modal-hanzi" lang="zh">
                       {[...example.chinese].map((char, i) => /[\u3400-\u9fff]/.test(char)

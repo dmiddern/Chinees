@@ -1,4 +1,5 @@
 import hsk1Examples from "../data/hsk1Examples.json";
+import hsk2Examples from "../data/hsk2Examples.json";
 import type { Word } from "../types";
 
 export interface WordExample {
@@ -87,27 +88,26 @@ export function exampleForWord(word: Word): WordExample {
 }
 
 export interface ContextualWordExample extends WordExample {
+  meaning?: string;
   grammar?: string;
   toneNumbers?: number[];
   reading?: string;
   gloss?: string;
 }
 
+function levelExamples(word: Word): ContextualWordExample[] | undefined {
+  if (word.custom) return undefined;
+  if (word.level === 1) return (hsk1Examples as Record<string, ContextualWordExample[]>)[word.hanzi];
+  if (word.level === 2) return (hsk2Examples as Record<string, ContextualWordExample[]>)[word.id];
+  return undefined;
+}
+
 // Only authored examples are suitable for standalone sentence practice.
 export function curatedExamplesForWord(word: Word): ContextualWordExample[] {
   if (word.custom) return [];
-  if (word.level === 1) {
-    const examples = (hsk1Examples as Record<string, ContextualWordExample[]>)[word.hanzi];
-    if (examples?.length) return examples;
-  }
-  return curated[word.hanzi] ? [curated[word.hanzi]] : [];
+  return levelExamples(word) ?? (curated[word.hanzi] ? [curated[word.hanzi]] : []);
 }
 
 export function examplesForWord(word: Word): ContextualWordExample[] {
-  if (word.level === 1 && !word.custom) {
-    const curatedExamples = (hsk1Examples as Record<string, ContextualWordExample[]>)[word.hanzi];
-    if (curatedExamples?.length) return curatedExamples;
-  }
-  // Existing examples remain available for other HSK levels and custom words.
-  return [exampleForWord(word)];
+  return levelExamples(word) ?? [exampleForWord(word)];
 }
