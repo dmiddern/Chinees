@@ -1,4 +1,5 @@
 import type { Article } from "./articles";
+import { exampleAnalyses } from "./exampleAnalyses";
 
 type Enrichment = [depth: string, pitfall: string, practice: string];
 
@@ -20,7 +21,7 @@ const enrichment: Record<string, Enrichment> = {
   ],
   toonveranderingen: [
     "Toonverandering is grotendeels fonetisch en verandert de woordenboekvorm niet. Bij een reeks derde tonen hangt de groepering samen met woord- en zinsgrenzen, waardoor langere reeksen niet simpelweg mechanisch afwisselen.",
-    "Schrijf ní hǎo of bú shì niet als vaste woordenboekvormen. De basisvormen blijven nǐ en bù, ook wanneer hun werkelijke uitspraak door de omgeving verandert.",
+    "Schrijf in gewone pinyin nǐ hǎo; ní hǎo kan de veranderde uitspraak illustreren: bij twee derde tonen blijft de geschreven vorm nǐ hǎo. Pas de regel voor 一 ook niet toe bij tellen of rangtelwoorden: 第一 blijft dì-yī.",
     "Markeer in een korte zin eerst alle woordenboektonen en spreek haar daarna opnieuw uit met de toepasselijke toonveranderingen.",
   ],
   basiszinsvolgorde: [
@@ -30,7 +31,7 @@ const enrichment: Record<string, Enrichment> = {
   ],
   shi: [
     "是 koppelt vooral twee nominale eenheden of benadrukt een identificatie. Het Nederlands gebruikt zijn veel ruimer voor toestand, plaats en bestaan; het Chinees kiest daarvoor adjectieven, 在, 有 of andere werkwoorden.",
-    "Zeg niet 他是很忙 voor het neutrale hij is druk. 很 is hier de normale koppeling tussen onderwerp en eigenschap, zonder noodzakelijk heel te betekenen.",
+    "Zeg niet 他是很忙 voor ‘hij heeft het druk’. 很 is hier de normale koppeling tussen onderwerp en eigenschap, zonder noodzakelijk heel te betekenen.",
     "Vertaal vijf zinnen met zijn en beslis vóór het vertalen of ze identiteit, eigenschap, locatie of bestaan uitdrukken.",
   ],
   "hen-adjectieven": [
@@ -90,7 +91,7 @@ const enrichment: Record<string, Enrichment> = {
   ],
   vergelijken: [
     "比 introduceert de vergelijkingsbasis vóór het adjectief. Het verschil kan na het adjectief volgen. 没有 drukt minder dan uit vanuit het onderwerp, terwijl 一样 gelijkheid aangeeft en vaak met 跟 of 和 combineert.",
-    "Gebruik bij een neutrale 比-vergelijking doorgaans geen 很 vóór het adjectief. Wil je een groot verschil tonen, gebruik dan veel duidelijker materiaal zoals 得多.",
+    "Gebruik bij een neutrale 比-vergelijking doorgaans geen 很 vóór het adjectief. Een groot verschil zet je achter de eigenschap met 得多 of 多了.",
     "Vergelijk drie steden op grootte, weer en afstand en formuleer ook minstens één gelijkheid en één negatieve vergelijking.",
   ],
   resultaatcomplementen: [
@@ -106,7 +107,7 @@ const enrichment: Record<string, Enrichment> = {
   "de-complement": [
     "得 opent na een werkwoord een beoordeling van manier, graad of resultaat. Wanneer het werkwoord al een voorwerp heeft, wordt het werkwoord vaak herhaald om het 得-complement helder aan te sluiten.",
     "Verwar complement-得 niet met bezits-的 of bijwoordelijk 地. Ze klinken gelijk, maar hun positie en functie zijn verschillend.",
-    "Neem één werkwoord en beschrijf ermee snelheid, kwaliteit en frequentie via drie verschillende 得-complementen.",
+    "Neem één werkwoord en beschrijf ermee snelheid, kwaliteit en graad via drie verschillende 得-complementen.",
   ],
   "relatieve-zinnen": [
     "Een Chinese relatieve zin staat volledig vóór het naamwoord en eindigt daar met 的. Er is geen apart betrekkelijk voornaamwoord voor die/dat/wie; de ontbrekende rol wordt uit de context begrepen.",
@@ -120,7 +121,7 @@ const enrichment: Record<string, Enrichment> = {
   ],
   bei: [
     "被 legt de aandacht op wat een gebeurtenis ondergaat. De uitvoerder kan genoemd of weggelaten worden. In modern Chinees hoeft de gebeurtenis niet negatief te zijn, al zijn ongunstige situaties erg gebruikelijk.",
-    "Maak niet elke Nederlandse passiefzin mechanisch met 被. Chinees laat het onderwerp vaak gewoon weg wanneer de uitvoerder niet belangrijk is.",
+    "Maak niet elke Nederlandse passiefzin mechanisch met 被. Chinees kan de ondergane zaak als onderwerp nemen zonder 被, zoals 问题解决了; de uitvoerder blijft dan ongenoemd.",
     "Vertel drie situaties eerst actief en daarna vanuit het getroffen voorwerp met 被; vergelijk welke focus verandert.",
   ],
   "shi-de": [
@@ -219,7 +220,7 @@ const enrichment: Record<string, Enrichment> = {
     "Oefen een formele kennismaking, een gesprek met een collega en een informele ontmoeting met passende aanspreekvormen.",
   ],
   "ja-nee-antwoorden": [
-    "Chinees antwoordt meestal door het werkwoord of adjectief van de vraag te herhalen of te ontkennen. 是 en 不是 werken alleen wanneer de vraag zelf om identiteit of bevestiging met 是 draait.",
+    "Chinees antwoordt meestal door het werkwoord of adjectief van de vraag te herhalen of te ontkennen. 是 en 不是 passen vooral bij vragen met 是; 是的 kan daarnaast een bewering bevestigen.",
     "Vertaal ja niet altijd als 是 en nee niet altijd als 不是. Op 你去吗 antwoord je 去 of 不去.",
     "Laat iemand tien korte vragen stellen en antwoord telkens eerst minimaal en daarna in een volledige zin.",
   ],
@@ -240,7 +241,7 @@ const enrichment: Record<string, Enrichment> = {
   ],
   luchthaven: [
     "Op een luchthaven heb je taal nodig voor paspoortcontrole, bagage, overstap, aankomsthal en vervoer. 航班 verwijst naar de vlucht, 登机口 naar de gate en 行李领取处 naar bagageafhaling.",
-    "Gebruik 到 niet voor elk vertrek en aankomen. 到达 is aankomen, 出发 vertrekken en 起飞 specifiek opstijgen.",
+    "Verwar de luchthavenwoorden niet: 到达 is aankomen, 出发 vertrekken en 起飞 opstijgen. 到 alleen betekent bereiken, nooit vertrekken.",
     "Doorloop een volledige aankomst: vluchtinformatie begrijpen, bagage zoeken, een probleem melden en vervoer naar de stad vragen.",
   ],
   "landen-nationaliteit": [
@@ -254,7 +255,7 @@ const enrichment: Record<string, Enrichment> = {
     "Bestel drie dranken volledig gespecificeerd en laat de gesprekspartner telkens één detail ter bevestiging herhalen.",
   ],
   "studie-lessen": [
-    "学习 is het algemene proces van leren; 学 kan een vak of vaardigheid nemen; 上课 is les volgen en 复习 is herhalen. 成绩, 作业 en 考试 beschrijven verschillende onderwijsresultaten en taken.",
+    "学习 is het algemene proces van leren; 学 kan een vak of vaardigheid nemen; 上课 is les volgen of geven, afhankelijk van het onderwerp, en 复习 is herhalen. 成绩, 作业 en 考试 beschrijven verschillende onderwijsresultaten en taken.",
     "Gebruik 教 en 学 niet omgekeerd. De docent 教, de leerling 学; 教书 betekent lesgeven als beroep.",
     "Beschrijf je weekrooster, favoriete vak, moeilijkste onderdeel, huiswerk en manier van herhalen.",
   ],
@@ -280,7 +281,7 @@ const enrichment: Record<string, Enrichment> = {
   ],
   "voor-na-wanneer": [
     "以前 en 以后 kunnen relatief aan nu of aan een expliciet referentiepunt staan. 的时候 maakt van een gebeurtenis een tijdskader; 之前 en 之后 klinken vaak compacter of formeler.",
-    "Plaats 以前 niet zomaar vóór het werkwoord wanneer je na een gebeurtenis bedoelt. De positie bepaalt waarop de tijdsrelatie betrekking heeft.",
+    "Verwar 以前 (vóór of vroeger) niet met 以后 (na of later). Zet de referentiegebeurtenis vóór het tijdswoord: 吃饭以后, na het eten.",
     "Vertel een dag in drie fasen en verbind gebeurtenissen met vóór, tijdens en nadat.",
   ],
   "cai-jiu": [
@@ -345,7 +346,7 @@ const enrichment: Record<string, Enrichment> = {
   ],
   "kleding-kleuren": [
     "Kledingtaal combineert kledingstuk, maatwoord, kleur, materiaal, maat en pasvorm. 穿 beschrijft dragen of aantrekken, 戴 geldt voor accessoires en 试穿 voor passen.",
-    "Verwar 好看 met 合适. Het eerste beoordeelt uiterlijk; het tweede of iets geschikt is of past.",
+    "Verwar 好看 niet met 合适. Het eerste beoordeelt uiterlijk; het tweede of iets geschikt is of past.",
     "Vergelijk twee outfits op kleur, maat, pasvorm, gelegenheid en prijs en vraag een andere variant.",
   ],
   "zhe-achtergrond": [
@@ -365,7 +366,7 @@ const enrichment: Record<string, Enrichment> = {
   ],
   onbepaald: [
     "Vraagwoorden krijgen met 都, 也 en context onbepaalde betekenissen: 谁都 iedereen, 谁也不 niemand, 什么都 alles. De negatie en het bereik bepalen de uiteindelijke interpretatie.",
-    "Vertaal 什么都不 en 不什么 mechanisch noch gelijk. De plaats van negatie bepaalt waarop de ontkenning slaat.",
+    "Verwar 什么都不 (helemaal niets) niet met 不是什么都 (niet alles). De plaats van de ontkenning bepaalt het bereik.",
     "Bouw voor 谁, 什么, 哪儿 en 怎么 telkens een universele en een volledig negatieve zin.",
   ],
   werkwoordreduplicatie: [
@@ -420,7 +421,7 @@ const enrichment: Record<string, Enrichment> = {
   ],
   "familie-verwantschap": [
     "Chinese verwantschapstermen coderen vaders- of moederskant, generatie, leeftijdsvolgorde en huwelijk. In dagelijks gebruik verschillen termen en aanspreekvormen bovendien per regio.",
-    "Vertaal uncle, aunt, neef en nicht niet zonder de precieze familierelatie te kennen. Eén Nederlands woord kan meerdere Chinese termen hebben.",
+    "Vertaal oom, tante, neef en nicht niet zonder de precieze familierelatie te kennen. Eén Nederlands woord kan meerdere Chinese termen hebben.",
     "Teken een familiestamboom van drie generaties en label elke relatie vanuit één gekozen persoon.",
   ],
   onderwijssysteem: [
@@ -450,8 +451,6 @@ const enrichment: Record<string, Enrichment> = {
   ],
 };
 
-
-
 // Editorial review: questions test the target concept rather than translation alone.
 const conceptQuestions: Record<string, [string, string[], number, string][]> = {"karakters-lezen":[["Welke component geeft vooral een klankaanwijzing in 妈？",["女","马","Beide betekenen mama"],1,"马 mǎ geeft een historische klankaanwijzing; 女 geeft het betekenisveld."],["Wat kun je uit 青 in 请 afleiden?",["De exacte toon","Een mogelijke klankverwantschap","Dat 请 blauw betekent"],1,"De klankfamilie is een aanwijzing, geen garantie."]],"pinyin":[["Welke klinker hoor je in 去 qù?",["oe","uu","oo"],1,"Na q staat u voor ü, ongeveer de Nederlandse uu."],["Waar blijven de puntjes van ü staan?",["qù","nǚ","xué"],1,"Na n en l is het onderscheid tussen u en ü nodig."]],"tonen":[["Welke toon heeft 买 mǎi?",["Tweede","Derde","Vierde"],1,"Het haakje markeert de derde toon, doorgaans laag in verbonden spraak."],["Hoe spreek je de tweede lettergreep van 妈妈 uit?",["Kort en licht","Altijd hoog en vlak","Altijd dalend"],0,"De tweede lettergreep is neutraal."]],"toonveranderingen":[["Hoe klinkt 你好 in verbonden spraak?",["nǐ háo","ní hǎo","nì hǎo"],1,"De eerste van twee derde tonen klinkt als een tweede toon."],["Hoe klinkt 一 in 一天?",["yī","yí","yì"],2,"Vóór een eerste, tweede of derde toon klinkt 一 meestal als yì."]],"basiszinsvolgorde":[["Welke zin betekent: morgen leer ik thuis Chinees?",["我学中文明天在家。","我明天在家学中文。","我在学中文家明天。"],1,"Tijd en plaats staan vóór de hoofdhandeling."],["Waar staat een tijdstip normaal?",["Vóór het werkwoord","Altijd na het voorwerp","Tussen werkwoord en voorwerp"],0,"Een tijdstip kan ook vóór het onderwerp staan."]],"shi":[["Vul aan: 我___老师。",["在","很","是"],2,"是 koppelt een persoon aan een identiteit of beroep."],["Welke zin betekent: zij heeft het druk?",["她是忙。","她很忙。","她有忙。"],1,"忙 kan zelf het gezegde vormen; 很 maakt de beschrijving neutraal."]],"hen-adjectieven":[["Welke zin is een neutrale beschrijving?",["他是高。","他很高。","他有高。"],1,"很 staat vóór het adjectief; 是 is niet nodig."],["Hoe zeg je: een beetje te duur?",["一点贵","有点贵","贵有点"],1,"有点 staat vóór de eigenschap en heeft vaak een negatieve nuance."]],"vragen":[["Welke zin is een gewone ja-neevraag?",["你喝茶吗？","你吗喝茶？","你喝吗茶？"],0,"吗 staat aan het einde."],["Waar staat 谁 in de vraag wie is hij?",["谁他是？","他是谁？","他谁是？"],1,"Het vraagwoord staat op de plaats van het antwoord."]],"ontkenning":[["Ik heb gisteren niet gegeten: welke ontkenning?",["不","没","别"],1,"没 ontkent een gebeurtenis die niet plaatsvond."],["Welke vorm ontkent bezit?",["不有","没有","有不"],1,"有 wordt met 没 ontkend."]],"de-bezit":[["Hoe zeg je mijn boek?",["书我的","我书的","我的书"],2,"Bezitter + 的 + naamwoord."],["Welke vorm is normaal voor mijn moeder?",["我妈妈","妈妈我","我妈的妈"],0,"Bij hechte familiebanden kan 的 wegvallen."]],"getallen-maatwoorden":[["Hoe zeg je twee boeken?",["二本书","两本书","两书本"],1,"两 staat doorgaans vóór een maatwoord."],["Welk maatwoord past bij een kop thee?",["本","张","杯"],2,"杯 telt kopjes of glazen."]],"tijd":[["Welke uitdrukking betekent gedurende drie uur?",["三点","三个小时","第三点"],1,"小时 is een duur; 点 is een kloktijd."],["Waar staat 明天 in een gewone zin?",["Vóór de handeling","Verplicht helemaal achteraan","Na het voorwerp"],0,"Een tijdstip geeft vooraf het kader."]],"plaats-zai-you":[["Hoe introduceer je een boek op tafel?",["桌子上有一本书。","桌子上在一本书。","一本书有桌子上。"],0,"Plaats + 有 introduceert wat er aanwezig is."],["Hoe lokaliseer je een bekend boek?",["书有桌子上。","书在桌子上。","在书桌子上。"],1,"Bekend voorwerp + 在 + plaats."]],"modale-werkwoorden":[["Je hebt leren zwemmen. Welk werkwoord past het best?",["会","要","必须"],0,"会 drukt een aangeleerde vaardigheid uit."],["Je hoeft niet te komen. Welke vorm?",["不要来","不用来","不能来"],1,"不用 betekent niet hoeven; 不要 is een negatief verzoek."]],"le":[["Welke zin meldt dat het weer veranderd is?",["下雨了。","不下雨。","下雨吗？"],0,"Zinsfinale 了 markeert een nieuwe situatie."],["Hoe ontken je 我买了一本书 in de betekenis dat je geen boek kocht?",["我不买了一本书。","我没买书。","我没买了书。"],1,"Bij ontkende voltooiing verdwijnt werkwoordelijk 了."]],"zai-zhe":[["Welke zin beschrijft een openstaande deur?",["门正在开。","门开着。","门开吗？"],1,"着 beschrijft de aanhoudende toestand."],["Hoe zeg je dat iemand nu leest?",["他在看书。","他看在书。","他是看书。"],0,"在 staat vóór de lopende activiteit."]],"guo":[["Welke zin vraagt naar een eerdere ervaring?",["你去中国吗？","你去过中国吗？","你在中国吗？"],1,"过 markeert ervaring."],["Hoe ontken je die ervaring?",["我不去过。","我没去过。","我没去。"],1,"没 + werkwoord + 过 behoudt het ervaringspartikel."]],"vergelijken":[["Welke zin betekent dat hij groter is dan ik?",["他比我高。","他比我很高。","他高比我。"],0,"De eigenschap volgt na 比 en de vergelijkingsbasis."],["Hoe zeg je dat ik niet zo groot ben als hij?",["我没有他高。","我不有他高。","我高没有他。"],0,"没有 introduceert hier de vergelijkingsbasis."]],"resultaatcomplementen":[["Je hebt geluisterd maar niet begrepen. Welke zin?",["我没听懂。","我没听。","我听得懂。"],0,"没听懂 ontkent het bereikte begrip, niet noodzakelijk het luisteren."],["Welke vorm betekent niet kunnen verstaan?",["没听懂","听不懂","不听"],1,"不 tussen werkwoord en resultaat drukt onmogelijkheid uit."]],"richtingcomplementen":[["Iemand komt jouw kamer binnen. Welke vorm?",["进来","进去","出来"],0,"进 is naar binnen; 来 is naar het gekozen referentiepunt."],["Welke volgorde is correct?",["回去家","回家去","家去回"],1,"Een plaats staat binnen het samengestelde richtingspatroon vóór 去."]],"de-complement":[["Welke zin beoordeelt de spreekvaardigheid?",["他说得很好。","他得说很好。","他很好得说。"],0,"得 volgt op het werkwoord en leidt de beoordeling in."],["Waar staat 不 in hij spreekt niet goed?",["他不说得好。","他说得不好。","他说不好得。"],1,"De ontkenning staat binnen het complement, na 得."]],"relatieve-zinnen":[["Hoe zeg je het boek dat ik kocht?",["书我买的","我买的书","我买书的书"],1,"De relatieve bepaling staat vóór 的 en het kernwoord."],["Wat is het kernwoord in 站在那边的人?",["站","那边","人"],2,"人 is het naamwoord dat de voorafgaande bepaling beschrijft."]],"ba":[["Welke zin vertelt wat er met de deur moet gebeuren?",["请把门关上。","请把关门。","请门把关。"],0,"把 introduceert het voorwerp; 关上 geeft het resultaat."],["Waar staat 没 in een 把-zin?",["Na 把","Vóór 把","Na het resultaat"],1,"Ontkenning en modale werkwoorden staan doorgaans vóór 把."]],"bei":[["Wie ondergaat de handeling in 我的自行车被人偷了?",["人","自行车","De spreker als uitvoerder"],1,"De fiets is het grammaticale onderwerp en ondergaat de diefstal."],["Welke zin betekent dat mijn fiets niet gestolen is?",["我的自行车被没偷。","我的自行车没被偷。","我的自行车被偷没。"],1,"没 staat vóór 被."]],"shi-de":[["Welke zin benadrukt wanneer ik kwam?",["我昨天来了。","我是昨天来的。","我明天来。"],1,"是…的 legt de nadruk op het detail 昨天."],["Hoe ontken je dat je per vliegtuig kwam?",["我不是坐飞机来的。","我没是坐飞机来的。","我是坐飞机不来的。"],0,"De ontkenning van het benadrukte detail is 不是…的."]],"verbanden":[["Welk woord past: 因为下雨，___我没去。",["但是","所以","虽然"],1,"所以 introduceert het gevolg."],["Vul aan: 如果你有时间，我们___一起去。",["就","虽然","因为"],0,"就 introduceert het gevolg van de voorwaarde."]],"topic-comment":[["Wie heeft gelezen in 这本书我看过?",["这本书","我","Onbekend"],1,"Het boek is het topic; 我 is het grammaticale onderwerp."],["Waarom staat 这本书 vooraan?",["Omdat het de uitvoerder is","Omdat het het gespreksonderwerp is","Omdat 过 een vraag vormt"],1,"Het topic is het kader waarover iets wordt gezegd."]],"lian-dou":[["Vul aan: 连孩子___懂。",["把","都","被"],1,"都 markeert dat zelfs kinderen het begrijpen."],["Welke zin benadrukt geen enkele keer?",["我连一次也没去过。","我去过一次。","我又去了一次。"],0,"连一次也没 versterkt de totale ontkenning."]],"kennismaken":[["Welke zin noemt je naam?",["我叫小明。","我在小明。","我有小明。"],0,"叫 wordt gebruikt voor hoe iemand heet."],["Hoe antwoord je op 您贵姓？",["我贵姓王。","我姓王。","我是贵姓。"],1,"In het antwoord gebruik je 姓 zonder 贵."]],"restaurant":[["Hoe vraag je om minder olie?",["不要油","少放一点油","多放一点油"],1,"少放 vraagt minder; 不要 vraagt weglaten."],["Hoe bestel je twee kopjes thee?",["二茶杯","两杯茶","两茶"],1,"Getal + maatwoord + drank."]],"winkelen":[["Hoe vraag je naar de prijs?",["这个多少钱？","这个几个人？","这个在哪里？"],0,"多少钱 vraagt naar het bedrag."],["Hoe vraag je om een groter exemplaar?",["有没有大一点的？","有没有有点大？","有没有一点大？"],0,"大一点 betekent iets groter; 的 vervangt het product."]],"richting-vragen":[["Welke vraag vraagt naar de route?",["火车站在哪儿？","去火车站怎么走？","火车站几点？"],1,"怎么走 vraagt hoe je er geraakt."],["Hoe zeg je dat het hotel ver van hier is?",["酒店在这里远。","酒店离这里远。","酒店有这里远。"],1,"离 introduceert het referentiepunt voor de afstand."]]};
 const editorialAdditions: Record<string, { add: string[] }> = {"pinyin":{"add":["Een lettergreep kan zonder beginmedeklinker beginnen, zoals 爱 ài. Na y wordt de ü eveneens zonder puntjes geschreven: 鱼 yú. Na n en l blijven de puntjes staan wanneer de klank ü is: 女 nǚ, 绿 lǜ. Bij yun en jun staat un voor ün, niet voor uen."]},"toonveranderingen":{"add":["一 klinkt yí vóór een vierde toon en yì vóór een eerste, tweede of derde toon. Bij los tellen, rangtelwoorden en cijferreeksen blijft yī gebruikelijk. In werkwoordherhaling kan 一 neutraal worden: 看一看 kàn yi kàn. 不 kan eveneens neutraal zijn in A不A-vragen."]},"le":{"add":["Vergelijk 我买了一本书 (ik heb een boek gekocht), 我没买书 (ik heb geen boek gekocht) en 我不买书了 (ik koop geen boeken meer). In de laatste zin blijft zinsfinale 了 staan omdat de situatie verandert. Perfectief 了 kan ook bij toekomstige gebeurtenissen voorkomen: 吃了饭再走, vertrek nadat je gegeten hebt."]},"resultaatcomplementen":{"add":["Vergelijk 我没听懂 (ik heb het deze keer niet verstaan) en 我听不懂 (ik kan het niet verstaan). 不 kan ook vóór een resultaatcombinatie voorkomen bij bijvoorbeeld gewoonten of toekomstige keuzes; het verbod geldt dus niet absoluut."]},"shi-de":{"add":["In een ontkennende focuszin blijft 是 staan: 我不是坐飞机来的. Deze les behandelt de focusconstructie rond een bekende gebeurtenis; andere 是…的-constructies kunnen ook over huidige of toekomstige situaties gaan."]},"getallen-maatwoorden":{"add":["两 is gebruikelijk vóór maatwoorden, 百, 千 en 万 kunnen afhankelijk van positie en register 两 of 二 krijgen. 二 is normaal in 十二, 二十 en rangtelwoorden."]},"finalen":{"add":["un staat voor uen na bijvoorbeeld l (论 lùn), maar voor ün na j, q en x (军 jūn, 群 qún, 迅 xùn)."]},"pinyin-tekst":{"add":["Drie woorden worden door twee spaties gescheiden. Apostroffen markeren een nieuwe lettergreep die met a, o of e begint wanneer deze binnen hetzelfde woord volgt."]},"ja-nee-antwoorden":{"add":["是的 kan ook als algemene bevestiging van een bewering functioneren, en 对 bevestigt dat iets klopt. Bij een gewone werkwoordvraag is herhaling van het kernwerkwoord meestal de veiligste keuze."]},"taalvaardigheid":{"add":["听得懂 drukt uit dat verstaan mogelijk is; 听懂了 meldt dat het verstaan daadwerkelijk gelukt is."]},"duur":{"add":["Een duur na een werkwoord betekent niet noodzakelijk dat de activiteit gestopt is. De context en een eventuele zinsfinale 了 helpen bepalen of ze nog doorgaat."]},"voor-na-wanneer":{"add":["以后 vóór een werkwoord kan op zichzelf later betekenen, zoals 以后再说. Na een gebeurtenis geeft het de volgorde ten opzichte van die gebeurtenis aan."]},"werkwoordreduplicatie":{"add":["De tweede lettergreep van 讨论 is in de standaardwoordenboekvorm lùn: tǎolùn. In een herhaalde vorm kan de uitspraak lichter worden; leer eerst de basisvorm."]},"verandering-cheng":{"add":["成 chéng heeft hier de betekenis van worden of een resultaat bereiken; de woordenboekbetekenis één tiende is in deze constructie niet van toepassing."]},"vervoer-samen":{"add":["同行 betekent samen reizen met de uitspraak tóngxíng. Tóngháng betekent hetzelfde beroep uitoefenen of een vakgenoot; dit is een andere lezing."]},"sport-scores":{"add":["Een score is getal + 比 + getal, bijvoorbeeld 三比二. De namen van de teams kunnen afzonderlijk worden genoemd."]},"onbepaald":{"add":["Vergelijk 我什么都不吃 (ik eet helemaal niets) en 我不是什么都吃 (ik eet niet zomaar alles). De plaats van de ontkenning bepaalt het bereik."]}};
@@ -460,17 +459,20 @@ export function enrichArticle(article: Article): Article {
   const notes = enrichment[article.id];
   if (!notes) return article;
 
-  const analysedExamples = article.examples;
-
+  // Analyses worden per voorbeeldzin in de brondata geschreven. Een automatische
+  // koppeling op volgnummer gaf vaak een analyse die niet bij de zin hoorde.
   return {
     ...article,
     explanation: [...article.explanation, ...(editorialAdditions[article.id]?.add ?? [])],
     exercises: [...(conceptQuestions[article.id] ?? []).map(([question, options, answer, explanation]) => ({ question, options, answer, explanation })), ...(article.exercises ?? [])],
     minutes: Math.max(article.minutes, 15),
-    examples: analysedExamples,
-    deepDive: [notes[0]],
-    pitfalls: [notes[1]],
-    practiceSteps: [notes[2]],
+    examples: article.examples.map((item) => ({
+      ...item,
+      analysis: item.analysis ?? exampleAnalyses[`${article.id}|${item.chinese}`],
+    })),
+    deepDive: [notes[0], ...(article.deepDive || [])],
+    pitfalls: [notes[1], ...(article.pitfalls || [])],
+    practiceSteps: [notes[2], ...(article.practiceSteps || [])],
   };
 }
 
