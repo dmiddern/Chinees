@@ -346,7 +346,12 @@ function App() {
           <ListManager
             lists={customLists}
             words={words}
-            onCreate={(name) => setCustomLists((current) => createCustomList(current, name))}
+            onCreate={(name) => {
+              const created = createCustomList([], name)[0];
+              if (!created) return;
+              setCustomLists(current => [...current, created]);
+              return created.id;
+            }}
             onDelete={(listId) => setCustomLists((current) => current.filter((list) => list.id !== listId))}
             onToggleWord={(listId, wordId) => setCustomLists((current) => toggleWordInList(current, listId, wordId))}
             onReplaceWords={(listId, wordIds) => setCustomLists((current) => current.map((list) => list.id === listId ? { ...list, wordIds: [...new Set(wordIds)], updatedAt: Date.now() } : list))}
