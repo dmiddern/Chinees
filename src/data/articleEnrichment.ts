@@ -41,7 +41,7 @@ const enrichment: Record<string, Enrichment> = {
   ],
   vragen: [
     "De gekozen vraagvorm bepaalt welk soort antwoord je verwacht. 吗 vraagt bevestiging, A不A legt de keuze tussen positief en negatief voor, een vraagwoord vraagt ontbrekende informatie en 呢 houdt een bekend onderwerp actief.",
-    "Voeg geen 吗 toe aan een zin die al een vraagwoord of een A不A-constructie bevat. 你去不去吗 mengt twee volledige vraagstrategieën.",
+    "Voeg bij een rechtstreekse vraagwoordvraag of een gewone A不A-vraag geen 吗 toe. Een ingebedde vraag kan wel met 吗 samengaan: 你知道他是谁吗？ vraagt of je weet wie hij is. 你去不去吗 mengt twee volledige vraagstrategieën.",
     "Zet een mededelende zin om in vier vraagtypes en formuleer bij elk type een natuurlijk kort antwoord.",
   ],
   ontkenning: [

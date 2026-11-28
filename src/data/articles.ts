@@ -123,6 +123,7 @@ const coreArticles: Article[] = [
     8,
     [
       "Pinyin is het officiële notatiesysteem voor de uitspraak van Standaardmandarijn. Een lettergreep bestaat uit een beginklank (die soms ontbreekt, zoals in ài), een eindklank en een toon. Lees pinyin niet alsof het Nederlands of Engels is.",
+      "Deze app gebruikt bij voorbeelden een didactische schrijfwijze: werkwoordelijk 着, 过 en 了 staan los om hun functie zichtbaar te maken. De standaardspelling verbindt deze aspectdeeltjes met het werkwoord, bijvoorbeeld kāizhe (开着), qùguo (去过) en mǎile (买了). Zinsfinale 了 blijft los staan. De losse schrijfwijze in de voorbeelden is dus een lesconventie.",
       "Vooral j, q en x vragen aandacht. Je vormt ze met het tongblad tegen het voorste deel van het harde gehemelte, terwijl de tongpunt achter de onderste tanden blijft. Bij zh, ch, sh en r ligt de tongpunt verder naar achteren, licht omhooggekruld. Bij z, c en s ligt de tongpunt vlak achter de boventanden.",
       "De letter c klinkt ongeveer als ts met een duidelijke luchtstoot, q ongeveer als tsj met een luchtstoot, en x ongeveer als een zachte sj. De Chinese r lijkt meer op de j in het Franse ‘jour’ dan op een Nederlandse r.",
       "Na j, q, x en y staat de geschreven u altijd voor ü, de uu-klank van ‘muur’. De puntjes worden dan weggelaten omdat er geen verwarring mogelijk is. Na n en l schrijf je ze wel, omdat nu en nü allebei bestaan: 女 nǚ (vrouw) tegenover 努 nǔ.",
@@ -343,7 +344,7 @@ const coreArticles: Article[] = [
       { chinese: "我很好，你呢？", pinyin: "Wǒ hěn hǎo, nǐ ne?", dutch: "Met mij gaat het goed, en met jou?", analysis: "呢 herhaalt de vraag voor een nieuw onderwerp." },
     ],
     [
-      "Combineer 吗 niet met een vraagwoord zoals 谁 of met een A-niet-A-vorm.",
+      "Voeg bij een rechtstreekse vraagwoordvraag zoals 他是谁？ geen 吗 toe. In een ingebedde vraag kan het wel: 你知道他是谁吗？ (Weet je wie hij is?). Combineer een gewone A-niet-A-vraag niet met 吗.",
       "Draai onderwerp en werkwoord niet om.",
       "Gebruik A-niet-A wanneer je een duidelijke keuze tussen ja en nee vraagt.",
     ],
@@ -732,13 +733,13 @@ const coreArticles: Article[] = [
     [
       "来 lái beschrijft beweging naar de spreker of het gekozen referentiepunt. 去 qù beschrijft beweging ervan weg. Ze komen achter een bewegingswerkwoord.",
       "Elementen als 上 (omhoog), 下 (omlaag), 进 (naar binnen), 出 (naar buiten), 回 (terug) en 过 (over) worden met 来 of 去 gecombineerd: 进来, 出去, 回来.",
-      "Een plaats staat vóór 来 of 去, nooit erachter: 回家去, 进教室来. 进来教室 is fout.",
+      "Binnen een samengesteld richtingscomplement staat de plaats vóór het afsluitende 来 of 去: 回家去, 进教室来, niet 进来教室. Wanneer 来 of 去 zelf het hoofdwerkwoord is, volgt de bestemming er juist op: 来中国, 去学校.",
       "De keuze is ook perspectivisch. Aan de telefoon zegt iemand 我马上过来, ik kom meteen naar jou toe, ook al is de spreker fysiek elders.",
     ],
     [
       { formula: "Werkwoord + 来 / 去", meaning: "Naar hier of van hier weg." },
       { formula: "Werkwoord + richting + 来 / 去", meaning: "Samengestelde richting, zoals 走进去." },
-      { formula: "Werkwoord + plaats + 来 / 去", meaning: "De plaats staat vóór 来 of 去: 回家去." },
+      { formula: "Werkwoord + plaats + 来 / 去", meaning: "Binnen dit samengestelde richtingspatroon staat de plaats vóór het afsluitende 来 of 去: 回家去." },
     ],
     [
       { chinese: "请进来。", pinyin: "Qǐng jìnlai.", dutch: "Kom binnen, alsjeblieft.", analysis: "进 + 来: naar binnen, naar de spreker toe." },
@@ -749,7 +750,7 @@ const coreArticles: Article[] = [
     [
       "Bepaal eerst het gezichtspunt.",
       "来 beweegt naar dat punt; 去 beweegt ervan weg.",
-      "Een plaats staat vóór 来 of 去.",
+      "Binnen een samengesteld richtingscomplement staat de plaats vóór het afsluitende 来 of 去.",
     ],
   ),
   article(
